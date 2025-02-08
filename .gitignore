@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+## Ignore IDE specific files
+.vscode/
+
+##Ignore build specific files
+bin/
+obj/
+__pycache__/
+.pytest_cache/
+
+## Ignore build specific files
+*.dSYM
+.DS_Store
