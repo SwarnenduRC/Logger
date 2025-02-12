@@ -1,3 +1,31 @@
+/**
+ * @file ClockTests.cpp
+ * @brief Unit tests for the Clock class using Google Test framework.
+ *
+ * This file contains a series of test cases to verify the functionality of the Clock class.
+ * The tests cover various aspects of the Clock class, including time retrieval, formatting,
+ * and timer functionality.
+ *
+ * The following test cases are included:
+ * - testGetLocalTime: Tests the retrieval of local time.
+ * - testGetGmtTime: Tests the retrieval of GMT time.
+ * - testGetLocalTimeStr: Tests the retrieval of formatted local time strings.
+ * - testGetGmtTimeStr: Tests the retrieval of formatted GMT time strings.
+ * - testGetDayOfWeek: Tests the retrieval of the current day of the week.
+ * - testGetMonth: Tests the retrieval of the current month.
+ * - testGetYear: Tests the retrieval of the current year.
+ * - testGetTimeOfTheDay: Tests the retrieval of the current time of the day (hours, minutes, seconds).
+ * - testGetGmtTimeOfTheDay: Tests the retrieval of the current GMT time of the day (hours, minutes, seconds).
+ * - testStart: Tests the start functionality of the timer.
+ * - testStop: Tests the stop functionality of the timer.
+ * - testGetElapsedTime: Tests the retrieval of elapsed time in different units (seconds, milliseconds).
+ * - testTimerThreadSafety: Tests the thread safety of the timer functionality.
+ *
+ * The Clock class is expected to provide accurate time information and handle timer operations
+ * correctly, even in multi-threaded environments.
+ *
+ * @note The tests use the Google Test framework for assertions and test case management.
+ */
 #include "Clock.hpp"
 
 #include <iomanip>
@@ -196,3 +224,58 @@ TEST_F(ClockTests, testGetElapsedTime)
         EXPECT_LE(elapsedTime, 105.0);  // 100ms + 5ms (tolerance)
     }
 }
+
+TEST_F(ClockTests, testTimerThreadSafety)
+{
+    std::mutex timerMutex;
+    std::condition_variable timerCond;
+    std::atomic_bool isRunning = false;
+
+    {
+        auto threadFunc1 = [&]()
+        {
+            std::lock_guard<std::mutex> lock(timerMutex);
+            clock.start();
+            ASSERT_TRUE(clock.isRunning());
+            isRunning = false;
+            std::this_thread::sleep_for(std::chrono::milliseconds(999));
+            clock.stop();
+            isRunning = false;
+            timerCond.notify_one();
+        };
+        auto threadFunc2 = [&]()
+        {
+            ASSERT_TRUE(clock.isRunning());
+            std::unique_lock<std::mutex> lock(timerMutex);
+            timerCond.wait(lock, [&] { return !isRunning.load(); });
+            ASSERT_FALSE(clock.isRunning());
+        };
+
+        std::thread t1(threadFunc1);
+        std::this_thread::sleep_for(std::chrono::milliseconds(99));
+        std::thread t2(threadFunc2);
+        t1.join();
+        t2.join();
+    }
+    {
+        auto threadFunc1 = [&]()
+        {
+            std::lock_guard<std::mutex> lock(timerMutex);
+            clock.start();
+            ASSERT_TRUE(clock.isRunning());
+            std::this_thread::sleep_for(std::chrono::milliseconds(999));
+        };
+        auto threadFunc2 = [&]()
+        {
+            EXPECT_TRUE(clock.isRunning());
+            auto timeElapsed = clock.getElapsedTime(TimeUnits::MILLISECONDS);
+            EXPECT_EQ(timeElapsed, -1.0);
+        };
+        std::thread t1(threadFunc1);
+        std::this_thread::sleep_for(std::chrono::milliseconds(99));
+        std::thread t2(threadFunc2);
+        t1.join();
+        t2.join();
+    }
+}
+

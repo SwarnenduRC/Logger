@@ -37,6 +37,7 @@
 ##Ignore build specific files
 bin/
 obj/
+lib/
 __pycache__/
 .pytest_cache/
 
