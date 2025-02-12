@@ -1,3 +1,36 @@
+/**
+ * @file Clock.cpp
+ * @brief Implementation of the Clock class for time measurement and formatting.
+ * 
+ * This file contains the implementation of the Clock class, which provides
+ * functionalities for measuring elapsed time, getting the current time in
+ * various formats, and retrieving specific components of the current time.
+ * 
+ * @author Swarnendu Roy Chowdhury
+ * @date 12/02/2025
+ * @version 1.0
+ * 
+ * @license MIT License
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 #include "Clock.hpp"
 
 #include <iomanip>
@@ -16,9 +49,8 @@ void Clock::start()
 void Clock::stop()
 {
     if (!m_isRunning || (m_threadId != std::this_thread::get_id()))
-    {
         return;
-    }
+    
     std::lock_guard<std::mutex> lock(m_mutex);
     m_endTime = std::chrono::high_resolution_clock::now();
     m_isRunning = false;
@@ -27,12 +59,8 @@ void Clock::stop()
 
 double Clock::getElapsedTime(const TimeUnits& units)
 {
-    if (m_isRunning)
-    {
-        stop();
-        std::unique_lock<std::mutex> lock(m_mutex);
-        m_condition.wait(lock, [this] { return !m_isRunning; });
-    }
+    if (m_isRunning || (m_threadId != std::this_thread::get_id()))
+        return -1.0;
 
     switch (units)
     {
@@ -72,7 +100,9 @@ std::string Clock::getGmtTimeStr(const std::string_view format) const
     auto now = std::chrono::system_clock::now();
     auto nowTimeT = std::chrono::system_clock::to_time_t(now);
     std::array<char, 80> buffer;
-    std::strftime(buffer.data(), sizeof(buffer), format.data(), std::gmtime(&nowTimeT));
+    std::strftime(buffer.data(), sizeof(buffer), 
+                    (format.empty() ? m_strFormat.data() : format.data()), 
+                    std::gmtime(&nowTimeT));
     return std::string(buffer.data());
 }
 
@@ -81,7 +111,9 @@ std::string Clock::getLocalTimeStr(const std::string_view format) const
     auto nowTimeT = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     auto localTimeT = std::localtime(&nowTimeT);
     std::array<char, 80> buffer;
-    std::strftime(buffer.data(), sizeof(buffer), format.data(), localTimeT);
+    std::strftime(buffer.data(), sizeof(buffer), 
+                    (format.empty() ? m_strFormat.data() : format.data()), 
+                    localTimeT);
     return std::string(buffer.data());
 }
 
