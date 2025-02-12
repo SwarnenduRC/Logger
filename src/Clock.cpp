@@ -34,20 +34,18 @@ double Clock::getElapsedTime(const TimeUnits& units)
         m_condition.wait(lock, [this] { return !m_isRunning; });
     }
 
-    std::chrono::duration<double> elapsedTime = m_endTime - m_startTime;
-
     switch (units)
     {
         case TimeUnits::SECONDS:
-            return elapsedTime.count();
+        return std::chrono::duration_cast<std::chrono::seconds>(m_endTime - m_startTime).count();
         case TimeUnits::MILLISECONDS:
-            return std::chrono::duration_cast<std::chrono::milliseconds>(elapsedTime).count();
+            return std::chrono::duration_cast<std::chrono::milliseconds>(m_endTime - m_startTime).count();
         case TimeUnits::MICROSECONDS:
-            return std::chrono::duration_cast<std::chrono::microseconds>(elapsedTime).count();
+            return std::chrono::duration_cast<std::chrono::microseconds>(m_endTime - m_startTime).count();
         case TimeUnits::NANOSECONDS:
-            return std::chrono::duration_cast<std::chrono::nanoseconds>(elapsedTime).count();
+            return std::chrono::duration_cast<std::chrono::nanoseconds>(m_endTime - m_startTime).count();
         default:
-            return elapsedTime.count();
+            return -1.0;
     }
 }
 
@@ -85,5 +83,46 @@ std::string Clock::getLocalTimeStr(const std::string_view format) const
     std::array<char, 80> buffer;
     std::strftime(buffer.data(), sizeof(buffer), format.data(), localTimeT);
     return std::string(buffer.data());
+}
+
+std::string Clock::getDayOfWeek() const
+{
+    auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    auto localTime = std::localtime(&now);
+    std::ostringstream oss;
+    oss << std::put_time(localTime, "%A");
+    return oss.str();
+}
+
+std::string Clock::getMonth() const
+{
+    auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    auto localTime = std::localtime(&now);
+    std::ostringstream oss;
+    oss << std::put_time(localTime, "%B");
+    return oss.str();
+}
+
+std::string Clock::getYear() const
+{
+    auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    auto localTime = std::localtime(&now);
+    std::ostringstream oss;
+    oss << std::put_time(localTime, "%Y");
+    return oss.str();
+}
+
+std::tuple<int, int, int> Clock::getTimeOfTheDay() const
+{
+    auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    auto localTime = std::localtime(&now);
+    return std::make_tuple(localTime->tm_hour, localTime->tm_min, localTime->tm_sec);
+}
+
+std::tuple<int, int, int> Clock::getGmtTimeOfTheDay() const
+{
+    auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    auto gmtTime = std::gmtime(&now);
+    return std::make_tuple(gmtTime->tm_hour, gmtTime->tm_min, gmtTime->tm_sec);
 }
 
