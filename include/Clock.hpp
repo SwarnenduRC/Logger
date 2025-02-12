@@ -8,9 +8,7 @@
 #include <mutex>
 #include <condition_variable>
 
-using StdHighResClock = std::chrono::time_point<std::chrono::high_resolution_clock>;
-using StartTime = std::chrono::time_point<std::chrono::high_resolution_clock>;
-using EndTime = std::chrono::time_point<std::chrono::high_resolution_clock>;
+using TimePoint = std::chrono::time_point<std::chrono::high_resolution_clock>;
 
 enum class TimeUnits
 {
@@ -27,14 +25,22 @@ class Clock
         void stop();
         double getElapsedTime(const TimeUnits& units = TimeUnits::SECONDS);
         inline bool isRunning() const { return m_isRunning; };
+                
         std::string getGmtTime() const;
         std::string getLocalTime() const;
         std::string getGmtTimeStr(const std::string_view format = "%d/%m/%Y %H:%M:%S") const;
         std::string getLocalTimeStr(const std::string_view format = "%d/%m/%Y %H:%M:%S") const;
+
+        std::string getDayOfWeek() const;
+        std::string getMonth() const;
+        std::string getYear() const;
+        std::tuple<int, int, int> getTimeOfTheDay() const;
+        std::tuple<int, int, int> getGmtTimeOfTheDay() const;
         
     private:
-        StartTime m_startTime;
-        EndTime m_endTime;
+        TimePoint m_startTime;
+        TimePoint m_endTime;
+
         std::atomic_bool m_isRunning;
         std::thread::id m_threadId;
         std::mutex m_mutex;
