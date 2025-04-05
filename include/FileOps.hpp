@@ -13,6 +13,8 @@ using BufferQ = std::queue<std::array<char, 1024>>;
 class FileOps
 {
     public:
+        using StdTupple = std::tuple<std::string, std::string, std::string>;
+
         FileOps() = delete;
         FileOps(const std::uintmax_t maxFileSize,
                 const std::string_view fileName = "", 
@@ -47,7 +49,7 @@ class FileOps
         bool clearFile();
     
     private:
-        void populateFilePathObj();
+        void populateFilePathObj(const StdTupple& fileDetails);
         void writeDataToFile();
         bool pop(std::array<char, 1024>& dataRecord);
         void push(const std::string_view data);
