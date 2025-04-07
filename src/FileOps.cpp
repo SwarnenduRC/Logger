@@ -1,16 +1,28 @@
 #include "FileOps.hpp"
 
 #include <exception>
+#include <tuple>
+
+#define nullString ""
 
 static constexpr std::string_view DEFAULT_FILE_EXTN = ".txt";
 
-void FileOps::populateFilePathObj()
+void FileOps::populateFilePathObj(const StdTupple& fileDetails)
 {
+    std::unique_lock<std::mutex> lock(m_FileOpsMutex);
+    m_FileOpsCv.wait(lock, [this] { return !m_isFileOpsRunning; });
+
+    if (!std::get<0>(fileDetails).empty())
+        m_FileName = std::get<0>(fileDetails);
+
+    if (!std::get<1>(fileDetails).empty())
+        m_FilePath = std::get<1>(fileDetails);
+
+    if (!std::get<2>(fileDetails).empty())
+        m_FileExtension = std::get<2>(fileDetails);
+
     if (!m_FileName.empty())
     {
-        std::unique_lock<std::mutex> lock(m_FileOpsMutex);
-        m_FileOpsCv.wait(lock, [this] { return !m_isFileOpsRunning; });
-
         if (m_FileExtension.empty())
         {
             if (m_FileName.find('.') != std::string::npos)
@@ -22,6 +34,11 @@ void FileOps::populateFilePathObj()
                 m_FileExtension = DEFAULT_FILE_EXTN;
                 m_FileName += m_FileExtension;
             }
+        }
+        else
+        {
+            m_FileName = m_FileName.substr(0, m_FileName.find_last_of('.'));
+            m_FileName += m_FileExtension;
         }
         
         auto getSeparator = []()
@@ -72,7 +89,8 @@ FileOps::FileOps(const std::uintmax_t maxFileSize,
     , m_DataRecords()
     , m_MaxFileSize(maxFileSize)
 {
-    populateFilePathObj();
+    auto fileDetails = std::make_tuple(m_FileName, m_FilePath, m_FileExtension);
+    populateFilePathObj(fileDetails);
 }
 
 FileOps::~FileOps()
@@ -148,17 +166,7 @@ void FileOps::setFileName(const std::string_view fileName)
     if (fileName.empty() || fileName == m_FileName)
         return;
 
-    m_FileName = fileName;
-    if (fileName.find('.') != std::string::npos)
-    {
-        m_FileExtension = fileName.substr(fileName.find_last_of('.'));
-    }
-    else
-    {
-        m_FileExtension = DEFAULT_FILE_EXTN;
-        m_FileName += m_FileExtension;
-    }
-    populateFilePathObj();
+    populateFilePathObj(std::make_tuple(std::string(fileName), nullString, nullString));
 }
 
 void FileOps::setFilePath(const std::string_view filePath)
@@ -166,8 +174,7 @@ void FileOps::setFilePath(const std::string_view filePath)
     if (filePath.empty() || filePath == m_FilePath)
         return;
 
-    m_FilePath = filePath;
-    populateFilePathObj();
+    populateFilePathObj(std::make_tuple(nullString, std::string(filePath), nullString));
 }
 
 void FileOps::setFileExtension(const std::string_view fileExtension)
@@ -175,8 +182,7 @@ void FileOps::setFileExtension(const std::string_view fileExtension)
     if (fileExtension.empty() || fileExtension == m_FileExtension)
         return;
 
-    m_FileExtension = fileExtension;
-    populateFilePathObj();
+    populateFilePathObj(std::make_tuple(nullString, nullString, std::string(fileExtension)));
 }
 
 bool FileOps::createFile()
@@ -253,7 +259,7 @@ void FileOps::readFile()
         while (std::getline(file, line))
         {
             std::copy(line.begin(), line.end(), dataRecord.begin());
-            m_FileContent.push(dataRecord);
+            m_FileContent.emplace(dataRecord);
         }
         file.close();
     }
