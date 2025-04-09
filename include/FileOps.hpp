@@ -45,7 +45,9 @@ class FileOps
         bool renameFile(const std::string_view newFileName);
         void readFile();
         bool createFile();
+        bool createFile(const std::filesystem::path& file);
         bool deleteFile();
+        bool deleteFile(const std::filesystem::path& file);
         bool clearFile();
     
     private:
@@ -67,7 +69,7 @@ class FileOps
         std::condition_variable m_FileOpsCv;
         std::condition_variable m_DataRecordsCv;
         std::atomic_bool m_isFileOpsRunning = false;
-        std::atomic_bool m_StopAndExit = false;
+        std::atomic_bool m_dataReady = false;
 };
 
 #endif // FILEOPS_HPP
