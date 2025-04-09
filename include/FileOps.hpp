@@ -45,7 +45,9 @@ class FileOps
         bool renameFile(const std::string_view newFileName);
         void readFile();
         bool createFile();
+        bool createFile(const std::filesystem::path& file);
         bool deleteFile();
+        bool deleteFile(const std::filesystem::path& file);
         bool clearFile();
     
     private:

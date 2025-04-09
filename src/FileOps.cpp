@@ -12,6 +12,8 @@ void FileOps::populateFilePathObj(const StdTupple& fileDetails)
     std::unique_lock<std::mutex> lock(m_FileOpsMutex);
     m_FileOpsCv.wait(lock, [this] { return !m_isFileOpsRunning; });
 
+    m_isFileOpsRunning = true;
+
     if (!std::get<0>(fileDetails).empty())
         m_FileName = std::get<0>(fileDetails);
 
@@ -76,7 +78,8 @@ void FileOps::populateFilePathObj(const StdTupple& fileDetails)
         }
         m_FilePathObj = std::filesystem::path(m_FilePath + m_FileName);
     }
-    m_FileOpsCv.notify_all();
+    m_isFileOpsRunning = false;
+    m_FileOpsCv.notify_one();
 }
 
 FileOps::FileOps(const std::uintmax_t maxFileSize,
@@ -187,36 +190,70 @@ void FileOps::setFileExtension(const std::string_view fileExtension)
 
 bool FileOps::createFile()
 {
+    auto retVal = false;
     std::scoped_lock<std::mutex> lock(m_FileOpsMutex);
+    m_isFileOpsRunning = true;
     if (!std::filesystem::exists(m_FilePathObj))
     {
-        m_isFileOpsRunning = true;
         std::ofstream file(m_FilePathObj);
         if (file.is_open())
         {
             file.close();
-            m_isFileOpsRunning = false;
-        }
-        else
-        {
-            m_isFileOpsRunning = false;
-            throw std::runtime_error("Failed to create file: " + m_FilePathObj.string());
+            retVal = true;
         }
     }
-    return true;
+    m_isFileOpsRunning = false;
+    return retVal;
+}
+
+bool FileOps::createFile(const std::filesystem::path& file)
+{
+    if (file.empty())
+        return false;
+
+    if (m_FilePathObj == file)
+    {
+        return createFile();
+    }
+    else
+    {
+        std::ofstream FILE(file);
+        if (FILE.is_open())
+        {
+            FILE.close();
+            return true;
+        }
+        return false;
+    }
 }
 
 bool FileOps::deleteFile()
 {
     auto retVal = false;
+
     std::scoped_lock<std::mutex> lock(m_FileOpsMutex);
     m_isFileOpsRunning = true;
     if (std::filesystem::exists(m_FilePathObj))
     {
         retVal = std::filesystem::remove(m_FilePathObj);
-        m_isFileOpsRunning = false;
     }
+    m_isFileOpsRunning = false;
     return retVal;
+}
+
+bool FileOps::deleteFile(const std::filesystem::path& file)
+{
+    if (file.empty())
+        return false;
+
+    if (m_FilePathObj == file)
+    {
+        return deleteFile();
+    }
+    else
+    {
+        return std::filesystem::remove(file);
+    }
 }
 
 bool FileOps::renameFile(const std::string_view newFileName)
@@ -224,25 +261,20 @@ bool FileOps::renameFile(const std::string_view newFileName)
     if (newFileName.empty())
         return false;
 
+    auto success = false;
     std::unique_lock<std::mutex> lock(m_FileOpsMutex);
     m_FileOpsCv.wait(lock, [this] { return !m_isFileOpsRunning; });
+    m_isFileOpsRunning = true;
 
-    std::filesystem::path newPath = m_FilePathObj.parent_path() / newFileName;
-    if (std::filesystem::exists(m_FilePathObj))
+    if (std::filesystem::exists(m_FilePathObj) && newFileName != m_FileName)
     {
-        m_isFileOpsRunning = true;
+        std::filesystem::path newPath = m_FilePathObj.parent_path() / newFileName;
         std::filesystem::rename(m_FilePathObj, newPath);
-        createFile();
-        m_isFileOpsRunning = false;
+        success = true;
     }
-    else
-    {
-        m_isFileOpsRunning = false;
-        m_FileOpsCv.notify_one();
-        return false;
-    }
-    m_FileOpsCv.notify_one();
-    return true;
+    m_isFileOpsRunning = false;
+    m_FileOpsCv.notify_all();
+    return success;
 }
 
 void FileOps::readFile()
@@ -284,23 +316,20 @@ void FileOps::appendFile(const std::string_view data)
 
 bool FileOps::clearFile()
 {
+    auto retVal = false;
     std::scoped_lock<std::mutex> lock(m_FileOpsMutex);
+    m_isFileOpsRunning = true;
     if (std::filesystem::exists(m_FilePathObj))
     {
-        m_isFileOpsRunning = true;
         std::ofstream file(m_FilePathObj, std::ios::out | std::ios::trunc);
         if (file.is_open())
         {
             file.close();
-            m_isFileOpsRunning = false;
-        }
-        else
-        {
-            m_isFileOpsRunning = false;
-            throw std::runtime_error("Failed to open file: " + m_FilePathObj.string());
+            retVal = true;
         }
     }
-    return true;
+    m_isFileOpsRunning = false;
+    return retVal;
 }
 
 void FileOps::push(const std::string_view data)
@@ -360,12 +389,13 @@ void FileOps::writeDataToFile()
     
     std::array<char, 1024> dataRecord;
     std::ofstream file(m_FilePathObj, std::ios::out | std::ios::app | std::ios::binary);
+    std::scoped_lock<std::mutex> lock(m_FileOpsMutex);
+    m_isFileOpsRunning = true;
+
     while (pop(dataRecord))
     {
         if (file.is_open())
         {
-            m_isFileOpsRunning = true;
-            std::scoped_lock<std::mutex> lock(m_FileOpsMutex);
             file.write(dataRecord.data(), dataRecord.size());
             file.write("\n", 1);
             m_isFileOpsRunning = false;
