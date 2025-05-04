@@ -3,12 +3,12 @@
 
 #include <fstream>
 #include <string>
-#include <vector>
+#include <queue>
 #include <filesystem>
-#include <mutex>
-#include <condition_variable>
+#include <thread>
 
-using BufferQ = std::queue<std::array<char, 1024>>;
+using BufferQ = std::queue<std::array<char, 1025>>;
+using DataQ = std::queue<std::shared_ptr<std::string>>;
 
 class FileOps
 {
@@ -21,10 +21,10 @@ class FileOps
                 const std::string_view filePath = "", 
                 const std::string_view fileExtension = "");
         ~FileOps();
-        FileOps(const FileOps&);
-        FileOps& operator=(const FileOps&);
-        FileOps(FileOps&&) noexcept;
-        FileOps& operator=(FileOps&&) noexcept;
+        FileOps(const FileOps&) = delete;
+        FileOps& operator=(const FileOps&) = delete;
+        FileOps(FileOps&&) = delete;
+        FileOps& operator=(FileOps&&) = delete;
 
         void setFileName(const std::string_view fileName);
         void setFilePath(const std::string_view filePath);
@@ -36,10 +36,12 @@ class FileOps
         inline std::string getFileExtension() const                     { return m_FileExtension;                           }
         inline std::filesystem::path getFilePathObj() const             { return m_FilePathObj;                             }
         inline std::uintmax_t getMaxFileSize() const                    { return m_MaxFileSize;                             }
-        inline BufferQ getFileContent()                                 { return m_FileContent;                             }
+        inline DataQ getFileContent() const                             { return m_FileContent;                             }
         inline bool isFileEmpty() const                                 { return std::filesystem::is_empty(m_FilePathObj);  }
-        inline std::uintmax_t getFileSize() const                       { return std::filesystem::file_size(m_FilePathObj); }
+        inline bool fileExists() const                                  { return std::filesystem::exists(m_FilePathObj);    }
+        inline bool fileExists(const std::filesystem::path& file) const { return std::filesystem::exists(file);             }
 
+        std::uintmax_t getFileSize();
         void writeFile(const std::string_view data);
         void appendFile(const std::string_view data);
         bool renameFile(const std::string_view newFileName);
@@ -49,17 +51,20 @@ class FileOps
         bool deleteFile();
         bool deleteFile(const std::filesystem::path& file);
         bool clearFile();
+
+        static const std::vector<std::exception_ptr>& getAllExceptions()    { return m_excpPtrVec; }
     
     private:
         void populateFilePathObj(const StdTupple& fileDetails);
-        void writeDataToFile();
-        bool pop(std::array<char, 1024>& dataRecord);
+        void keepWatchAndPull();
+        void writeToFile(BufferQ&& dataQueue, std::exception_ptr& excpPtr);
+        bool pop(BufferQ& data);
         void push(const std::string_view data);
 
         std::string m_FileName;
         std::string m_FilePath;
         std::string m_FileExtension;
-        BufferQ m_FileContent;
+        DataQ m_FileContent;
         BufferQ m_DataRecords;
         std::filesystem::path m_FilePathObj;
         std::uintmax_t m_MaxFileSize;
@@ -70,6 +75,10 @@ class FileOps
         std::condition_variable m_DataRecordsCv;
         std::atomic_bool m_isFileOpsRunning = false;
         std::atomic_bool m_dataReady = false;
+        std::atomic_bool m_shutAndExit = false;
+        std::thread m_watcher;
+
+        static std::vector<std::exception_ptr> m_excpPtrVec;
 };
 
 #endif // FILEOPS_HPP

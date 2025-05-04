@@ -4,6 +4,8 @@
 
 #include <gtest/gtest.h>
 
+#include <random>
+
 #define nullString ""
 
 class FileOpsTests : public ::testing::Test
@@ -21,6 +23,32 @@ class FileOpsTests : public ::testing::Test
             pathSep += "/";
 #endif
             return pathSep;
+        }
+        static std::string generateRandomText(const size_t textLen)
+        {
+            static const char charset[] =
+                {
+                    "0123456789"
+                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    "abcdefghijklmnopqrstuvwxyz"
+                    //" .,!?;:-_+=()[]{}<>|/@#$%^&*~`"
+                };
+            std::random_device rd;   // Random seed
+            std::mt19937 gen(rd());  // Mersenne Twister engine
+            std::uniform_int_distribution<> dist(0, sizeof(charset) - 2);
+
+            std::string result;
+            result.reserve(textLen);
+            for (size_t i = 0; i < textLen; ++i)
+            {
+                result += charset[dist(gen)];
+            }
+            return result;
+        }
+        static std::string generateRandomFileName(const std::string& prefix = "tmp_", const std::string& extension = ".txt")
+        {
+            std::string randomPart = generateRandomText(8);  // 8-char random string
+            return prefix + randomPart + extension;
         }
 };
 
@@ -234,108 +262,6 @@ TEST_F(FileOpsTests, testSetFileExtension)
     }
 }
 
-TEST_F(FileOpsTests, testCopyConstructor)
-{
-    std::uintmax_t maxFileSize = 1024;
-    auto fileName = getPathSeperator() + "tmp" + getPathSeperator() + "test" + getPathSeperator() + "TestFile.log";
-    auto expFileExtn = fileName.substr(fileName.find_last_of('.'));
-    auto expFilePath = fileName.substr(0, fileName.find_last_of(getPathSeperator()) + 1);
-    {
-        FileOps fileOps(maxFileSize);
-        fileOps.setFileName(fileName);
-
-        FileOps fileOpsCopy = fileOps;
-        std::filesystem::path expFilePathObj(fileName);
-        auto expFileName = fileName.substr(fileName.find_last_of(getPathSeperator()) + 1);
-
-        ASSERT_EQ(fileOpsCopy.getFileName(), expFileName);
-        EXPECT_EQ(fileOpsCopy.getFileExtension(), expFileExtn);
-        EXPECT_EQ(fileOpsCopy.getFilePath(), expFilePath);
-        EXPECT_EQ(fileOpsCopy.getFilePathObj().string(), expFilePathObj.string());
-        ASSERT_TRUE(fileOpsCopy.getFileContent().empty());
-    }
-}
-
-TEST_F(FileOpsTests, testMoveConstructor)
-{
-    std::uintmax_t maxFileSize = 1024;
-    auto fileName = getPathSeperator() + "tmp" + getPathSeperator() + "test" + getPathSeperator() + "TestFile.log";
-    auto expFileExtn = fileName.substr(fileName.find_last_of('.'));
-    auto expFilePath = fileName.substr(0, fileName.find_last_of(getPathSeperator()) + 1);
-    {
-        FileOps fileOps(maxFileSize);
-        fileOps.setFileName(fileName);
-
-        FileOps fileOpsCopy = std::move(fileOps);
-        std::filesystem::path expFilePathObj(fileName);
-        auto expFileName = fileName.substr(fileName.find_last_of(getPathSeperator()) + 1);
-
-        ASSERT_EQ(fileOpsCopy.getFileName(), expFileName);
-        EXPECT_EQ(fileOpsCopy.getFileExtension(), expFileExtn);
-        EXPECT_EQ(fileOpsCopy.getFilePath(), expFilePath);
-        EXPECT_EQ(fileOpsCopy.getFilePathObj().string(), expFilePathObj.string());
-        ASSERT_TRUE(fileOpsCopy.getFileContent().empty());
-
-        ASSERT_EQ(fileOps.getFileName(), nullString);
-        EXPECT_EQ(fileOps.getFileExtension(), nullString);
-        EXPECT_EQ(fileOps.getFilePath(), nullString);
-        EXPECT_EQ(fileOps.getFilePathObj().string(), nullString);
-        ASSERT_EQ(static_cast<int>(fileOps.getMaxFileSize()), 0);
-    }
-}
-
-TEST_F(FileOpsTests, testCopyAssignment)
-{
-    std::uintmax_t maxFileSize = 1024;
-    auto fileName = getPathSeperator() + "tmp" + getPathSeperator() + "test" + getPathSeperator() + "TestFile.log";
-    auto expFileExtn = fileName.substr(fileName.find_last_of('.'));
-    auto expFilePath = fileName.substr(0, fileName.find_last_of(getPathSeperator()) + 1);
-    {
-        FileOps fileOps(maxFileSize);
-        fileOps.setFileName(fileName);
-
-        FileOps fileOpsCopy(maxFileSize);
-        fileOpsCopy = fileOps;
-        std::filesystem::path expFilePathObj(fileName);
-        auto expFileName = fileName.substr(fileName.find_last_of('/') + 1);
-
-        ASSERT_EQ(fileOpsCopy.getFileName(), expFileName);
-        EXPECT_EQ(fileOpsCopy.getFileExtension(), expFileExtn);
-        EXPECT_EQ(fileOpsCopy.getFilePath(), expFilePath);
-        EXPECT_EQ(fileOpsCopy.getFilePathObj().string(), expFilePathObj.string());
-        ASSERT_TRUE(fileOpsCopy.getFileContent().empty());
-    }
-}
-
-TEST_F(FileOpsTests, testMoveAssignment)
-{
-    std::uintmax_t maxFileSize = 1024;
-    auto fileName = getPathSeperator() + "tmp" + getPathSeperator() + "test" + getPathSeperator() + "TestFile.log";
-    auto expFileExtn = fileName.substr(fileName.find_last_of('.'));
-    auto expFilePath = fileName.substr(0, fileName.find_last_of(getPathSeperator()) + 1);
-    {
-        FileOps fileOps(maxFileSize);
-        fileOps.setFileName(fileName);
-
-        FileOps fileOpsCopy(maxFileSize);
-        fileOpsCopy = std::move(fileOps);
-        std::filesystem::path expFilePathObj(fileName);
-        auto expFileName = fileName.substr(fileName.find_last_of(getPathSeperator()) + 1);
-
-        ASSERT_EQ(fileOpsCopy.getFileName(), expFileName);
-        EXPECT_EQ(fileOpsCopy.getFileExtension(), expFileExtn);
-        EXPECT_EQ(fileOpsCopy.getFilePath(), expFilePath);
-        EXPECT_EQ(fileOpsCopy.getFilePathObj().string(), expFilePathObj.string());
-        ASSERT_TRUE(fileOpsCopy.getFileContent().empty());
-
-        ASSERT_EQ(fileOps.getFileName(), nullString);
-        EXPECT_EQ(fileOps.getFileExtension(), nullString);
-        EXPECT_EQ(fileOps.getFilePath(), nullString);
-        EXPECT_EQ(fileOps.getFilePathObj().string(), nullString);
-        ASSERT_EQ(static_cast<int>(fileOps.getMaxFileSize()), 0);
-    }
-}
-
 TEST_F(FileOpsTests, testCreateAndDeleteFile)
 {
     std::uintmax_t maxFileSize = 1024;
@@ -351,18 +277,18 @@ TEST_F(FileOpsTests, testCreateAndDeleteFile)
         EXPECT_EQ(fileOps.getFilePathObj().string(), expFilePathObj.string());
         ASSERT_TRUE(fileOps.getFileContent().empty());
 
-        ASSERT_TRUE(std::filesystem::exists(fileOps.getFilePathObj()));
+        ASSERT_TRUE(fileOps.fileExists());
         ASSERT_TRUE(fileOps.deleteFile());
-        ASSERT_FALSE(std::filesystem::exists(fileOps.getFilePathObj()));
+        ASSERT_FALSE(fileOps.fileExists());
         ASSERT_FALSE(fileOps.deleteFile());
     }
     {
         FileOps fileOps(maxFileSize);
         std::filesystem::path expFilePathObj(expFilePath + fileName);
         fileOps.createFile(expFilePathObj);
-        ASSERT_TRUE(std::filesystem::exists(expFilePathObj));
+        ASSERT_TRUE(fileOps.fileExists(expFilePathObj));
         ASSERT_TRUE(fileOps.deleteFile(expFilePathObj));
-        ASSERT_FALSE(std::filesystem::exists(expFilePathObj));
+        ASSERT_FALSE(fileOps.fileExists(expFilePathObj));
     }
 }
 
@@ -383,39 +309,65 @@ TEST_F(FileOpsTests, testRenameFile)
 
         auto newFileName = "TestFileRenamed.txt";
         ASSERT_TRUE(fileOps.renameFile(newFileName));
-        ASSERT_FALSE(std::filesystem::exists(fileOps.getFilePathObj()));
-        EXPECT_TRUE(std::filesystem::exists(expFilePath + newFileName));
+        ASSERT_FALSE(fileOps.fileExists(expFilePathObj));
+        EXPECT_TRUE(fileOps.fileExists(newFileName));
         std::filesystem::path newFilePathObj(expFilePath + newFileName);
         ASSERT_TRUE(fileOps.deleteFile(newFilePathObj));
-        ASSERT_FALSE(std::filesystem::exists(newFilePathObj));
+        ASSERT_FALSE(fileOps.fileExists());
     }
+}
+
+TEST_F(FileOpsTests, testReadWrite)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 255;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    auto text = generateRandomText(maxTextSize);
+    file.writeFile(text);
+    ASSERT_TRUE(file.fileExists());
+
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    auto data = fileContents.front();
+    EXPECT_EQ(text, data->c_str());
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testAppendFile)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    std::vector<std::string> dataQueue;
+    auto text = generateRandomText(maxTextSize);
+    dataQueue.push_back(text);
+    file.writeFile(text);
+    ASSERT_TRUE(file.fileExists());
+    for (auto cnt = 0; cnt < 200; ++cnt)
+    {
+        text = generateRandomText(maxTextSize);
+        file.appendFile(text);
+        dataQueue.push_back(text);
+    }
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    for (const auto& data : dataQueue)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        EXPECT_EQ(data, fileData->c_str());
+    }
+    ASSERT_TRUE(file.deleteFile());
 }
 
 double findMedianSortedArrays(std::vector<int>& nums1, std::vector<int>& nums2) 
 {
-    auto singleArrCase = [](const std::vector<int> nums)
-    {
-        int low = 0;
-        int high = nums.size();
-        auto mid = (low + high) / 2;
-
-        if (nums.size() % 2 == 0)
-            return static_cast<float>((nums[mid] + nums[mid - 1]) / 2.0);
-        else
-            return static_cast<float>(nums[mid]);
-    };
-    if (nums1.empty())
-    {
-        return singleArrCase(nums2);
-    }
-    else if (nums2.empty())
-    {
-        return singleArrCase(nums1);
-    }
-    else if (nums1.size() > nums2.size())
-    {
-        findMedianSortedArrays(nums2, nums1);
-    }
+    if (nums1.size() > nums2.size())
+        std::swap(nums1, nums2);
 
     auto low = 0;
     int high = nums1.size();
