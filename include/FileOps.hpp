@@ -20,17 +20,17 @@ class FileOps
                 const std::string_view fileName = "", 
                 const std::string_view filePath = "", 
                 const std::string_view fileExtension = "");
-        ~FileOps();
+        virtual ~FileOps();
         FileOps(const FileOps&) = delete;
         FileOps& operator=(const FileOps&) = delete;
         FileOps(FileOps&&) = delete;
         FileOps& operator=(FileOps&&) = delete;
 
-        void setFileName(const std::string_view fileName);
-        void setFilePath(const std::string_view filePath);
-        void setFileExtension(const std::string_view fileExtension);
+        FileOps& setFileName(const std::string_view fileName);
+        FileOps& setFilePath(const std::string_view filePath);
+        FileOps& setFileExtension(const std::string_view fileExtension);
 
-        inline void setMaxFileSize(const std::uintmax_t fileSize)       { m_MaxFileSize = fileSize;                         }
+        inline FileOps& setMaxFileSize(const std::uintmax_t fileSize)   { m_MaxFileSize = fileSize; return *this;           }
         inline std::string getFileName() const                          { return m_FileName;                                }
         inline std::string getFilePath() const                          { return m_FilePath;                                }
         inline std::string getFileExtension() const                     { return m_FileExtension;                           }
@@ -39,7 +39,6 @@ class FileOps
         inline DataQ getFileContent() const                             { return m_FileContent;                             }
         inline bool isFileEmpty() const                                 { return std::filesystem::is_empty(m_FilePathObj);  }
         inline bool fileExists() const                                  { return std::filesystem::exists(m_FilePathObj);    }
-        inline bool fileExists(const std::filesystem::path& file) const { return std::filesystem::exists(file);             }
 
         std::uintmax_t getFileSize();
         void writeFile(const std::string_view data);
@@ -47,11 +46,14 @@ class FileOps
         bool renameFile(const std::string_view newFileName);
         void readFile();
         bool createFile();
-        bool createFile(const std::filesystem::path& file);
         bool deleteFile();
-        bool deleteFile(const std::filesystem::path& file);
         bool clearFile();
 
+        static bool isFileEmpty(const std::filesystem::path& file);
+        static bool isFileExists(const std::filesystem::path& file);
+        static bool removeFile(const std::filesystem::path& file);
+        static bool clearFile(const std::filesystem::path& file);
+        static bool createFile(const std::filesystem::path& file);
         static const std::vector<std::exception_ptr>& getAllExceptions()    { return m_excpPtrVec; }
     
     private:

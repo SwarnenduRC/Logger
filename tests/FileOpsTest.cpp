@@ -240,8 +240,8 @@ TEST_F(FileOpsTests, testSetFileExtension)
     std::string expFileExtn = ".txt";
     auto expFilePath = std::filesystem::current_path().string() + getPathSeperator();
     {
-        FileOps fileOps(maxFileSize, fileName);
-        fileOps.setFileExtension(expFileExtn);
+        FileOps fileOps(maxFileSize);
+        fileOps.setFileExtension(expFileExtn).setFileName(fileName);
         fileName += expFileExtn;
         std::filesystem::path expFilePathObj(expFilePath + fileName);
 
@@ -285,10 +285,10 @@ TEST_F(FileOpsTests, testCreateAndDeleteFile)
     {
         FileOps fileOps(maxFileSize);
         std::filesystem::path expFilePathObj(expFilePath + fileName);
-        fileOps.createFile(expFilePathObj);
-        ASSERT_TRUE(fileOps.fileExists(expFilePathObj));
-        ASSERT_TRUE(fileOps.deleteFile(expFilePathObj));
-        ASSERT_FALSE(fileOps.fileExists(expFilePathObj));
+        FileOps::createFile(expFilePathObj);
+        ASSERT_TRUE(FileOps::isFileExists(expFilePathObj));
+        ASSERT_TRUE(FileOps::removeFile(expFilePathObj));
+        ASSERT_FALSE(FileOps::isFileExists(expFilePathObj));
     }
 }
 
@@ -309,10 +309,10 @@ TEST_F(FileOpsTests, testRenameFile)
 
         auto newFileName = "TestFileRenamed.txt";
         ASSERT_TRUE(fileOps.renameFile(newFileName));
-        ASSERT_FALSE(fileOps.fileExists(expFilePathObj));
-        EXPECT_TRUE(fileOps.fileExists(newFileName));
+        ASSERT_FALSE(FileOps::isFileExists(expFilePathObj));
+        EXPECT_TRUE(FileOps::isFileExists(newFileName));
         std::filesystem::path newFilePathObj(expFilePath + newFileName);
-        ASSERT_TRUE(fileOps.deleteFile(newFilePathObj));
+        ASSERT_TRUE(FileOps::removeFile(newFilePathObj));
         ASSERT_FALSE(fileOps.fileExists());
     }
 }
@@ -361,6 +361,81 @@ TEST_F(FileOpsTests, testAppendFile)
         fileContents.pop();
         EXPECT_EQ(data, fileData->c_str());
     }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteLargeDataChunk)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 3080;
+    std::size_t maxLineLen = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    std::vector<std::string> dataQueue;
+    for (auto cnt = 0; cnt < 200; ++cnt)
+    {
+        auto text = generateRandomText(maxTextSize);
+        file.appendFile(text);
+        while (text.size() > maxLineLen)
+        {
+            auto subText = text.substr(0, maxLineLen);
+            dataQueue.push_back(subText);
+            text = text.substr(maxLineLen + 1);
+        }
+        dataQueue.push_back(text);
+    }
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    for (const auto& data : dataQueue)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        EXPECT_EQ(data, fileData->c_str());
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testClearFile)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    std::vector<std::string> dataQueue;
+    auto text = generateRandomText(maxTextSize);
+    dataQueue.push_back(text);
+    file.writeFile(text);
+    ASSERT_TRUE(file.fileExists());
+    for (auto cnt = 0; cnt < 2; ++cnt)
+    {
+        text = generateRandomText(maxTextSize);
+        file.appendFile(text);
+        dataQueue.push_back(text);
+    }
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    std::vector<std::string> readDataQueue;
+    while (!fileContents.empty())
+    {
+        auto fileData = *(fileContents.front());
+        fileContents.pop();
+        readDataQueue.emplace_back(fileData);
+    }
+    for (size_t idx = 0; idx < readDataQueue.size(); ++idx)
+        EXPECT_EQ(dataQueue[idx], readDataQueue[idx]);
+
+    EXPECT_TRUE(fileContents.empty());
+    for (size_t idx = 0; idx < 3; idx++)
+        fileContents.emplace(std::make_shared<std::string>(readDataQueue[idx]));
+
+    ASSERT_FALSE(fileContents.empty());
+
+    file.clearFile();
+    file.readFile();
+    fileContents = file.getFileContent();
+    ASSERT_TRUE(fileContents.empty());
     ASSERT_TRUE(file.deleteFile());
 }
 

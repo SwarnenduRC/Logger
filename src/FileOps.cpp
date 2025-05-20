@@ -3,14 +3,65 @@
 #include <exception>
 #include <tuple>
 #include <memory>
-#include <future>
-#include <cstdio>
-#include <iostream>
 
-#define nullString ""
-
+static constexpr std::string_view nullString = "";
 static constexpr std::string_view DEFAULT_FILE_EXTN = ".txt";
 std::vector<std::exception_ptr> FileOps::m_excpPtrVec = {0};
+
+/*static*/ bool FileOps::isFileEmpty(const std::filesystem::path& file)
+{
+    if (isFileExists(file))
+    {
+        std::ifstream fileStream(file);
+        if (fileStream.is_open())
+            return fileStream.peek() == std::ifstream::traits_type::eof();
+    }
+    return false;
+}
+
+/*static*/ bool FileOps::isFileExists(const std::filesystem::path& file)
+{
+    if (file.empty())
+        return false;
+
+    return std::filesystem::exists(file);
+}
+
+/*static*/ bool FileOps::removeFile(const std::filesystem::path& file)
+{
+    if (isFileExists(file))
+        return std::filesystem::remove(file);
+    else
+        return false;
+}
+
+/*static*/ bool FileOps::clearFile(const std::filesystem::path& file)
+{
+    if (isFileExists(file))
+    {
+        std::ofstream outFile(file, std::ios::out | std::ios::trunc);
+        if (outFile.is_open())
+        {
+            outFile.close();
+            return true;
+        }
+    }
+    return false;
+}
+
+/*static*/ bool FileOps::createFile(const std::filesystem::path& file)
+{
+    if (file.empty() || isFileExists(file))
+        return false;
+    
+    std::ofstream FILE(file);
+    if (FILE.is_open())
+    {
+        FILE.close();
+        return true;
+    }
+    return false;
+}
 
 void FileOps::populateFilePathObj(const StdTupple& fileDetails)
 {
@@ -113,28 +164,31 @@ FileOps::~FileOps()
         m_watcher.join();
 }
 
-void FileOps::setFileName(const std::string_view fileName)
+FileOps& FileOps::setFileName(const std::string_view fileName)
 {
     if (fileName.empty() || fileName == m_FileName)
-        return;
+        return *this;
 
-    populateFilePathObj(std::make_tuple(std::string(fileName), nullString, nullString));
+    populateFilePathObj(std::make_tuple(std::string(fileName), nullString.data(), nullString.data()));
+    return *this;
 }
 
-void FileOps::setFilePath(const std::string_view filePath)
+FileOps& FileOps::setFilePath(const std::string_view filePath)
 {
     if (filePath.empty() || filePath == m_FilePath)
-        return;
+        return *this;
 
-    populateFilePathObj(std::make_tuple(nullString, std::string(filePath), nullString));
+    populateFilePathObj(std::make_tuple(nullString.data(), std::string(filePath), nullString.data()));
+    return *this;
 }
 
-void FileOps::setFileExtension(const std::string_view fileExtension)
+FileOps& FileOps::setFileExtension(const std::string_view fileExtension)
 {
     if (fileExtension.empty() || fileExtension == m_FileExtension)
-        return;
+        return *this;
 
-    populateFilePathObj(std::make_tuple(nullString, nullString, std::string(fileExtension)));
+    populateFilePathObj(std::make_tuple(nullString.data(), nullString.data(), std::string(fileExtension)));
+    return *this;
 }
 
 std::uintmax_t FileOps::getFileSize()
@@ -166,27 +220,6 @@ bool FileOps::createFile()
     return retVal;
 }
 
-bool FileOps::createFile(const std::filesystem::path& file)
-{
-    if (file.empty())
-        return false;
-
-    if (m_FilePathObj == file)
-    {
-        return createFile();
-    }
-    else
-    {
-        std::ofstream FILE(file);
-        if (FILE.is_open())
-        {
-            FILE.close();
-            return true;
-        }
-        return false;
-    }
-}
-
 bool FileOps::deleteFile()
 {
     auto retVal = false;
@@ -201,21 +234,6 @@ bool FileOps::deleteFile()
         m_FileOpsCv.notify_one();
     }
     return retVal;
-}
-
-bool FileOps::deleteFile(const std::filesystem::path& file)
-{
-    if (file.empty())
-        return false;
-
-    if (m_FilePathObj == file)
-    {
-        return deleteFile();
-    }
-    else
-    {
-        return std::filesystem::remove(file);
-    }
 }
 
 bool FileOps::renameFile(const std::string_view newFileName)
@@ -256,7 +274,7 @@ void FileOps::readFile()
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
     }
-    //BufferQ fileContents;
+    DataQ().swap(m_FileContent);
     std::unique_lock<std::mutex> fileLock(m_FileOpsMutex);
     m_FileOpsCv.wait(fileLock, [this]{ return !m_isFileOpsRunning; });
     m_isFileOpsRunning = true;
@@ -269,8 +287,6 @@ void FileOps::readFile()
             while (std::getline(file, line))
             {
                 m_FileContent.emplace(std::make_shared<std::string>(line.c_str()));
-                //std::cout << "Read line = " << dataRecord.data() << std::endl;
-                //fileContents.emplace(dataRecord);
                 line.clear();
             }
             file.close();
@@ -282,10 +298,6 @@ void FileOps::readFile()
             m_FileOpsCv.notify_all();
             throw std::runtime_error("Failed to open file: " + m_FilePathObj.string());
         }
-    }
-    else
-    {
-        //std::cout << "File " << m_FilePathObj.string() << " doesn't exist" << std::endl << std::endl;
     }
     m_isFileOpsRunning = false;
     fileLock.unlock();
@@ -419,8 +431,6 @@ void FileOps::keepWatchAndPull()
         if (m_shutAndExit)
             break;
     } while (true);
-
-    //std::cout << std::endl << std::endl << "***********************************" << std::endl << std::endl;
 }
 
 void FileOps::writeToFile(BufferQ&& dataQueue, std::exception_ptr& excpPtr)
