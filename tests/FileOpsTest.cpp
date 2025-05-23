@@ -1,4 +1,36 @@
 //leaks --atExit --list -- ./bin/TestLogger_d --gtest_shuffle --gtest_repeat=3 --gtest_filter="FileOpsTests.*"
+//leaks --atExit --list -- ./bin/TestLogger_d --gtest_shuffle --gtest_repeat=3 --gtest_filter=FileOpsTests.testWriteFileWith_1_Byte_Hex_DataStream
+
+/*
+ * FileOpsTest.cpp
+ * Unit tests for FileOps functions using Google Test framework.
+ *
+ * MIT License
+ *
+ * Copyright (c) 2024
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * This file contains unit tests for the FileOps class, covering file creation,
+ * deletion, renaming, reading, writing, appending, and binary data operations.
+ * The tests use the Google Test framework.
+ */
 
 #include "FileOps.hpp"
 
@@ -27,15 +59,18 @@ class FileOpsTests : public ::testing::Test
         static std::string generateRandomText(const size_t textLen)
         {
             static const char charset[] =
-                {
-                    "0123456789"
-                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    "abcdefghijklmnopqrstuvwxyz"
-                    //" .,!?;:-_+=()[]{}<>|/@#$%^&*~`"
-                };
+            {
+                "0123456789"
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                "abcdefghijklmnopqrstuvwxyz"
+                //" .,!?;:-_+=()[]{}<>|/@#$%^&*~`"
+                //As the same function is used to genrate random file names thus
+                // better to avoid special char set otherwise in some rare cases
+                // it may failed to create files with some special chars in the name
+            };
             std::random_device rd;   // Random seed
             std::mt19937 gen(rd());  // Mersenne Twister engine
-            std::uniform_int_distribution<> dist(0, sizeof(charset) - 2);
+            std::uniform_int_distribution<> dist(0, sizeof(charset) - 2); // -2 for null terminator
 
             std::string result;
             result.reserve(textLen);
@@ -45,10 +80,79 @@ class FileOpsTests : public ::testing::Test
             }
             return result;
         }
+        static std::vector<uint8_t> generateRandomBinary_1_Byte_Data(const size_t byteLen)
+        {
+            std::random_device rd;   // Random seed
+            std::mt19937 gen(rd());  // Mersenne Twister engine
+            std::uniform_int_distribution<> dist(0, 255); //One byte
+
+            std::vector<uint8_t> binaryStream(byteLen);
+            for (size_t idx = 0; idx < byteLen; ++idx)
+                binaryStream[idx] = static_cast<uint8_t>(dist(gen));
+
+            return binaryStream;
+        }
+        static std::vector<uint16_t> generateRandomBinary_2_Bytes_Data(const size_t byteLen)
+        {
+            std::random_device rd;   // Random seed
+            std::mt19937 gen(rd());  // Mersenne Twister engine
+            std::uniform_int_distribution<> dist(0, 511); //Two bytes
+
+            std::vector<uint16_t> binaryStream(byteLen);
+            for (size_t idx = 0; idx < byteLen; ++idx)
+                binaryStream[idx] = static_cast<uint16_t>(dist(gen));
+
+            return binaryStream;
+        }
+        static std::vector<uint32_t> generateRandomBinary_4_Bytes_Data(const size_t byteLen)
+        {
+            std::random_device rd;   // Random seed
+            std::mt19937 gen(rd());  // Mersenne Twister engine
+            std::uniform_int_distribution<> dist(0, 1023); //Four bytes
+
+            std::vector<uint32_t> binaryStream(byteLen);
+            for (size_t idx = 0; idx < byteLen; ++idx)
+                binaryStream[idx] = static_cast<uint16_t>(dist(gen));
+
+            return binaryStream;
+        }
+        static std::vector<uint64_t> generateRandomBinary_8_Bytes_Data(const size_t byteLen)
+        {
+            std::random_device rd;   // Random seed
+            std::mt19937 gen(rd());  // Mersenne Twister engine
+            std::uniform_int_distribution<> dist(0, 2047); //Eight bytes
+
+            std::vector<uint64_t> binaryStream(byteLen);
+            for (size_t idx = 0; idx < byteLen; ++idx)
+                binaryStream[idx] = static_cast<uint16_t>(dist(gen));
+
+            return binaryStream;
+        }
         static std::string generateRandomFileName(const std::string& prefix = "tmp_", const std::string& extension = ".txt")
         {
             std::string randomPart = generateRandomText(8);  // 8-char random string
             return prefix + randomPart + extension;
+        }
+};
+class RandomHexGenerator
+{
+    public:
+        RandomHexGenerator()
+            : rng(std::random_device{}()) {}
+
+        uint8_t  get8()  { return get<uint8_t>(); }
+        uint16_t get16() { return get<uint16_t>(); }
+        uint32_t get32() { return get<uint32_t>(); }
+        uint64_t get64() { return get<uint64_t>(); }
+
+    private:
+        std::mt19937 rng;
+
+        template<typename T>
+        T get()
+        {
+            std::uniform_int_distribution<uint64_t> dist(0, static_cast<uint64_t>(std::numeric_limits<T>::max()));
+            return static_cast<T>(dist(rng));
         }
 };
 
@@ -286,9 +390,9 @@ TEST_F(FileOpsTests, testCreateAndDeleteFile)
         FileOps fileOps(maxFileSize);
         std::filesystem::path expFilePathObj(expFilePath + fileName);
         FileOps::createFile(expFilePathObj);
-        ASSERT_TRUE(FileOps::isFileExists(expFilePathObj));
+        ASSERT_TRUE(FileOps::fileExists(expFilePathObj));
         ASSERT_TRUE(FileOps::removeFile(expFilePathObj));
-        ASSERT_FALSE(FileOps::isFileExists(expFilePathObj));
+        ASSERT_FALSE(FileOps::fileExists(expFilePathObj));
     }
 }
 
@@ -309,8 +413,8 @@ TEST_F(FileOpsTests, testRenameFile)
 
         auto newFileName = "TestFileRenamed.txt";
         ASSERT_TRUE(fileOps.renameFile(newFileName));
-        ASSERT_FALSE(FileOps::isFileExists(expFilePathObj));
-        EXPECT_TRUE(FileOps::isFileExists(newFileName));
+        ASSERT_FALSE(FileOps::fileExists(expFilePathObj));
+        EXPECT_TRUE(FileOps::fileExists(newFileName));
         std::filesystem::path newFilePathObj(expFilePath + newFileName);
         ASSERT_TRUE(FileOps::removeFile(newFilePathObj));
         ASSERT_FALSE(fileOps.fileExists());
@@ -360,6 +464,314 @@ TEST_F(FileOpsTests, testAppendFile)
         auto fileData = fileContents.front();
         fileContents.pop();
         EXPECT_EQ(data, fileData->c_str());
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteFileWith_1_ByteBinaryData)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    auto bindata = generateRandomBinary_1_Byte_Data(maxTextSize);
+    for (const auto& data : bindata)
+        file.writeFile(data);
+
+    ASSERT_TRUE(file.fileExists());
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    ASSERT_EQ(bindata.size(), fileContents.size());
+    for (const auto& data : bindata)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        auto fileDataBin = static_cast<uint8_t>(std::bitset<8>(*fileData).to_ulong());
+        EXPECT_EQ(data, fileDataBin);
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteFileWith_1_ByteBinaryDataStream)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    auto bindata = generateRandomBinary_1_Byte_Data(maxTextSize);
+    file.writeFile(bindata);
+
+    ASSERT_TRUE(file.fileExists());
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    ASSERT_EQ(bindata.size(), fileContents.size());
+    for (const auto& data : bindata)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        auto fileDataBin = static_cast<uint8_t>(std::bitset<8>(*fileData).to_ulong());
+        EXPECT_EQ(data, fileDataBin);
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteFileWith_2_BytesBinaryData)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    auto bindata = generateRandomBinary_2_Bytes_Data(maxTextSize);
+    for (const auto& data : bindata)
+        file.writeFile(data);
+
+    ASSERT_TRUE(file.fileExists());
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    ASSERT_EQ(bindata.size(), fileContents.size());
+    for (const auto& data : bindata)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        auto fileDataBin = static_cast<uint16_t>(std::bitset<16>(*fileData).to_ulong());
+        EXPECT_EQ(data, fileDataBin);
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteFileWith_2_ByteBinaryDataStream)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    auto bindata = generateRandomBinary_2_Bytes_Data(maxTextSize);
+    file.writeFile(bindata);
+
+    ASSERT_TRUE(file.fileExists());
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    ASSERT_EQ(bindata.size(), fileContents.size());
+    for (const auto& data : bindata)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        auto fileDataBin = static_cast<uint16_t>(std::bitset<16>(*fileData).to_ulong());
+        EXPECT_EQ(data, fileDataBin);
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteFileWith_4_BytesBinaryData)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    auto bindata = generateRandomBinary_4_Bytes_Data(maxTextSize);
+    for (const auto& data : bindata)
+        file.writeFile(data);
+
+    ASSERT_TRUE(file.fileExists());
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    ASSERT_EQ(bindata.size(), fileContents.size());
+    for (const auto& data : bindata)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        auto fileDataBin = static_cast<uint32_t>(std::bitset<32>(*fileData).to_ulong());
+        EXPECT_EQ(data, fileDataBin);
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteFileWith_4_ByteBinaryDataStream)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    auto bindata = generateRandomBinary_4_Bytes_Data(maxTextSize);
+    file.writeFile(bindata);
+
+    ASSERT_TRUE(file.fileExists());
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    ASSERT_EQ(bindata.size(), fileContents.size());
+    for (const auto& data : bindata)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        auto fileDataBin = static_cast<uint32_t>(std::bitset<32>(*fileData).to_ulong());
+        EXPECT_EQ(data, fileDataBin);
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteFileWith_8_BytesBinaryData)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    auto bindata = generateRandomBinary_8_Bytes_Data(maxTextSize);
+    for (const auto& data : bindata)
+        file.writeFile(data);
+
+    ASSERT_TRUE(file.fileExists());
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    ASSERT_EQ(bindata.size(), fileContents.size());
+    for (const auto& data : bindata)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        auto fileDataBin = static_cast<uint64_t>(std::bitset<64>(*fileData).to_ulong());
+        EXPECT_EQ(data, fileDataBin);
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteFileWith_8_ByteBinaryDataStream)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    auto bindata = generateRandomBinary_8_Bytes_Data(maxTextSize);
+    file.writeFile(bindata);
+
+    ASSERT_TRUE(file.fileExists());
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    ASSERT_EQ(bindata.size(), fileContents.size());
+    for (const auto& data : bindata)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        auto fileDataBin = static_cast<uint64_t>(std::bitset<64>(*fileData).to_ulong());
+        EXPECT_EQ(data, fileDataBin);
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteFileWith_1_Byte_Hex_DataStream)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    RandomHexGenerator hexGenerator;
+    std::vector<uint8_t> hexData(maxTextSize);
+    for (size_t idx = 0; idx < hexData.size(); ++idx)
+        hexData[idx] = hexGenerator.get8();
+
+    file.writeFile(hexData);
+
+    ASSERT_TRUE(file.fileExists());
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    ASSERT_EQ(hexData.size(), fileContents.size());
+    for (const auto& data : hexData)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        auto fileDataBin = static_cast<uint8_t>(std::bitset<8>(*fileData).to_ulong());
+        EXPECT_EQ(data, fileDataBin);
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteFileWith_2_Bytes_Hex_DataStream)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    RandomHexGenerator hexGenerator;
+    std::vector<uint16_t> hexData(maxTextSize);
+    for (size_t idx = 0; idx < hexData.size(); ++idx)
+        hexData[idx] = hexGenerator.get16();
+
+    file.writeFile(hexData);
+
+    ASSERT_TRUE(file.fileExists());
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    ASSERT_EQ(hexData.size(), fileContents.size());
+    for (const auto& data : hexData)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        auto fileDataBin = static_cast<uint16_t>(std::bitset<16>(*fileData).to_ulong());
+        EXPECT_EQ(data, fileDataBin);
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteFileWith_4_Bytes_Hex_DataStream)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    RandomHexGenerator hexGenerator;
+    std::vector<uint32_t> hexData(maxTextSize);
+    for (size_t idx = 0; idx < hexData.size(); ++idx)
+        hexData[idx] = hexGenerator.get32();
+
+    file.writeFile(hexData);
+
+    ASSERT_TRUE(file.fileExists());
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    ASSERT_EQ(hexData.size(), fileContents.size());
+    for (const auto& data : hexData)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        auto fileDataBin = static_cast<uint32_t>(std::bitset<32>(*fileData).to_ulong());
+        EXPECT_EQ(data, fileDataBin);
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testWriteFileWith_8_Bytes_Hex_DataStream)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    RandomHexGenerator hexGenerator;
+    std::vector<uint64_t> hexData(maxTextSize);
+    for (size_t idx = 0; idx < hexData.size(); ++idx)
+        hexData[idx] = hexGenerator.get32();
+
+    file.writeFile(hexData);
+
+    ASSERT_TRUE(file.fileExists());
+    file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    ASSERT_EQ(hexData.size(), fileContents.size());
+    for (const auto& data : hexData)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        auto fileDataBin = static_cast<uint64_t>(std::bitset<64>(*fileData).to_ulong());
+        EXPECT_EQ(data, fileDataBin);
     }
     ASSERT_TRUE(file.deleteFile());
 }

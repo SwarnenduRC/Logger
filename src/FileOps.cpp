@@ -1,25 +1,53 @@
+/*
+ * FileOps.cpp
+ *
+ * Implementation of the FileOps class for thread-safe file operations.
+ *
+ * MIT License
+ *
+ * Copyright (c) 2025 Swarnendu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 #include "FileOps.hpp"
 
 #include <exception>
 #include <tuple>
 #include <memory>
 
+// Necessary constants and static variables
 static constexpr std::string_view nullString = "";
 static constexpr std::string_view DEFAULT_FILE_EXTN = ".txt";
 std::vector<std::exception_ptr> FileOps::m_excpPtrVec = {0};
 
-/*static*/ bool FileOps::isFileEmpty(const std::filesystem::path& file)
+/*static*/ bool FileOps::isFileEmpty(const std::filesystem::path& file) noexcept
 {
-    if (isFileExists(file))
+    if (fileExists(file))
     {
-        std::ifstream fileStream(file);
+        std::ifstream fileStream(file, std::ios::binary);
         if (fileStream.is_open())
             return fileStream.peek() == std::ifstream::traits_type::eof();
     }
     return false;
 }
 
-/*static*/ bool FileOps::isFileExists(const std::filesystem::path& file)
+/*static*/ bool FileOps::fileExists(const std::filesystem::path& file) noexcept
 {
     if (file.empty())
         return false;
@@ -27,17 +55,17 @@ std::vector<std::exception_ptr> FileOps::m_excpPtrVec = {0};
     return std::filesystem::exists(file);
 }
 
-/*static*/ bool FileOps::removeFile(const std::filesystem::path& file)
+/*static*/ bool FileOps::removeFile(const std::filesystem::path& file) noexcept
 {
-    if (isFileExists(file))
+    if (fileExists(file))
         return std::filesystem::remove(file);
     else
         return false;
 }
 
-/*static*/ bool FileOps::clearFile(const std::filesystem::path& file)
+/*static*/ bool FileOps::clearFile(const std::filesystem::path& file) noexcept
 {
-    if (isFileExists(file))
+    if (fileExists(file))
     {
         std::ofstream outFile(file, std::ios::out | std::ios::trunc);
         if (outFile.is_open())
@@ -49,9 +77,9 @@ std::vector<std::exception_ptr> FileOps::m_excpPtrVec = {0};
     return false;
 }
 
-/*static*/ bool FileOps::createFile(const std::filesystem::path& file)
+/*static*/ bool FileOps::createFile(const std::filesystem::path& file) noexcept
 {
-    if (file.empty() || isFileExists(file))
+    if (file.empty() || fileExists(file))
         return false;
     
     std::ofstream FILE(file);
@@ -65,10 +93,11 @@ std::vector<std::exception_ptr> FileOps::m_excpPtrVec = {0};
 
 void FileOps::populateFilePathObj(const StdTupple& fileDetails)
 {
+    //First of all let us wait for any ongoing file operations (if any) to finish
     std::unique_lock<std::mutex> lock(m_FileOpsMutex);
     m_FileOpsCv.wait(lock, [this] { return !m_isFileOpsRunning; });
 
-    m_isFileOpsRunning = true;
+    m_isFileOpsRunning = true;  // Make the flag true to indicate that file operations are in progress
 
     if (!std::get<0>(fileDetails).empty())
         m_FileName = std::get<0>(fileDetails);
@@ -95,7 +124,7 @@ void FileOps::populateFilePathObj(const StdTupple& fileDetails)
         }
         else
         {
-            m_FileName = m_FileName.substr(0, m_FileName.find_last_of('.'));
+            m_FileName = m_FileName.substr(0, m_FileName.find_last_of('.')); //It is expected that the file name will have only one extension
             m_FileName += m_FileExtension;
         }
         
@@ -111,29 +140,33 @@ void FileOps::populateFilePathObj(const StdTupple& fileDetails)
         if (m_FilePath.empty())
         {
             auto pathSeparator = m_FileName.find_last_of('/');
-            if (pathSeparator == std::string::npos)
+            if (pathSeparator == std::string::npos) //If it is on windows sytem
                 pathSeparator = m_FileName.find_last_of('\\');
 
             if (pathSeparator != std::string::npos)
             {
+                //Separate the file name and path from the incoming string
                 m_FilePath = m_FileName.substr(0, pathSeparator + 1);
                 m_FileName = m_FileName.substr(pathSeparator + 1);
             }
-            else
+            else    //If the file name does not contain any path, then use the current path
             {
                 m_FilePath = std::filesystem::current_path().string();
                 m_FilePath += getSeparator();
             }
         }
-        else
+        else //If the file path doesn't end with a separator, then add it
         {
             if (m_FilePath.back() != '/' && m_FilePath.back() != '\\')
             {
                 m_FilePath += getSeparator();
             }
         }
+        //Finally create the file path object
         m_FilePathObj = std::filesystem::path(m_FilePath + m_FileName);
     }
+    //All done, now we can set the flag to false
+    //and notify any waiting threads
     m_isFileOpsRunning = false;
     m_FileOpsCv.notify_one();
 }
@@ -149,14 +182,22 @@ FileOps::FileOps(const std::uintmax_t maxFileSize,
     , m_MaxFileSize(maxFileSize)
 {
     auto fileDetails = std::make_tuple(m_FileName, m_FilePath, m_FileExtension);
+    // Initialize the file path object
     populateFilePathObj(fileDetails);
-    m_watcher = std::thread(&FileOps::keepWatchAndPull, this);
+    //Spawn a thread to keep watch and pull the data from the data records queue
+    //and write it to the file whenever it is available
+    std::function<void()> watcherThread = [this]() { this->keepWatchAndPull(); };
+    m_watcher = std::thread(std::move(watcherThread));
 }
 
 FileOps::~FileOps()
 {
+    // Wait for any ongoing data operations to finish
     std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
+    // Set the flag to true to indicate that we are shutting down
     m_shutAndExit = true;
+    // Notify the watcher thread to wake up and complete
+    // any pending operations before exiting
     dataLock.unlock();
     m_DataRecordsCv.notify_one();
 
@@ -170,7 +211,7 @@ FileOps& FileOps::setFileName(const std::string_view fileName)
         return *this;
 
     populateFilePathObj(std::make_tuple(std::string(fileName), nullString.data(), nullString.data()));
-    return *this;
+    return *this;   // Builder pattern
 }
 
 FileOps& FileOps::setFilePath(const std::string_view filePath)
@@ -264,23 +305,28 @@ void FileOps::readFile()
     if (m_FilePathObj.empty())
         throw std::runtime_error("File path is empty");
 
+    // Check if there is any data in the data records queue
+    // and wait for it to be processed before reading the file
+    while (!m_DataRecords.empty())
     {
         std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
-        if (!m_DataRecords.empty())
-        {
-            m_dataReady = true;
-            dataLock.unlock();
-            m_DataRecordsCv.notify_one();
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
+        m_DataRecordsCv.wait(dataLock, [this]{ return !m_dataReady; });
+        m_dataReady = true;
+        dataLock.unlock();
+        m_DataRecordsCv.notify_one();
     }
-    DataQ().swap(m_FileContent);
+
+    DataQ().swap(m_FileContent); // Clear the file content queue
+    // Wait for any ongoing file operations to finish
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+
     std::unique_lock<std::mutex> fileLock(m_FileOpsMutex);
     m_FileOpsCv.wait(fileLock, [this]{ return !m_isFileOpsRunning; });
     m_isFileOpsRunning = true;
+
     if (std::filesystem::exists(m_FilePathObj))
     {
-        std::ifstream file(m_FilePathObj);
+        std::ifstream file(m_FilePathObj, std::ios::binary);
         if (file.is_open())
         {
             std::string line;
@@ -289,7 +335,6 @@ void FileOps::readFile()
                 m_FileContent.emplace(std::make_shared<std::string>(line.c_str()));
                 line.clear();
             }
-            file.close();
         }
         else
         {
@@ -302,7 +347,6 @@ void FileOps::readFile()
     m_isFileOpsRunning = false;
     fileLock.unlock();
     m_FileOpsCv.notify_all();
-    //return fileContents;
 }
 
 void FileOps::writeFile(const std::string_view data)
@@ -323,9 +367,121 @@ void FileOps::writeFile(const std::string_view data)
     }
 }
 
+void FileOps::writeFile(const uint8_t data)
+{
+    writeFile(std::bitset<8>(data).to_string());
+}
+
+void FileOps::writeFile(const uint16_t data)
+{
+    writeFile(std::bitset<16>(data).to_string());
+}
+
+void FileOps::writeFile(const uint32_t data)
+{
+    writeFile(std::bitset<32>(data).to_string());
+}
+
+void FileOps::writeFile(const uint64_t data)
+{
+    writeFile(std::bitset<64>(data).to_string());
+}
+
 void FileOps::appendFile(const std::string_view data)
 {
     writeFile(data);
+}
+
+void FileOps::appendFile(const uint8_t data)
+{
+    writeFile(std::bitset<8>(data).to_string());
+}
+
+void FileOps::appendFile(const uint16_t data)
+{
+    writeFile(std::bitset<16>(data).to_string());
+}
+
+void FileOps::appendFile(const uint32_t data)
+{
+    writeFile(std::bitset<32>(data).to_string());
+}
+
+void FileOps::appendFile(const uint64_t data)
+{
+    writeFile(std::bitset<64>(data).to_string());
+}
+
+void FileOps::appendFile(const std::vector<uint8_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            writeFile(bindata);
+    }
+}
+
+void FileOps::appendFile(const std::vector<uint16_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            writeFile(bindata);
+    }
+}
+
+void FileOps::appendFile(const std::vector<uint32_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            writeFile(bindata);
+    }
+}
+
+void FileOps::appendFile(const std::vector<uint64_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            writeFile(bindata);
+    }
+}
+
+void FileOps::writeFile(const std::vector<uint8_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            writeFile(bindata);
+    }
+}
+
+void FileOps::writeFile(const std::vector<uint16_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            writeFile(bindata);
+    }
+}
+
+void FileOps::writeFile(const std::vector<uint32_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            writeFile(bindata);
+    }
+}
+
+void FileOps::writeFile(const std::vector<uint64_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            writeFile(bindata);
+    }
 }
 
 bool FileOps::clearFile()
@@ -367,12 +523,12 @@ void FileOps::push(const std::string_view data)
     };
     
     {
-        std::array<char, 1025> dataRecord;
+        std::array<char, 1025> dataRecord; // One extra byte for null termination
         std::scoped_lock<std::mutex> lock(m_DataRecordsMtx);
         if (data.size() > dataRecord.size())
         {
             std::string dataCopy = data.data();
-            while (dataCopy.size() > dataRecord.size())
+            while (dataCopy.size() > dataRecord.size()) // Split the data into 1024 byte chunks
             {
                 push(dataRecord, dataCopy.substr(0, dataRecord.size() - 1));
                 dataRecord.fill('\0');
@@ -388,7 +544,10 @@ void FileOps::push(const std::string_view data)
             push(dataRecord, data);
         }
     }
-    if (m_DataRecords.size() == 2)
+    // If the data queue contains at least 256 elements
+    // then notify the watcher thread that data is available
+    // and it can start writing to the file
+    if (m_DataRecords.size() == 256)
     {
         m_dataReady = true;
         m_DataRecordsCv.notify_one();
@@ -400,6 +559,7 @@ bool FileOps::pop(BufferQ& data)
     if (m_DataRecords.empty())
         return false;
 
+    // Clear the outgoing data buffer
     BufferQ().swap(data);
     data.swap(m_DataRecords);
     m_dataReady = false;
@@ -410,6 +570,8 @@ bool FileOps::pop(BufferQ& data)
 void FileOps::keepWatchAndPull()
 {
     BufferQ dataq;
+    // It is an infinite loop, but it will break out of the loop
+    // when the m_shutAndExit flag is set to true
     do
     {
         std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
@@ -418,6 +580,12 @@ void FileOps::keepWatchAndPull()
         auto success = pop(dataq);
         dataLock.unlock();
         m_DataRecordsCv.notify_one();
+        // Spawn a thread to write to the file
+        // and pass the data queue to it so that
+        // the data records queue can be free for
+        // other threads to push data to it
+        // and the file can be written to in parallel
+        // The thread will be joined after the file is written
         std::thread writerThread;
         if (success)
         {
@@ -445,7 +613,7 @@ void FileOps::writeToFile(BufferQ&& dataQueue, std::exception_ptr& excpPtr)
         m_FileOpsCv.wait(fileLock, [this]{ return !m_isFileOpsRunning; });
         m_isFileOpsRunning = true;
 
-        std::ofstream file(m_FilePathObj, std::ios::out | std::ios::app);
+        std::ofstream file(m_FilePathObj, std::ios::out | std::ios::app | std::ios::binary);
         if (file.is_open())
         {
             while (!dataQueue.empty())
@@ -460,9 +628,9 @@ void FileOps::writeToFile(BufferQ&& dataQueue, std::exception_ptr& excpPtr)
         else
         {
             std::ostringstream osstr;
-            osstr << "LOGGING_ERROR : [";
+            osstr << "WRITING_ERROR : [";
             osstr << std::this_thread::get_id();
-            osstr << "]: File [" << m_FilePathObj << "] can not be opened to log MSG;";
+            osstr << "]: File [" << m_FilePathObj << "] can not be opened to write data;";
             errMsg = osstr.str();
         }
         m_isFileOpsRunning = false;
