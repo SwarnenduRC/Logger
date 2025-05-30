@@ -307,14 +307,7 @@ void FileOps::readFile()
 
     // Check if there is any data in the data records queue
     // and wait for it to be processed before reading the file
-    while (!m_DataRecords.empty())
-    {
-        std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
-        m_DataRecordsCv.wait(dataLock, [this]{ return !m_dataReady; });
-        m_dataReady = true;
-        dataLock.unlock();
-        m_DataRecordsCv.notify_one();
-    }
+    flush();
 
     DataQ().swap(m_FileContent); // Clear the file content queue
     // Wait for any ongoing file operations to finish
@@ -567,6 +560,19 @@ bool FileOps::pop(BufferQ& data)
     return true;
 }
 
+void FileOps::flush()
+{
+    std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
+    while (!m_DataRecords.empty())
+    {
+        m_DataRecordsCv.wait(dataLock, [this]{ return !m_dataReady; });
+        m_dataReady = true;
+        dataLock.unlock();
+        m_DataRecordsCv.notify_one();
+        dataLock.lock();
+    }
+}
+
 void FileOps::keepWatchAndPull()
 {
     BufferQ dataq;
@@ -620,7 +626,7 @@ void FileOps::writeToFile(BufferQ&& dataQueue, std::exception_ptr& excpPtr)
             {
                 auto data = dataQueue.front();
                 dataQueue.pop();
-                file << data.data() << "\n";
+                file << data.data() << std::endl;
                 file.flush();
             }
             file.close();

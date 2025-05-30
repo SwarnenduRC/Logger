@@ -510,6 +510,14 @@ class FileOps
          * to ensure that only one thread can clear the file at a time.
          */
         bool clearFile();
+
+        /**
+         * @brief flush the data records queue.
+         * It checks the data records queue and if it is not empty then
+         * notifies the watcher thread to write the data to the file
+         * immediately.
+         */
+        void flush();
     
     private:
         /**
