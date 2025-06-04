@@ -27,14 +27,12 @@
  */
 #include "FileOps.hpp"
 
-#include <exception>
 #include <tuple>
 #include <memory>
 
 // Necessary constants and static variables
 static constexpr std::string_view nullString = "";
 static constexpr std::string_view DEFAULT_FILE_EXTN = ".txt";
-std::vector<std::exception_ptr> FileOps::m_excpPtrVec = {0};
 
 /*static*/ bool FileOps::isFileEmpty(const std::filesystem::path& file) noexcept
 {
@@ -87,6 +85,95 @@ std::vector<std::exception_ptr> FileOps::m_excpPtrVec = {0};
     {
         FILE.close();
         return true;
+    }
+    return false;
+}
+
+/*static*/ bool FileOps::readFileByteRange(FileOps& file,
+                                    const std::streampos start,
+                                    const std::streampos end,
+                                    std::vector<char>& outBuff)
+{
+    try
+    {
+        if (file.isEmpty())
+            throw std::runtime_error("File " + file.getFilePathObj().string() + " empty to read");
+
+        std::streampos fileSize = file.getFileSize();
+        if (start > fileSize || end > fileSize || start > end)
+        {
+            if (start > fileSize)
+                throw std::runtime_error("Out of bound: Start pos is greater than file size");
+            else if (end > fileSize)
+                throw std::runtime_error("Out of bound: End pos is greater than file size");
+            else
+                throw std::runtime_error("Out of bound: Start pos is greater than end pos");
+        }
+
+        std::ifstream ifile(file.getFilePathObj(), std::ios::binary);
+        if (!ifile)
+            throw std::runtime_error("File " + file.getFilePathObj().string() + " can't be opened for reading");
+
+        auto bytesToRead = end - start;
+        outBuff.clear();
+        outBuff.resize(bytesToRead);
+        ifile.seekg(start, std::ios::beg);
+        ifile.read(outBuff.data(), bytesToRead);
+
+        if (!ifile)
+            throw std::runtime_error("File " + file.getFilePathObj().string() + " can't be read even after opening");
+
+        return true;
+    }
+    catch(...)
+    {
+        auto excpPtr = std::current_exception();
+        file.addRaisedException(excpPtr);
+    }
+    return false;
+}
+
+/*static*/bool FileOps::readFileLineRange(FileOps& file,
+                                        const size_t startLineNo,
+                                        const size_t endLineNo,
+                                        std::vector<std::string>& outBuf)
+{
+    try
+    {
+        if (file.isEmpty())
+            throw std::runtime_error("File " + file.getFilePathObj().string() + " empty to read");
+
+        if (startLineNo > endLineNo)
+            throw std::runtime_error("Out of bound: Start pos is greater than end pos");
+
+        std::ifstream ifile(file.getFilePathObj(), std::ios::binary);
+        if (!ifile)
+            throw std::runtime_error("File " + file.getFilePathObj().string() + " can't be opened for reading");
+
+        outBuf.clear();
+        std::string readLine;
+        size_t readLineCnt = 0;
+        while (std::getline(ifile, readLine))
+        {
+            ++readLineCnt;
+            if (readLineCnt >= startLineNo)
+            {
+                if (readLineCnt <= endLineNo)
+                    outBuf.emplace_back(readLine);
+            }
+            readLine.clear();
+            if (readLineCnt > endLineNo)
+                break;
+        }
+        if (!ifile)
+            throw std::runtime_error("File " + file.getFilePathObj().string() + " can't be read even after opening");
+
+        return true;
+    }
+    catch(...)
+    {
+        auto excpPtr = std::current_exception();
+        file.addRaisedException(excpPtr);
     }
     return false;
 }
@@ -175,34 +262,24 @@ FileOps::FileOps(const std::uintmax_t maxFileSize,
                  const std::string_view fileName, 
                  const std::string_view filePath, 
                  const std::string_view fileExtension)
-    : m_FileName(fileName)
+    : DataOps()
+    , m_FileName(fileName)
     , m_FilePath(filePath)
     , m_FileExtension(fileExtension)
-    , m_DataRecords()
     , m_MaxFileSize(maxFileSize)
+    , m_isFileOpsRunning(false)
 {
     auto fileDetails = std::make_tuple(m_FileName, m_FilePath, m_FileExtension);
     // Initialize the file path object
     populateFilePathObj(fileDetails);
     //Spawn a thread to keep watch and pull the data from the data records queue
     //and write it to the file whenever it is available
-    std::function<void()> watcherThread = [this]() { this->keepWatchAndPull(); };
+    std::function<void()> watcherThread = [this]() { keepWatchAndPull(); };
     m_watcher = std::thread(std::move(watcherThread));
 }
 
 FileOps::~FileOps()
 {
-    // Wait for any ongoing data operations to finish
-    std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
-    // Set the flag to true to indicate that we are shutting down
-    m_shutAndExit = true;
-    // Notify the watcher thread to wake up and complete
-    // any pending operations before exiting
-    dataLock.unlock();
-    m_DataRecordsCv.notify_one();
-
-    if (m_watcher.joinable())
-        m_watcher.join();
 }
 
 FileOps& FileOps::setFileName(const std::string_view fileName)
@@ -311,7 +388,7 @@ void FileOps::readFile()
 
     DataQ().swap(m_FileContent); // Clear the file content queue
     // Wait for any ongoing file operations to finish
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
     std::unique_lock<std::mutex> fileLock(m_FileOpsMutex);
     m_FileOpsCv.wait(fileLock, [this]{ return !m_isFileOpsRunning; });
@@ -499,67 +576,6 @@ bool FileOps::clearFile()
     return retVal;
 }
 
-void FileOps::push(const std::string_view data)
-{
-    if (data.empty())
-        return;
-
-    auto push = [this](std::array<char, 1025>& dataRecord, const std::string_view data)
-    {
-        std::copy(data.begin(), data.end(), dataRecord.begin());
-        if (data.size() < dataRecord.size())
-        {
-            auto dataSize = data.size();
-            std::fill(dataRecord.begin() + dataSize, dataRecord.end(), '\0');
-        }
-        m_DataRecords.push(dataRecord);
-    };
-    
-    {
-        std::array<char, 1025> dataRecord; // One extra byte for null termination
-        std::scoped_lock<std::mutex> lock(m_DataRecordsMtx);
-        if (data.size() > dataRecord.size())
-        {
-            std::string dataCopy = data.data();
-            while (dataCopy.size() > dataRecord.size()) // Split the data into 1024 byte chunks
-            {
-                push(dataRecord, dataCopy.substr(0, dataRecord.size() - 1));
-                dataRecord.fill('\0');
-                dataCopy = dataCopy.substr(dataRecord.size());
-            }
-            if (!dataCopy.empty())
-            {
-                push(dataRecord, dataCopy);
-            }
-        }
-        else
-        {
-            push(dataRecord, data);
-        }
-    }
-    // If the data queue contains at least 256 elements
-    // then notify the watcher thread that data is available
-    // and it can start writing to the file
-    if (m_DataRecords.size() == 256)
-    {
-        m_dataReady = true;
-        m_DataRecordsCv.notify_one();
-    }
-}
-
-bool FileOps::pop(BufferQ& data)
-{
-    if (m_DataRecords.empty())
-        return false;
-
-    // Clear the outgoing data buffer
-    BufferQ().swap(data);
-    data.swap(m_DataRecords);
-    m_dataReady = false;
-
-    return true;
-}
-
 void FileOps::flush()
 {
     std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
@@ -573,41 +589,7 @@ void FileOps::flush()
     }
 }
 
-void FileOps::keepWatchAndPull()
-{
-    BufferQ dataq;
-    // It is an infinite loop, but it will break out of the loop
-    // when the m_shutAndExit flag is set to true
-    do
-    {
-        std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
-        m_DataRecordsCv.wait(dataLock, [this]{ return m_dataReady || m_shutAndExit.load(); });
-
-        auto success = pop(dataq);
-        dataLock.unlock();
-        m_DataRecordsCv.notify_one();
-        // Spawn a thread to write to the file
-        // and pass the data queue to it so that
-        // the data records queue can be free for
-        // other threads to push data to it
-        // and the file can be written to in parallel
-        // The thread will be joined after the file is written
-        std::thread writerThread;
-        if (success)
-        {
-            std::exception_ptr excpPtr = nullptr;
-            m_excpPtrVec.emplace_back(excpPtr);
-            writerThread = std::thread([this, &dataq, &excpPtr](){ writeToFile(std::move(dataq), excpPtr); });
-        }
-        if (writerThread.joinable())
-            writerThread.join();
-
-        if (m_shutAndExit)
-            break;
-    } while (true);
-}
-
-void FileOps::writeToFile(BufferQ&& dataQueue, std::exception_ptr& excpPtr)
+void FileOps::writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& excpPtr)
 {
     if (dataQueue.empty())
         return;
@@ -650,5 +632,24 @@ void FileOps::writeToFile(BufferQ&& dataQueue, std::exception_ptr& excpPtr)
     {
         excpPtr = std::current_exception();
     }
+}
+
+bool FileOps::isEmpty()
+{
+    flush();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));  //Wait a while for the flushing to be finished.
+    std::unique_lock<std::mutex> fileLock(m_FileOpsMutex);
+    m_FileOpsCv.wait(fileLock, [this]{ return !m_isFileOpsRunning; });
+    m_isFileOpsRunning = true;
+    std::ifstream file(m_FilePathObj.string(), std::ios::ate | std::ios::binary);
+    if (!file)
+        return false;
+
+    auto retVal = file.tellg();
+    file.close();
+    m_isFileOpsRunning = false;
+    fileLock.unlock();
+    m_FileOpsCv.notify_one();
+    return retVal == 0;
 }
 

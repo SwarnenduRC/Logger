@@ -30,19 +30,18 @@
  * SOFTWARE.
  */
 
-#ifndef FILEOPS_HPP
-#define FILEOPS_HPP
+#ifndef FILE_OPS_HPP
+#define FILE_OPS_HPP
+
+#include "DataOps.hpp"
 
 #include <fstream>
 #include <string>
-#include <queue>
 #include <filesystem>
-#include <thread>
 
-using BufferQ = std::queue<std::array<char, 1025>>;
 using DataQ = std::queue<std::shared_ptr<std::string>>;
 
-class FileOps
+class FileOps : public DataOps
 {
     public:
         using StdTupple = std::tuple<std::string, std::string, std::string>;
@@ -116,13 +115,70 @@ class FileOps
          * @return false
          */
         static bool createFile(const std::filesystem::path& file) noexcept;
-        /**
-         * @brief Get all the exceptions happened during the file ops
-         *
-         * @return std::filesystem::path The file path object
-         */
-        static const std::vector<std::exception_ptr>& getAllExceptions() noexcept    { return m_excpPtrVec; }
 
+        /**
+         * @brief Read a range of bytes from the file
+         *
+         * Reads a range of bytes from the file specified by the FileOps object.
+         * The range is specified by the start and end positions.
+         *
+         * @note Throws exceptions which is collected in the static
+         *       std::vector<std::exception_ptr> m_excpPtrVec
+         *       and can be accessed using getAllExceptions() function.
+         * @note This function is not thread safe. The caller must ensure thread safety.
+         *
+         * @param [in] file The FileOps object
+         * @param [in] start The start position of the range
+         * @param [in] end The end position of the range
+         * @param [out] outBuff The output buffer to store the read bytes
+         *
+         * @return true If the read was successful, otherwise
+         * @return false
+         */
+        static bool readFileByteRange(FileOps& file,
+                                    const std::streampos start,
+                                    const std::streampos end,
+                                    std::vector<char>& outBuff);
+
+        /**
+         * @brief Read a range of lines from the file
+         * Reads a range of lines from the file specified by the FileOps object.
+         * The range is specified by the start and end line numbers.
+         *
+         * @note Throws exceptions which is collected in the static
+         *      std::vector<std::exception_ptr> m_excpPtrVec
+         *      and can be accessed using getAllExceptions() function.
+         * @note This function is not thread safe. The caller must ensure thread safety.
+         *
+         * @param [in] file The FileOps object
+         * @param [in] startLineNo The starting line number (1-based index)
+         * @param [in] endLineNo The ending line number (1-based index)
+         * @note The line numbers are inclusive, meaning both startLineNo and endLineNo
+         *       are included in the range.
+         * @note If startLineNo is greater than endLineNo, the function will return false
+         *       and will throw an exception.
+         * @param [out] outBuf The output buffer to store the read lines
+         * @note The outBuf will be cleared before reading the lines.
+         *       If no lines are read, it will remain empty.
+         * @return true If the read was successful and lines were read,
+         *         otherwise
+         * @return false
+         */
+        static bool readFileLineRange(FileOps& file,
+                                const size_t startLineNo,
+                                const size_t endLineNo,
+                                std::vector<std::string>& outBuf);
+
+
+        /**
+         * @brief Construct a new File Ops object
+         * This is a deleted constructor to prevent
+         * creating an object of FileOps without any parameters.
+         * It is not allowed to create a FileOps object
+         * without specifying the maximum file size.
+         * This is to ensure that the file operations
+         * are always performed with a valid file size limit.
+         */
         FileOps() = delete;
         /**
          * @brief Construct a new File Ops object
@@ -143,7 +199,7 @@ class FileOps
          * stop the file watcher thread and clear the
          * data records queue.
          */
-        virtual ~FileOps();
+        ~FileOps();
 
         /**
          * @brief Copy and move constructors and assignment operators are deleted
@@ -244,12 +300,12 @@ class FileOps
          */
         inline DataQ getFileContent() const                             { return m_FileContent;                             }
         /**
-         * @brief Checks if the file is empty or not
+         * @brief Checks if the file path is empty or not
          *
-         * @return true If the file is empty, otherwise
+         * @return true If the file path is empty, otherwise
          * @return false
          */
-        inline bool isFileEmpty() const                                 { return std::filesystem::is_empty(m_FilePathObj);  }
+        inline bool isFilePathEmpty() const                             { return std::filesystem::is_empty(m_FilePathObj);  }
         /**
          * @brief Checks if the file exists or not
          *
@@ -263,6 +319,8 @@ class FileOps
          * @return std::uintmax_t The file size
          */
         std::uintmax_t getFileSize();
+
+        bool isEmpty();
 
         /**
          * @brief write the file.
@@ -518,6 +576,9 @@ class FileOps
          * immediately.
          */
         void flush();
+
+    protected:
+            void writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& excpPtr) override;
     
     private:
         /**
@@ -531,72 +592,16 @@ class FileOps
          */
         void populateFilePathObj(const StdTupple& fileDetails);
 
-        /**
-         * @brief Keep watch and pull the data from the data records queue
-         *
-         * @note This function is thread safe. It uses mutex and condition variable
-         * to ensure that only one thread can keep watch and pull the data at a time.
-         *
-         * @see writeToFile
-         * @see pop
-         * @see push
-         */
-        void keepWatchAndPull();
-
-        /**
-         * @brief Write to the file
-         *
-         * @param [in] dataQueue The data queue to be written to the file
-         * @param [out] excpPtr The exception pointer to be used for exception handling
-         *
-         * @note This function is thread safe. It uses mutex and condition variable
-         * to ensure that only one thread can write to the file at a time.
-         */
-        void writeToFile(BufferQ&& dataQueue, std::exception_ptr& excpPtr);
-
-        /**
-         * @brief Pops the data to a data buffer
-         *
-         * @param [out] data The data to be popped from the data records queue
-         * @return true If the data was popped successfully, otherwise
-         * @return false
-         */
-        bool pop(BufferQ& data);
-
-        /**
-         * @brief Push the data to the data records queue
-         *
-         * @param [in] data The data to be pushed to the data records queue
-         * @note This function is thread safe. It uses mutex and condition variable
-         * to ensure that only one thread can push the data at a time.
-         */
-        void push(const std::string_view data);
-
         /// Data members for file opening, closing, reading and writing
         std::string m_FileName;
         std::string m_FilePath;
         std::string m_FileExtension;
         DataQ m_FileContent;
-        BufferQ m_DataRecords;
         std::filesystem::path m_FilePathObj;
         std::uintmax_t m_MaxFileSize;
-
         std::mutex m_FileOpsMutex;
-        std::mutex m_DataRecordsMtx;
         std::condition_variable m_FileOpsCv;
-        std::condition_variable m_DataRecordsCv;
-        std::atomic_bool m_isFileOpsRunning = false;
-        std::atomic_bool m_dataReady = false;
-        std::atomic_bool m_shutAndExit = false;
-        std::thread m_watcher;
-
-        /**
-         * @brief It is a vector of exception pointers
-         * which is used to store the exceptions occurred
-         * during the file operations. It is static and
-         * shared among all the instances of the class.
-         */
-        static std::vector<std::exception_ptr> m_excpPtrVec;
+        std::atomic_bool m_isFileOpsRunning;
 };
 
-#endif // FILEOPS_HPP
+#endif // FILE_OPS_HPP

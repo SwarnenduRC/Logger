@@ -430,7 +430,7 @@ TEST_F(FileOpsTests, testReadWrite)
     auto text = generateRandomText(maxTextSize);
     file.writeFile(text);
     ASSERT_TRUE(file.fileExists());
-
+    EXPECT_FALSE(file.isEmpty());
     file.readFile();
     auto fileContents = file.getFileContent();
     ASSERT_FALSE(fileContents.empty());
@@ -456,7 +456,9 @@ TEST_F(FileOpsTests, testAppendFile)
         file.appendFile(text);
         dataQueue.push_back(text);
     }
+    EXPECT_FALSE(file.isEmpty());
     file.readFile();
+    EXPECT_FALSE(file.isEmpty());
     auto fileContents = file.getFileContent();
     ASSERT_FALSE(fileContents.empty());
     for (const auto& data : dataQueue)
@@ -734,6 +736,7 @@ TEST_F(FileOpsTests, testWriteFileWith_4_Bytes_Hex_DataStream)
     file.writeFile(hexData);
 
     ASSERT_TRUE(file.fileExists());
+    EXPECT_FALSE(file.isEmpty());
     file.readFile();
     auto fileContents = file.getFileContent();
     ASSERT_FALSE(fileContents.empty());
@@ -762,6 +765,7 @@ TEST_F(FileOpsTests, testWriteFileWith_8_Bytes_Hex_DataStream)
     file.writeFile(hexData);
 
     ASSERT_TRUE(file.fileExists());
+    EXPECT_FALSE(file.isEmpty());
     file.readFile();
     auto fileContents = file.getFileContent();
     ASSERT_FALSE(fileContents.empty());
@@ -796,6 +800,7 @@ TEST_F(FileOpsTests, testWriteLargeDataChunk)
         }
         dataQueue.push_back(text);
     }
+    EXPECT_FALSE(file.isEmpty());
     file.readFile();
     auto fileContents = file.getFileContent();
     ASSERT_FALSE(fileContents.empty());
@@ -806,6 +811,145 @@ TEST_F(FileOpsTests, testWriteLargeDataChunk)
         EXPECT_EQ(data, fileData->c_str());
     }
     ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testReadFileBytesRange)
+{
+    std::uintmax_t maxFileSize = 1024;
+    std::uintmax_t maxTextSize = 255;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    auto text = generateRandomText(maxTextSize);
+    file.writeFile(text);
+    ASSERT_TRUE(file.fileExists());
+    ASSERT_FALSE(file.isEmpty());
+
+    std::vector<char> readBuf = {0};
+    ASSERT_TRUE(FileOps::readFileByteRange(file, 0, 55, readBuf));
+    for (size_t idx = 0; idx < readBuf.size(); ++idx)
+        EXPECT_EQ(readBuf[idx], text[idx]);
+
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testReadFileBytesRangeExceptionCase)
+{
+    std::uintmax_t maxFileSize = 1024;
+    std::uintmax_t maxTextSize = 255;
+    {
+        auto fileName = generateRandomFileName();
+        FileOps file(maxFileSize, fileName);
+        auto text = generateRandomText(maxTextSize);
+        file.writeFile(text);
+        ASSERT_TRUE(file.fileExists());
+        ASSERT_FALSE(file.isEmpty());
+
+        std::vector<char> readBuf = {0};
+        ASSERT_FALSE(FileOps::readFileByteRange(file, 100, 1025, readBuf));
+
+        auto allExceptions = file.getAllExceptions();
+        EXPECT_FALSE(allExceptions.empty());
+        EXPECT_EQ(static_cast<size_t>(1), allExceptions.size());
+        ASSERT_TRUE(file.deleteFile());
+    }
+    {
+        auto fileName = generateRandomFileName();
+        FileOps file(maxFileSize, fileName);
+        auto text = generateRandomText(maxTextSize);
+        file.writeFile(text);
+        ASSERT_TRUE(file.fileExists());
+        ASSERT_FALSE(file.isEmpty());
+
+        std::vector<char> readBuf = {0};
+        ASSERT_FALSE(FileOps::readFileByteRange(file, 100, 99, readBuf));
+
+        auto allExceptions = file.getAllExceptions();
+        EXPECT_FALSE(allExceptions.empty());
+        EXPECT_EQ(static_cast<size_t>(1), allExceptions.size());
+        ASSERT_TRUE(file.deleteFile());
+    }
+}
+
+TEST_F(FileOpsTests, testReadFileLineRange)
+{
+    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxTextSize = 3080;
+    std::size_t maxLineLen = 1024;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    std::vector<std::string> dataQueue;
+    for (auto cnt = 0; cnt < 200; ++cnt)
+    {
+        auto text = generateRandomText(maxTextSize);
+        file.appendFile(text);
+        while (text.size() > maxLineLen)
+        {
+            auto subText = text.substr(0, maxLineLen);
+            dataQueue.push_back(subText);
+            text = text.substr(maxLineLen + 1);
+        }
+        dataQueue.push_back(text);
+    }
+    ASSERT_TRUE(file.fileExists());
+    ASSERT_FALSE(file.isEmpty());
+    std::vector<std::string> readBuf;
+    size_t startLineNo = 5;
+    size_t endLineNo = 15;
+    ASSERT_TRUE(FileOps::readFileLineRange(file, startLineNo, endLineNo, readBuf));
+    EXPECT_FALSE(readBuf.empty());
+    EXPECT_EQ((endLineNo - startLineNo + 1), readBuf.size()); //+1 for inclusive range
+    auto dataQueueItr = dataQueue.cbegin();
+    for (size_t begin = 1; begin < startLineNo; ++begin)
+        ++dataQueueItr;
+
+    for (size_t idx = 0; idx < readBuf.size(); ++idx)
+    {
+        EXPECT_EQ(readBuf[idx], *dataQueueItr);
+        ++dataQueueItr;
+    }
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testReadFileLineRangeExceptionCase)
+{
+    std::uintmax_t maxFileSize = 1024;
+    std::uintmax_t maxTextSize = 255;
+    {
+        auto fileName = generateRandomFileName();
+        FileOps file(maxFileSize, fileName);
+        auto text = generateRandomText(maxTextSize);
+        file.writeFile(text);
+        ASSERT_TRUE(file.fileExists());
+        ASSERT_FALSE(file.isEmpty());
+
+        std::vector<std::string> readBuf;
+        size_t startLineNo = 15;
+        size_t endLineNo = 5;
+        ASSERT_FALSE(FileOps::readFileLineRange(file, startLineNo, endLineNo, readBuf));
+
+        auto allExceptions = file.getAllExceptions();
+        EXPECT_FALSE(allExceptions.empty());
+        EXPECT_EQ(static_cast<size_t>(1), allExceptions.size());
+        ASSERT_TRUE(file.deleteFile());
+    }
+    {
+        auto fileName = generateRandomFileName();
+        FileOps file(maxFileSize, fileName);
+        auto text = generateRandomText(maxTextSize);
+        file.createFile();
+        ASSERT_TRUE(file.fileExists());
+        ASSERT_TRUE(file.isEmpty());
+
+        std::vector<std::string> readBuf;
+        size_t startLineNo = 15;
+        size_t endLineNo = 25;
+        ASSERT_FALSE(FileOps::readFileLineRange(file, startLineNo, endLineNo, readBuf));
+
+        auto allExceptions = file.getAllExceptions();
+        EXPECT_FALSE(allExceptions.empty());
+        EXPECT_EQ(static_cast<size_t>(1), allExceptions.size());
+        ASSERT_TRUE(file.deleteFile());
+    }
 }
 
 TEST_F(FileOpsTests, testClearFile)
