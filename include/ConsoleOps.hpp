@@ -35,6 +35,19 @@ class ConsoleOps : public DataOps
         static ConsoleOps::LoggingTypes loggingTypesStringToEnum(const std::string_view enumString) noexcept;
         static std::string loggingTypesEnumToString(const ConsoleOps::LoggingTypes& loggingType) noexcept;
 
+        /**
+         * @brief Get the Class Id for the object
+         * This function is used to get the class id of the object.
+         *
+         * @return std::string The class id of the object
+         * @note This function is used to identify the class of the object
+         *       in the polymorphic hierarchy. It is used to identify the class
+         *       of the object at runtime.
+         * @see DataOps::getClassId()
+         * @see DataOps::getClassId() for more details
+         */
+        inline const std::string getClassId() const override { return "ConsoleOps"; }
+
     protected:
         void writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& excpPtr) override;
 

@@ -89,6 +89,8 @@ class DataOps
         DataOps& operator=(const DataOps& rhs) = delete;
         DataOps& operator=(DataOps&& rhs) = delete;
 
+        inline virtual const std::string getClassId() const = 0;
+
     protected:
         /**
          * @brief Keep watch and pull the data from the data records queue

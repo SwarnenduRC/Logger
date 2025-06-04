@@ -314,6 +314,18 @@ class FileOps : public DataOps
          */
         inline bool fileExists() const                                  { return std::filesystem::exists(m_FilePathObj);    }
         /**
+         * @brief Get the Class Id for the object
+         * This function is used to get the class id of the object.
+         *
+         * @return std::string The class id of the object
+         * @note This function is used to identify the class of the object
+         *       in the polymorphic hierarchy. It is used to identify the class
+         *       of the object at runtime.
+         * @see DataOps::getClassId()
+         * @see DataOps::getClassId() for more details
+         */
+        inline const std::string getClassId() const override             { return "FileOps";                                 }
+        /**
          * @brief Get the file size
          *
          * @return std::uintmax_t The file size
