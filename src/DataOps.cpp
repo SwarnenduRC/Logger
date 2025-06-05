@@ -151,3 +151,16 @@ void DataOps::keepWatchAndPull()
     } while (true);
 }
 
+void DataOps::flush()
+{
+    std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
+    while (!m_DataRecords.empty())
+    {
+        m_DataRecordsCv.wait(dataLock, [this]{ return !m_dataReady; });
+        m_dataReady = true;
+        dataLock.unlock();
+        m_DataRecordsCv.notify_one();
+        dataLock.lock();
+    }
+}
+
