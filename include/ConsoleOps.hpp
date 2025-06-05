@@ -6,8 +6,6 @@
 #include <iostream>
 #include <string_view>
 
-using DataQ = std::queue<std::pair<std::string, std::string>>;
-
 class ConsoleOps : public DataOps
 {
         ConsoleOps();
