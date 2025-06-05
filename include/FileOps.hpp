@@ -581,14 +581,6 @@ class FileOps : public DataOps
          */
         bool clearFile();
 
-        /**
-         * @brief flush the data records queue.
-         * It checks the data records queue and if it is not empty then
-         * notifies the watcher thread to write the data to the file
-         * immediately.
-         */
-        void flush();
-
     protected:
             void writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& excpPtr) override;
     

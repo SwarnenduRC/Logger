@@ -576,19 +576,6 @@ bool FileOps::clearFile()
     return retVal;
 }
 
-void FileOps::flush()
-{
-    std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
-    while (!m_DataRecords.empty())
-    {
-        m_DataRecordsCv.wait(dataLock, [this]{ return !m_dataReady; });
-        m_dataReady = true;
-        dataLock.unlock();
-        m_DataRecordsCv.notify_one();
-        dataLock.lock();
-    }
-}
-
 void FileOps::writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& excpPtr)
 {
     if (dataQueue.empty())
@@ -618,7 +605,7 @@ void FileOps::writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& ex
             std::ostringstream osstr;
             osstr << "WRITING_ERROR : [";
             osstr << std::this_thread::get_id();
-            osstr << "]: File [" << m_FilePathObj << "] can not be opened to write data;";
+            osstr << "]: File [" << m_FilePathObj.string() << "] can not be opened to write data;";
             errMsg = osstr.str();
         }
         m_isFileOpsRunning = false;
