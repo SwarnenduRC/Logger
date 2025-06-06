@@ -419,141 +419,6 @@ void FileOps::readFile()
     m_FileOpsCv.notify_all();
 }
 
-void FileOps::writeFile(const std::string_view data)
-{
-    if (data.empty())
-        return;
-
-    if (!fileExists())
-    {
-        if (createFile())
-            push(data);
-        else
-            throw std::runtime_error("File neither exists nor can be created");
-    }
-    else
-    {
-        push(data);
-    }
-}
-
-void FileOps::writeFile(const uint8_t data)
-{
-    writeFile(std::bitset<8>(data).to_string());
-}
-
-void FileOps::writeFile(const uint16_t data)
-{
-    writeFile(std::bitset<16>(data).to_string());
-}
-
-void FileOps::writeFile(const uint32_t data)
-{
-    writeFile(std::bitset<32>(data).to_string());
-}
-
-void FileOps::writeFile(const uint64_t data)
-{
-    writeFile(std::bitset<64>(data).to_string());
-}
-
-void FileOps::appendFile(const std::string_view data)
-{
-    writeFile(data);
-}
-
-void FileOps::appendFile(const uint8_t data)
-{
-    writeFile(std::bitset<8>(data).to_string());
-}
-
-void FileOps::appendFile(const uint16_t data)
-{
-    writeFile(std::bitset<16>(data).to_string());
-}
-
-void FileOps::appendFile(const uint32_t data)
-{
-    writeFile(std::bitset<32>(data).to_string());
-}
-
-void FileOps::appendFile(const uint64_t data)
-{
-    writeFile(std::bitset<64>(data).to_string());
-}
-
-void FileOps::appendFile(const std::vector<uint8_t>& binaryStream)
-{
-    if (!binaryStream.empty())
-    {
-        for (const auto& bindata : binaryStream)
-            writeFile(bindata);
-    }
-}
-
-void FileOps::appendFile(const std::vector<uint16_t>& binaryStream)
-{
-    if (!binaryStream.empty())
-    {
-        for (const auto& bindata : binaryStream)
-            writeFile(bindata);
-    }
-}
-
-void FileOps::appendFile(const std::vector<uint32_t>& binaryStream)
-{
-    if (!binaryStream.empty())
-    {
-        for (const auto& bindata : binaryStream)
-            writeFile(bindata);
-    }
-}
-
-void FileOps::appendFile(const std::vector<uint64_t>& binaryStream)
-{
-    if (!binaryStream.empty())
-    {
-        for (const auto& bindata : binaryStream)
-            writeFile(bindata);
-    }
-}
-
-void FileOps::writeFile(const std::vector<uint8_t>& binaryStream)
-{
-    if (!binaryStream.empty())
-    {
-        for (const auto& bindata : binaryStream)
-            writeFile(bindata);
-    }
-}
-
-void FileOps::writeFile(const std::vector<uint16_t>& binaryStream)
-{
-    if (!binaryStream.empty())
-    {
-        for (const auto& bindata : binaryStream)
-            writeFile(bindata);
-    }
-}
-
-void FileOps::writeFile(const std::vector<uint32_t>& binaryStream)
-{
-    if (!binaryStream.empty())
-    {
-        for (const auto& bindata : binaryStream)
-            writeFile(bindata);
-    }
-}
-
-void FileOps::writeFile(const std::vector<uint64_t>& binaryStream)
-{
-    if (!binaryStream.empty())
-    {
-        for (const auto& bindata : binaryStream)
-            writeFile(bindata);
-    }
-}
-
 bool FileOps::clearFile()
 {
     auto retVal = false;
@@ -574,6 +439,21 @@ bool FileOps::clearFile()
     fileLock.unlock();
     m_FileOpsCv.notify_all();
     return retVal;
+}
+
+void FileOps::writeDataTo(const std::string_view data)
+{
+    if (!fileExists())
+    {
+        if (createFile())
+            push(data);
+        else
+            throw std::runtime_error("File neither exists nor can be created");
+    }
+    else
+    {
+        push(data);
+    }
 }
 
 void FileOps::writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& excpPtr)

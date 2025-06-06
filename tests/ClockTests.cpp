@@ -238,7 +238,7 @@ TEST_F(ClockTests, testTimerThreadSafety)
             clock.start();
             ASSERT_TRUE(clock.isRunning());
             isRunning = false;
-            std::this_thread::sleep_for(std::chrono::milliseconds(999));
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
             clock.stop();
             isRunning = false;
             timerCond.notify_one();
@@ -252,7 +252,7 @@ TEST_F(ClockTests, testTimerThreadSafety)
         };
 
         std::thread t1(threadFunc1);
-        std::this_thread::sleep_for(std::chrono::milliseconds(99));
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
         std::thread t2(threadFunc2);
         t1.join();
         t2.join();
@@ -263,7 +263,7 @@ TEST_F(ClockTests, testTimerThreadSafety)
             std::lock_guard<std::mutex> lock(timerMutex);
             clock.start();
             ASSERT_TRUE(clock.isRunning());
-            std::this_thread::sleep_for(std::chrono::milliseconds(999));
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
         };
         auto threadFunc2 = [&]()
         {
@@ -272,7 +272,7 @@ TEST_F(ClockTests, testTimerThreadSafety)
             EXPECT_EQ(timeElapsed, -1.0);
         };
         std::thread t1(threadFunc1);
-        std::this_thread::sleep_for(std::chrono::milliseconds(99));
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
         std::thread t2(threadFunc2);
         t1.join();
         t2.join();
