@@ -428,7 +428,7 @@ TEST_F(FileOpsTests, testReadWrite)
     auto fileName = generateRandomFileName();
     FileOps file(maxFileSize, fileName);
     auto text = generateRandomText(maxTextSize);
-    file.writeFile(text);
+    file.write(text);
     ASSERT_TRUE(file.fileExists());
     EXPECT_FALSE(file.isEmpty());
     file.readFile();
@@ -448,12 +448,12 @@ TEST_F(FileOpsTests, testAppendFile)
     std::vector<std::string> dataQueue;
     auto text = generateRandomText(maxTextSize);
     dataQueue.push_back(text);
-    file.writeFile(text);
+    file.write(text);
     ASSERT_TRUE(file.fileExists());
     for (auto cnt = 0; cnt < 200; ++cnt)
     {
         text = generateRandomText(maxTextSize);
-        file.appendFile(text);
+        file.append(text);
         dataQueue.push_back(text);
     }
     EXPECT_FALSE(file.isEmpty());
@@ -478,7 +478,7 @@ TEST_F(FileOpsTests, testWriteFileWith_1_ByteBinaryData)
     FileOps file(maxFileSize, fileName);
     auto bindata = generateRandomBinary_1_Byte_Data(maxTextSize);
     for (const auto& data : bindata)
-        file.writeFile(data);
+        file.write(data);
 
     ASSERT_TRUE(file.fileExists());
     file.readFile();
@@ -502,7 +502,7 @@ TEST_F(FileOpsTests, testWriteFileWith_1_ByteBinaryDataStream)
     auto fileName = generateRandomFileName();
     FileOps file(maxFileSize, fileName);
     auto bindata = generateRandomBinary_1_Byte_Data(maxTextSize);
-    file.writeFile(bindata);
+    file.write(bindata);
 
     ASSERT_TRUE(file.fileExists());
     file.readFile();
@@ -527,7 +527,7 @@ TEST_F(FileOpsTests, testWriteFileWith_2_BytesBinaryData)
     FileOps file(maxFileSize, fileName);
     auto bindata = generateRandomBinary_2_Bytes_Data(maxTextSize);
     for (const auto& data : bindata)
-        file.writeFile(data);
+        file.write(data);
 
     ASSERT_TRUE(file.fileExists());
     file.readFile();
@@ -551,7 +551,7 @@ TEST_F(FileOpsTests, testWriteFileWith_2_ByteBinaryDataStream)
     auto fileName = generateRandomFileName();
     FileOps file(maxFileSize, fileName);
     auto bindata = generateRandomBinary_2_Bytes_Data(maxTextSize);
-    file.writeFile(bindata);
+    file.write(bindata);
 
     ASSERT_TRUE(file.fileExists());
     file.readFile();
@@ -576,7 +576,7 @@ TEST_F(FileOpsTests, testWriteFileWith_4_BytesBinaryData)
     FileOps file(maxFileSize, fileName);
     auto bindata = generateRandomBinary_4_Bytes_Data(maxTextSize);
     for (const auto& data : bindata)
-        file.writeFile(data);
+        file.write(data);
 
     ASSERT_TRUE(file.fileExists());
     file.readFile();
@@ -600,7 +600,7 @@ TEST_F(FileOpsTests, testWriteFileWith_4_ByteBinaryDataStream)
     auto fileName = generateRandomFileName();
     FileOps file(maxFileSize, fileName);
     auto bindata = generateRandomBinary_4_Bytes_Data(maxTextSize);
-    file.writeFile(bindata);
+    file.write(bindata);
 
     ASSERT_TRUE(file.fileExists());
     file.readFile();
@@ -625,7 +625,7 @@ TEST_F(FileOpsTests, testWriteFileWith_8_BytesBinaryData)
     FileOps file(maxFileSize, fileName);
     auto bindata = generateRandomBinary_8_Bytes_Data(maxTextSize);
     for (const auto& data : bindata)
-        file.writeFile(data);
+        file.write(data);
 
     ASSERT_TRUE(file.fileExists());
     file.readFile();
@@ -649,7 +649,7 @@ TEST_F(FileOpsTests, testWriteFileWith_8_ByteBinaryDataStream)
     auto fileName = generateRandomFileName();
     FileOps file(maxFileSize, fileName);
     auto bindata = generateRandomBinary_8_Bytes_Data(maxTextSize);
-    file.writeFile(bindata);
+    file.write(bindata);
 
     ASSERT_TRUE(file.fileExists());
     file.readFile();
@@ -677,7 +677,7 @@ TEST_F(FileOpsTests, testWriteFileWith_1_Byte_Hex_DataStream)
     for (size_t idx = 0; idx < hexData.size(); ++idx)
         hexData[idx] = hexGenerator.get8();
 
-    file.writeFile(hexData);
+    file.write(hexData);
 
     ASSERT_TRUE(file.fileExists());
     file.readFile();
@@ -705,7 +705,7 @@ TEST_F(FileOpsTests, testWriteFileWith_2_Bytes_Hex_DataStream)
     for (size_t idx = 0; idx < hexData.size(); ++idx)
         hexData[idx] = hexGenerator.get16();
 
-    file.writeFile(hexData);
+    file.write(hexData);
 
     ASSERT_TRUE(file.fileExists());
     file.readFile();
@@ -733,7 +733,7 @@ TEST_F(FileOpsTests, testWriteFileWith_4_Bytes_Hex_DataStream)
     for (size_t idx = 0; idx < hexData.size(); ++idx)
         hexData[idx] = hexGenerator.get32();
 
-    file.writeFile(hexData);
+    file.write(hexData);
 
     ASSERT_TRUE(file.fileExists());
     EXPECT_FALSE(file.isEmpty());
@@ -762,7 +762,7 @@ TEST_F(FileOpsTests, testWriteFileWith_8_Bytes_Hex_DataStream)
     for (size_t idx = 0; idx < hexData.size(); ++idx)
         hexData[idx] = hexGenerator.get32();
 
-    file.writeFile(hexData);
+    file.write(hexData);
 
     ASSERT_TRUE(file.fileExists());
     EXPECT_FALSE(file.isEmpty());
@@ -791,7 +791,7 @@ TEST_F(FileOpsTests, testWriteLargeDataChunk)
     for (auto cnt = 0; cnt < 200; ++cnt)
     {
         auto text = generateRandomText(maxTextSize);
-        file.appendFile(text);
+        file.append(text);
         while (text.size() > maxLineLen)
         {
             auto subText = text.substr(0, maxLineLen);
@@ -820,7 +820,7 @@ TEST_F(FileOpsTests, testReadFileBytesRange)
     auto fileName = generateRandomFileName();
     FileOps file(maxFileSize, fileName);
     auto text = generateRandomText(maxTextSize);
-    file.writeFile(text);
+    file.write(text);
     ASSERT_TRUE(file.fileExists());
     ASSERT_FALSE(file.isEmpty());
 
@@ -840,7 +840,7 @@ TEST_F(FileOpsTests, testReadFileBytesRangeExceptionCase)
         auto fileName = generateRandomFileName();
         FileOps file(maxFileSize, fileName);
         auto text = generateRandomText(maxTextSize);
-        file.writeFile(text);
+        file.write(text);
         ASSERT_TRUE(file.fileExists());
         ASSERT_FALSE(file.isEmpty());
 
@@ -856,7 +856,7 @@ TEST_F(FileOpsTests, testReadFileBytesRangeExceptionCase)
         auto fileName = generateRandomFileName();
         FileOps file(maxFileSize, fileName);
         auto text = generateRandomText(maxTextSize);
-        file.writeFile(text);
+        file.write(text);
         ASSERT_TRUE(file.fileExists());
         ASSERT_FALSE(file.isEmpty());
 
@@ -881,7 +881,7 @@ TEST_F(FileOpsTests, testReadFileLineRange)
     for (auto cnt = 0; cnt < 200; ++cnt)
     {
         auto text = generateRandomText(maxTextSize);
-        file.appendFile(text);
+        file.append(text);
         while (text.size() > maxLineLen)
         {
             auto subText = text.substr(0, maxLineLen);
@@ -918,7 +918,7 @@ TEST_F(FileOpsTests, testReadFileLineRangeExceptionCase)
         auto fileName = generateRandomFileName();
         FileOps file(maxFileSize, fileName);
         auto text = generateRandomText(maxTextSize);
-        file.writeFile(text);
+        file.write(text);
         ASSERT_TRUE(file.fileExists());
         ASSERT_FALSE(file.isEmpty());
 
@@ -961,12 +961,12 @@ TEST_F(FileOpsTests, testClearFile)
     std::vector<std::string> dataQueue;
     auto text = generateRandomText(maxTextSize);
     dataQueue.push_back(text);
-    file.writeFile(text);
+    file.write(text);
     ASSERT_TRUE(file.fileExists());
     for (auto cnt = 0; cnt < 2; ++cnt)
     {
         text = generateRandomText(maxTextSize);
-        file.appendFile(text);
+        file.append(text);
         dataQueue.push_back(text);
     }
     file.readFile();

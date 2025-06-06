@@ -164,3 +164,128 @@ void DataOps::flush()
     }
 }
 
+void DataOps::write(const std::string_view data)
+{
+    if (data.empty())
+        return;
+
+    writeDataTo(data);
+}
+
+void DataOps::write(const uint8_t data)
+{
+    write(std::bitset<8>(data).to_string());
+}
+
+void DataOps::write(const uint16_t data)
+{
+    write(std::bitset<16>(data).to_string());
+}
+
+void DataOps::write(const uint32_t data)
+{
+    write(std::bitset<32>(data).to_string());
+}
+
+void DataOps::write(const uint64_t data)
+{
+    write(std::bitset<64>(data).to_string());
+}
+
+void DataOps::append(const std::string_view data)
+{
+    write(data);
+}
+
+void DataOps::append(const uint8_t data)
+{
+    write(std::bitset<8>(data).to_string());
+}
+
+void DataOps::append(const uint16_t data)
+{
+    write(std::bitset<16>(data).to_string());
+}
+
+void DataOps::append(const uint32_t data)
+{
+    write(std::bitset<32>(data).to_string());
+}
+
+void DataOps::append(const uint64_t data)
+{
+    write(std::bitset<64>(data).to_string());
+}
+
+void DataOps::append(const std::vector<uint8_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            write(bindata);
+    }
+}
+
+void DataOps::append(const std::vector<uint16_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            write(bindata);
+    }
+}
+
+void DataOps::append(const std::vector<uint32_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            write(bindata);
+    }
+}
+
+void DataOps::append(const std::vector<uint64_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            write(bindata);
+    }
+}
+
+void DataOps::write(const std::vector<uint8_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            write(bindata);
+    }
+}
+
+void DataOps::write(const std::vector<uint16_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            write(bindata);
+    }
+}
+
+void DataOps::write(const std::vector<uint32_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            write(bindata);
+    }
+}
+
+void DataOps::write(const std::vector<uint64_t>& binaryStream)
+{
+    if (!binaryStream.empty())
+    {
+        for (const auto& bindata : binaryStream)
+            write(bindata);
+    }
+}
+

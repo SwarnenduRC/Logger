@@ -335,191 +335,6 @@ class FileOps : public DataOps
         bool isEmpty();
 
         /**
-         * @brief write the file.
-         * Writes the file with the data passed to it. The data is  pushed to the
-         * data records queue and then the file watcher thread will pick it up.
-         * The file is created if it does not exist. The file is opened in binary and
-         * appending mode. The file is closed after writing the data.
-         *
-         * @param [in] data The data to be written to the file
-         */
-        void writeFile(const std::string_view data);
-        /**
-         * @brief write the file.
-         * Writes the file with the binary data passed to it. The data is  pushed to the
-         * data records queue and then the file watcher thread will pick it up.
-         * The file is created if it does not exist. The file is opened in binary and
-         * appending mode. The file is closed after writing the data.
-         *
-         * @param [in] data The data to be written to the file. Is of type uint8_t
-         * @note The data is converted to a string of 8 bits and then written to the file.
-         */
-        void writeFile(const uint8_t data);
-        /**
-         * @brief write the file.
-         * Writes the file with the data passed to it. The data is  pushed to the
-         * data records queue and then the file watcher thread will pick it up.
-         * The file is created if it does not exist. The file is opened in binary and
-         * appending mode. The file is closed after writing the data.
-         *
-         * @param [in] data The data to be written to the file. Is of type uint16_t
-         * @note The data is converted to a string of 16 bits and then written to the file.
-         */
-        void writeFile(const uint16_t data);
-        /**
-         * @brief write the file.
-         * Writes the file with the data passed to it. The data is  pushed to the
-         * data records queue and then the file watcher thread will pick it up.
-         * The file is created if it does not exist. The file is opened in binary and
-         * appending mode. The file is closed after writing the data.
-         *
-         * @param [in] data The data to be written to the file. Is of type uint64_t
-         * @note The data is converted to a string of 64 bits and then written to the file.
-         */
-        void writeFile(const uint64_t data);
-        /**
-         * @brief write the file.
-         * Writes the file with the data passed to it. The data is  pushed to the
-         * data records queue and then the file watcher thread will pick it up.
-         * The file is created if it does not exist. The file is opened in binary and
-         * appending mode. The file is closed after writing the data.
-         *
-         * @param [in] data The data to be written to the file. Is of type uint32_t
-         * @note The data is converted to a string of 32 bits and then written to the file.
-         */
-        void writeFile(const uint32_t data);
-        /**
-         * @brief write the file.
-         * Writes the file with the binary data stream passed to it. The data is  pushed to the
-         * data records queue and then the file watcher thread will pick it up.
-         * The file is created if it does not exist. The file is opened in binary and
-         * appending mode. The file is closed after writing the data.
-         *
-         * @param [in] binaryStream The binary data stream (uint8_t) to be written to the file.
-         * @note It internally calls writeFile(const uint8_t data) in a loop
-         * @see writeFile(const uint8_t data)
-         */
-        void writeFile(const std::vector<uint8_t>& binaryStream);
-        /**
-         * @brief write the file.
-         * Writes the file with the binary data stream passed to it. The data is  pushed to the
-         * data records queue and then the file watcher thread will pick it up.
-         * The file is created if it does not exist. The file is opened in binary and
-         * appending mode. The file is closed after writing the data.
-         *
-         * @param [in] binaryStream The binary data stream (uint16_t) to be written to the file.
-         * @note It internally calls writeFile(const uint16_t data) in a loop
-         * @see writeFile(const uint16_t data)
-         */
-        void writeFile(const std::vector<uint16_t>& binaryStream);
-        /**
-         * @brief write the file.
-         * Writes the file with the binary data stream passed to it. The data is  pushed to the
-         * data records queue and then the file watcher thread will pick it up.
-         * The file is created if it does not exist. The file is opened in binary and
-         * appending mode. The file is closed after writing the data.
-         *
-         * @param [in] binaryStream The binary data stream (uint32_t) to be written to the file.
-         * @note It internally calls writeFile(const uint32_t data) in a loop
-         * @see writeFile(const uint32_t data)
-         */
-        void writeFile(const std::vector<uint32_t>& binaryStream);
-        /**
-         * @brief write the file.
-         * Writes the file with the binary data stream passed to it. The data is  pushed to the
-         * data records queue and then the file watcher thread will pick it up.
-         * The file is created if it does not exist. The file is opened in binary and
-         * appending mode. The file is closed after writing the data.
-         *
-         * @param [in] binaryStream The binary data stream (uint64_t) to be written to the file.
-         * @note It internally calls writeFile(const uint64_t data) in a loop
-         * @see writeFile(const uint64_t data)
-         */
-        void writeFile(const std::vector<uint64_t>& binaryStream);
-
-        /**
-         * @brief Append the file.
-         * Appends the file with the data passed to it.
-         *
-         * @param [in] data The data to be appended to the file
-         * @note It internally calls writeFile(const std::string_view data)
-         * @see writeFile(const std::string_view data)
-         */
-        void appendFile(const std::string_view data);
-        /**
-         * @brief Append the file.
-         * Appends the file with the binary data passed to it.
-         *
-         * @param [in] data The data to be appended to the file. Is of type uint8_t
-         * @note It internally calls writeFile(const uint8_t data)
-         * @see writeFile(const uint8_t data)
-         */
-        void appendFile(const uint8_t data);
-        /**
-         * @brief Append the file.
-         * Appends the file with the data passed to it.
-         *
-         * @param [in] data The data to be appended to the file. Is of type uint16_t
-         * @note It internally calls writeFile(const uint16_t data)
-         * @see writeFile(const uint16_t data)
-         */
-        void appendFile(const uint16_t data);
-        /**
-         * @brief Append the file.
-         * Appends the file with the data passed to it.
-         *
-         * @param [in] data The data to be appended to the file. Is of type uint64_t
-         * @note It internally calls writeFile(const uint64_t data)
-         * @see writeFile(const uint64_t data)
-         */
-        void appendFile(const uint64_t data);
-        /**
-         * @brief Append the file.
-         * Appends the file with the data passed to it.
-         *
-         * @param [in] data The data to be appended to the file. Is of type uint32_t
-         * @note It internally calls writeFile(const uint32_t data)
-         * @see writeFile(const uint32_t data)
-         */
-        void appendFile(const uint32_t data);
-        /**
-         * @brief Append the file.
-         * Appends the file with the binary data stream passed to it.
-         *
-         * @param [in] binaryStream The binary data stream (uint8_t) to be appended to the file.
-         * @note It internally calls writeFile(const std::vector<uint8_t>& binaryStream)
-         * @see writeFile(const std::vector<uint8_t>& binaryStream)
-         */
-        void appendFile(const std::vector<uint8_t>& binaryStream);
-        /**
-         * @brief Append the file.
-         * Appends the file with the binary data stream passed to it.
-         *
-         * @param [in] binaryStream The binary data stream (uint16_t) to be appended to the file.
-         * @note It internally calls writeFile(const std::vector<uint16_t>& binaryStream)
-         * @see writeFile(const std::vector<uint16_t>& binaryStream)
-         */
-        void appendFile(const std::vector<uint16_t>& binaryStream);
-        /**
-         * @brief Append the file.
-         * Appends the file with the binary data stream passed to it.
-         *
-         * @param [in] binaryStream The binary data stream (uint32_t) to be appended to the file.
-         * @note It internally calls writeFile(const std::vector<uint32_t>& binaryStream)
-         * @see writeFile(const std::vector<uint32_t>& binaryStream)
-         */
-        void appendFile(const std::vector<uint32_t>& binaryStream);
-        /**
-         * @brief Append the file.
-         * Appends the file with the binary data stream passed to it.
-         *
-         * @param [in] binaryStream The binary data stream (uint64_t) to be appended to the file.
-         * @note It internally calls writeFile(const std::vector<uint64_t>& binaryStream)
-         * @see writeFile(const std::vector<uint64_t>& binaryStream)
-         */
-        void appendFile(const std::vector<uint64_t>& binaryStream);
-
-        /**
          * @brief Rename the file.
          * Renames the file with the new name passed to it.
          *
@@ -582,7 +397,25 @@ class FileOps : public DataOps
         bool clearFile();
 
     protected:
-            void writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& excpPtr) override;
+        /**
+         * @brief Write to the out stream object
+         *
+         * @param [in] dataQueue The data queue to be written to the out stream object
+         * @param [out] excpPtr The exception pointer to be used for exception handling
+         *
+         * @note This function is thread safe. It uses mutex and condition variable
+         * to ensure that only one thread can write to the outstream object at a time.
+         */
+        void writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& excpPtr) override;
+
+        /**
+         * @brief Write data to the out stream object
+         *
+         * @param [in] data The data to be written to the out stream object
+         * @note This function is pure virtual and must be implemented by the derived classes.
+         * It is used to write the data to the out stream object.
+         */
+        void writeDataTo(const std::string_view data) override;
     
     private:
         /**
