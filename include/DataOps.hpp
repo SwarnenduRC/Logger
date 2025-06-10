@@ -92,7 +92,7 @@ class DataOps
         /**
          * @brief flush the data records queue.
          * It checks the data records queue and if it is not empty then
-         * notifies the watcher thread to write the data to the file
+         * notifies the watcher thread to write the data to the file/console
          * immediately.
          */
         void flush();

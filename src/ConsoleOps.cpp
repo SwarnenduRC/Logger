@@ -12,6 +12,7 @@ ConsoleOps::~ConsoleOps()
 void ConsoleOps::writeDataTo(const std::string_view data)
 {
     push(data);
+    flush();    //Flush the data immediately to console always
 }
 
 void ConsoleOps::writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& excpPtr)
