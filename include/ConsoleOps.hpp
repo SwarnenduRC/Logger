@@ -3,7 +3,7 @@
 
 #include "DataOps.hpp"
 
-#include <iostream>
+#include <string>
 #include <string_view>
 
 class ConsoleOps : public DataOps
@@ -19,7 +19,7 @@ class ConsoleOps : public DataOps
          * @brief Destructor for ConsoleOps class
          * Cleans up the console operations object.
          */
-        ~ConsoleOps();
+        virtual ~ConsoleOps();
 
         /**
          * @brief Deleted copy constructor and move constructor

@@ -93,7 +93,7 @@ void DataOps::push(const std::string_view data)
     }
     // If the data queue contains at least 256 elements
     // then notify the watcher thread that data is available
-    // and it can start writing to the file
+    // and it can start writing to the outstream object
     if (m_DataRecords.size() == 256)
     {
         m_dataReady = true;
