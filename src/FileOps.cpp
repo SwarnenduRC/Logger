@@ -388,7 +388,7 @@ void FileOps::readFile()
 
     DataQ().swap(m_FileContent); // Clear the file content queue
     // Wait for any ongoing file operations to finish
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    std::this_thread::sleep_for(std::chrono::microseconds(500));
 
     std::unique_lock<std::mutex> fileLock(m_FileOpsMutex);
     m_FileOpsCv.wait(fileLock, [this]{ return !m_isFileOpsRunning; });
