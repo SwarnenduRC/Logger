@@ -63,7 +63,7 @@ DBG_TARGET := $(LIB_DIR)/$(DBG_LIB_NAME).a
 TEST_TARGET := $(BIN_DIR)/TestLogger
 TEST_DBG_TARGET := $(BIN_DIR)/TestLogger_d
 
-all : debug release
+all : clean debug release
 
 release : $(TARGET) $(TEST_TARGET)	##Build release version of the library first and then the test release binary
 

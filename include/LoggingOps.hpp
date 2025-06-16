@@ -1,6 +1,6 @@
 /**
- * @file DataOps.hpp
- * @brief Declaration of the DataOps class for thread-safe data queue operations.
+ * @file LoggingOps.hpp
+ * @brief Declaration of the LoggingOps class for thread-safe data queue operations.
  *
  * @copyright
  * MIT License
@@ -26,8 +26,8 @@
  * SOFTWARE.
  */
 
-#ifndef DATA_OPS_HPP
-#define DATA_OPS_HPP
+#ifndef LOGGING_OPS_HPP
+#define LOGGING_OPS_HPP
 
 #include <queue>
 #include <vector>
@@ -39,7 +39,7 @@
 
 using BufferQ = std::queue<std::array<char, 1025>>;
 
-class DataOps
+class LoggingOps
 {
     public:
         /**
@@ -59,7 +59,7 @@ class DataOps
         inline void addRaisedException(const std::exception_ptr& excpPtr) noexcept      { m_excpPtrVec.emplace_back(excpPtr); }
 
         /**
-         * @brief Default constructor for DataOps class
+         * @brief Default constructor for LoggingOps class
          * Initializes the data records queue, data ready flag,
          * shutdown and exit flag, and starts the watcher thread
          *
@@ -69,25 +69,25 @@ class DataOps
          * @note This function is thread safe. It uses mutex and condition variable
          * to ensure that only one thread can keep watch and pull the data at a time.
          */
-        DataOps();
+        LoggingOps();
 
         /**
-         * @brief Destructor for DataOps class
+         * @brief Destructor for LoggingOps class
          * Stops the watcher thread and clears the data records queue
          *
          * @note This function is thread safe. It uses mutex and condition variable
          * to ensure that only one thread can stop the watcher thread and clear the data records queue at a time.
          */
-        virtual ~DataOps();
+        virtual ~LoggingOps();
 
         /**
          * @brief Deleted copy constructor and move constructor
-         * to prevent copying and moving of DataOps objects
+         * to prevent copying and moving of LoggingOps objects
          */
-        DataOps(const DataOps& rhs) = delete;
-        DataOps(DataOps&& rhs) = delete;
-        DataOps& operator=(const DataOps& rhs) = delete;
-        DataOps& operator=(DataOps&& rhs) = delete;
+        LoggingOps(const LoggingOps& rhs) = delete;
+        LoggingOps(LoggingOps&& rhs) = delete;
+        LoggingOps& operator=(const LoggingOps& rhs) = delete;
+        LoggingOps& operator=(LoggingOps&& rhs) = delete;
 
         /**
          * @brief flush the data records queue.
@@ -351,4 +351,4 @@ class DataOps
         std::vector<std::exception_ptr> m_excpPtrVec;
 };
 
-#endif  //DATA_OPS_HPP
+#endif  //LOGGING_OPS_HPP

@@ -33,7 +33,7 @@
 #ifndef FILE_OPS_HPP
 #define FILE_OPS_HPP
 
-#include "DataOps.hpp"
+#include "LoggingOps.hpp"
 
 #include <fstream>
 #include <string>
@@ -41,7 +41,7 @@
 
 using DataQ = std::queue<std::shared_ptr<std::string>>;
 
-class FileOps : public DataOps
+class FileOps : public LoggingOps
 {
     public:
         using StdTupple = std::tuple<std::string, std::string, std::string>;
@@ -321,8 +321,8 @@ class FileOps : public DataOps
          * @note This function is used to identify the class of the object
          *       in the polymorphic hierarchy. It is used to identify the class
          *       of the object at runtime.
-         * @see DataOps::getClassId()
-         * @see DataOps::getClassId() for more details
+         * @see LoggingOps::getClassId()
+         * @see LoggingOps::getClassId() for more details
          */
         inline const std::string getClassId() const override             { return "FileOps";                                 }
         /**

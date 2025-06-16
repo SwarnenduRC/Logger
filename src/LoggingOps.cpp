@@ -21,16 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * 
- * File: DataOps.cpp
- * Description: Implementation of the DataOps class for asynchronous data operations.
- * See DataOps.hpp for class definition and documentation.
+ * File: LoggingOps.cpp
+ * Description: Implementation of the LoggingOps class for asynchronous data operations.
+ * See LoggingOps.hpp for class definition and documentation.
  */
 
-#include "DataOps.hpp"
+#include "LoggingOps.hpp"
 
-///*static*/std::vector<std::exception_ptr> DataOps::m_excpPtrVec = {0};
+///*static*/std::vector<std::exception_ptr> LoggingOps::m_excpPtrVec = {0};
 
-DataOps::DataOps()
+LoggingOps::LoggingOps()
     : m_DataRecords()
     , m_dataReady(false)
     , m_shutAndExit(false)
@@ -38,7 +38,7 @@ DataOps::DataOps()
 {
 }
 
-/*virtual*/DataOps::~DataOps()
+/*virtual*/LoggingOps::~LoggingOps()
 {
     // Wait for any ongoing data operations to finish
     std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
@@ -53,7 +53,7 @@ DataOps::DataOps()
         m_watcher.join();
 }
 
-void DataOps::push(const std::string_view data)
+void LoggingOps::push(const std::string_view data)
 {
     if (data.empty())
         return;
@@ -101,7 +101,7 @@ void DataOps::push(const std::string_view data)
     }
 }
 
-bool DataOps::pop(BufferQ& data)
+bool LoggingOps::pop(BufferQ& data)
 {
     if (m_DataRecords.empty())
         return false;
@@ -114,7 +114,7 @@ bool DataOps::pop(BufferQ& data)
     return true;
 }
 
-void DataOps::keepWatchAndPull()
+void LoggingOps::keepWatchAndPull()
 {
     BufferQ dataq;
     // It is an infinite loop, but it will break out of the loop
@@ -151,7 +151,7 @@ void DataOps::keepWatchAndPull()
     } while (true);
 }
 
-void DataOps::flush()
+void LoggingOps::flush()
 {
     std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
     while (!m_DataRecords.empty())
@@ -164,7 +164,7 @@ void DataOps::flush()
     }
 }
 
-void DataOps::write(const std::string_view data)
+void LoggingOps::write(const std::string_view data)
 {
     if (data.empty())
         return;
@@ -172,52 +172,52 @@ void DataOps::write(const std::string_view data)
     writeDataTo(data);
 }
 
-void DataOps::write(const uint8_t data)
+void LoggingOps::write(const uint8_t data)
 {
     write(std::bitset<8>(data).to_string());
 }
 
-void DataOps::write(const uint16_t data)
+void LoggingOps::write(const uint16_t data)
 {
     write(std::bitset<16>(data).to_string());
 }
 
-void DataOps::write(const uint32_t data)
+void LoggingOps::write(const uint32_t data)
 {
     write(std::bitset<32>(data).to_string());
 }
 
-void DataOps::write(const uint64_t data)
+void LoggingOps::write(const uint64_t data)
 {
     write(std::bitset<64>(data).to_string());
 }
 
-void DataOps::append(const std::string_view data)
+void LoggingOps::append(const std::string_view data)
 {
     write(data);
 }
 
-void DataOps::append(const uint8_t data)
+void LoggingOps::append(const uint8_t data)
 {
     write(std::bitset<8>(data).to_string());
 }
 
-void DataOps::append(const uint16_t data)
+void LoggingOps::append(const uint16_t data)
 {
     write(std::bitset<16>(data).to_string());
 }
 
-void DataOps::append(const uint32_t data)
+void LoggingOps::append(const uint32_t data)
 {
     write(std::bitset<32>(data).to_string());
 }
 
-void DataOps::append(const uint64_t data)
+void LoggingOps::append(const uint64_t data)
 {
     write(std::bitset<64>(data).to_string());
 }
 
-void DataOps::append(const std::vector<uint8_t>& binaryStream)
+void LoggingOps::append(const std::vector<uint8_t>& binaryStream)
 {
     if (!binaryStream.empty())
     {
@@ -226,7 +226,7 @@ void DataOps::append(const std::vector<uint8_t>& binaryStream)
     }
 }
 
-void DataOps::append(const std::vector<uint16_t>& binaryStream)
+void LoggingOps::append(const std::vector<uint16_t>& binaryStream)
 {
     if (!binaryStream.empty())
     {
@@ -235,7 +235,7 @@ void DataOps::append(const std::vector<uint16_t>& binaryStream)
     }
 }
 
-void DataOps::append(const std::vector<uint32_t>& binaryStream)
+void LoggingOps::append(const std::vector<uint32_t>& binaryStream)
 {
     if (!binaryStream.empty())
     {
@@ -244,7 +244,7 @@ void DataOps::append(const std::vector<uint32_t>& binaryStream)
     }
 }
 
-void DataOps::append(const std::vector<uint64_t>& binaryStream)
+void LoggingOps::append(const std::vector<uint64_t>& binaryStream)
 {
     if (!binaryStream.empty())
     {
@@ -253,7 +253,7 @@ void DataOps::append(const std::vector<uint64_t>& binaryStream)
     }
 }
 
-void DataOps::write(const std::vector<uint8_t>& binaryStream)
+void LoggingOps::write(const std::vector<uint8_t>& binaryStream)
 {
     if (!binaryStream.empty())
     {
@@ -262,7 +262,7 @@ void DataOps::write(const std::vector<uint8_t>& binaryStream)
     }
 }
 
-void DataOps::write(const std::vector<uint16_t>& binaryStream)
+void LoggingOps::write(const std::vector<uint16_t>& binaryStream)
 {
     if (!binaryStream.empty())
     {
@@ -271,7 +271,7 @@ void DataOps::write(const std::vector<uint16_t>& binaryStream)
     }
 }
 
-void DataOps::write(const std::vector<uint32_t>& binaryStream)
+void LoggingOps::write(const std::vector<uint32_t>& binaryStream)
 {
     if (!binaryStream.empty())
     {
@@ -280,7 +280,7 @@ void DataOps::write(const std::vector<uint32_t>& binaryStream)
     }
 }
 
-void DataOps::write(const std::vector<uint64_t>& binaryStream)
+void LoggingOps::write(const std::vector<uint64_t>& binaryStream)
 {
     if (!binaryStream.empty())
     {

@@ -1,12 +1,12 @@
 #ifndef CONSOLE_OPS_HPP
 #define CONSOLE_OPS_HPP
 
-#include "DataOps.hpp"
+#include "LoggingOps.hpp"
 
 #include <string>
 #include <string_view>
 
-class ConsoleOps : public DataOps
+class ConsoleOps : public LoggingOps
 {
     public:
         /**
@@ -38,8 +38,8 @@ class ConsoleOps : public DataOps
          * @note This function is used to identify the class of the object
          *       in the polymorphic hierarchy. It is used to identify the class
          *       of the object at runtime.
-         * @see DataOps::getClassId()
-         * @see DataOps::getClassId() for more details
+         * @see LoggingOps::getClassId()
+         * @see LoggingOps::getClassId() for more details
          */
         inline const std::string getClassId() const override { return "ConsoleOps"; }
 

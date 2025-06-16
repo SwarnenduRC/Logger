@@ -217,11 +217,11 @@ TEST_F(ClockTests, testGetElapsedTime)
     }
     {
         clock.start();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         clock.stop();
         auto elapsedTime = clock.getElapsedTime(TimeUnits::MILLISECONDS);
-        EXPECT_GE(elapsedTime, 100.0);
-        EXPECT_LE(elapsedTime, 105.0);  // 100ms + 5ms (tolerance)
+        EXPECT_GE(elapsedTime, 10.0);
+        EXPECT_LE(elapsedTime, 12.0);  // 100ms + 5ms (tolerance)
     }
 }
 

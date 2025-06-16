@@ -3,7 +3,7 @@
 #include <iostream>
 
 ConsoleOps::ConsoleOps()
-    : DataOps()
+    : LoggingOps()
     , m_testing(false)
     , m_testStringStream()
     , m_isOpsRunning(false)

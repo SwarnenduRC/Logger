@@ -26,6 +26,7 @@
  * SOFTWARE.
  */
 #include "FileOps.hpp"
+#include "Clock.hpp"
 
 #include <tuple>
 #include <memory>
@@ -262,7 +263,7 @@ FileOps::FileOps(const std::uintmax_t maxFileSize,
                  const std::string_view fileName, 
                  const std::string_view filePath, 
                  const std::string_view fileExtension)
-    : DataOps()
+    : LoggingOps()
     , m_FileName(fileName)
     , m_FilePath(filePath)
     , m_FileExtension(fileExtension)
@@ -443,16 +444,55 @@ bool FileOps::clearFile()
 
 void FileOps::writeDataTo(const std::string_view data)
 {
-    if (!fileExists())
+    try
     {
-        if (createFile())
-            push(data);
+        if (data.empty())
+            return;
+
+        if (!fileExists())
+        {
+            if (createFile())
+                push(data);
+            else
+                throw std::runtime_error("File neither exists nor can be created");
+        }
         else
-            throw std::runtime_error("File neither exists nor can be created");
+        {
+            /**
+             * First check if the current log file
+             * size and the data size to be written
+             * exceeds the max file size limit set
+             * by the user. If so then rename the
+             * existing file with the current time
+             * stamp and create a new blank file
+             * for further logging/writting. Throw
+             * exception for any runtime error case.
+             */
+            auto currFileSize = getFileSize();
+            if ((currFileSize + data.size()) >= m_MaxFileSize)
+            {
+                Clock clock;
+                auto currentTimeStr = clock.getLocalTimeStr("%d%m%Y_%H%M%S");
+                auto currentFileName = getFileName();
+                auto currentFileExtension = getFileExtension();
+                auto newFileName = currentFileName.substr(0, currentFileName.find(currentFileExtension))
+                                     + "_" + currentTimeStr + currentFileExtension;
+                if (renameFile(newFileName))
+                {
+                    setFileName(currentFileName);
+                    createFile();
+                }
+                else
+                {
+                    throw std::runtime_error("File limit exceeds but can not be renamed");
+                }
+            }
+            push(data);
+        }
     }
-    else
+    catch(...)
     {
-        push(data);
+        m_excpPtrVec.emplace_back(std::current_exception());
     }
 }
 
