@@ -316,14 +316,11 @@ std::uintmax_t FileOps::getFileSize()
     if (fileExists())
     {
         flush();
-        std::unique_lock<std::mutex> fileLock(m_FileOpsMutex);
-        m_FileOpsCv.wait(fileLock, [this]{ return !m_isFileOpsRunning; });
+        std::scoped_lock<std::mutex> fileLock(m_FileOpsMutex);
         m_isFileOpsRunning = true;
         std::error_code ec;
         fileSize = std::filesystem::file_size(m_FilePathObj, ec);
         m_isFileOpsRunning = false;
-        fileLock.unlock();
-        m_FileOpsCv.notify_one();
         if (ec)
         {
             std::ostringstream os;

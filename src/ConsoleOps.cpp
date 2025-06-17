@@ -24,6 +24,7 @@ void ConsoleOps::writeDataTo(const std::string_view data)
     {
         push(data);
         flush();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
 

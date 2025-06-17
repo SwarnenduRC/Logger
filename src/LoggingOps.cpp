@@ -153,17 +153,15 @@ void LoggingOps::keepWatchAndPull()
 
 void LoggingOps::flush()
 {
-    std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
-    while (!m_DataRecords.empty())
+    if (!m_DataRecords.empty())
     {
-        m_DataRecordsCv.wait(dataLock, [this]{ return !m_dataReady; });
+        std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
         m_dataReady = true;
         dataLock.unlock();
         m_DataRecordsCv.notify_one();
-        dataLock.lock();
     }
     // Give the poor chap some breathing time
-    std::this_thread::sleep_for(std::chrono::microseconds(50));
+    std::this_thread::sleep_for(std::chrono::microseconds(500));
 }
 
 void LoggingOps::write(const std::string_view data)
