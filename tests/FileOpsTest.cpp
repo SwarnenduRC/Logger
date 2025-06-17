@@ -33,6 +33,7 @@
  */
 
 #include "FileOps.hpp"
+#include "Clock.hpp"
 #include "CommonFunc.hpp"
 
 class FileOpsTests : public CommonTestDataGenerator
@@ -876,6 +877,57 @@ TEST_F(FileOpsTests, testClearFile)
     fileContents = file.getFileContent();
     ASSERT_TRUE(fileContents.empty());
     ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testGetFileSize)
+{
+    std::uintmax_t maxFileSize = 1024 * 50;
+    std::uintmax_t maxTextSize = 25;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    std::vector<std::string> dataQueue;
+    size_t dataWrittenByteCnt = 0;
+    size_t newLineCharAdjst = 1;
+    for (auto cnt = 0; cnt < 100; ++cnt)
+    {
+        auto text = generateRandomText(maxTextSize);
+        file.append(text);
+        auto currFileSize = file.getFileSize();
+        dataWrittenByteCnt += text.size();
+        // dataWrittenByteCnt + newLineCharAdjst --> Because while writting to a file
+        // we add a new line char after each line written
+        ASSERT_EQ(currFileSize, dataWrittenByteCnt + newLineCharAdjst) << " Text = " << text << std::endl;
+        dataQueue.push_back(text);
+        ++newLineCharAdjst; // Increment it for next new line
+    }
+    EXPECT_FALSE(file.isEmpty());
+    ASSERT_TRUE(file.deleteFile());
+}
+
+TEST_F(FileOpsTests, testFileLimitExceed)
+{
+    std::uintmax_t maxFileSize = 1024;
+    std::uintmax_t maxTextSize = 255;
+    auto fileName = generateRandomFileName();
+    FileOps file(maxFileSize, fileName);
+    std::vector<std::string> dataQueue;
+    for (auto cnt = 0; cnt < 200; ++cnt)
+    {
+        auto text = generateRandomText(maxTextSize);
+        file.append(text);
+        dataQueue.push_back(text);
+    }
+    EXPECT_FALSE(file.isEmpty());
+    /* file.readFile();
+    auto fileContents = file.getFileContent();
+    ASSERT_FALSE(fileContents.empty());
+    for (const auto& data : dataQueue)
+    {
+        auto fileData = fileContents.front();
+        fileContents.pop();
+        EXPECT_EQ(data, fileData->c_str());
+    } */
+    //ASSERT_TRUE(file.deleteFile());
 }
 
 double findMedianSortedArrays(std::vector<int>& nums1, std::vector<int>& nums2) 

@@ -162,6 +162,8 @@ void LoggingOps::flush()
         m_DataRecordsCv.notify_one();
         dataLock.lock();
     }
+    // Give the poor chap some breathing time
+    std::this_thread::sleep_for(std::chrono::microseconds(50));
 }
 
 void LoggingOps::write(const std::string_view data)

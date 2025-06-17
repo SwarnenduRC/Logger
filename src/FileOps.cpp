@@ -312,12 +312,28 @@ FileOps& FileOps::setFileExtension(const std::string_view fileExtension)
 
 std::uintmax_t FileOps::getFileSize()
 {
+    std::uintmax_t fileSize = 0;
     if (fileExists())
     {
-        std::scoped_lock<std::mutex> fileLock(m_FileOpsMutex);
-        return std::filesystem::file_size(m_FilePathObj);
+        flush();
+        std::unique_lock<std::mutex> fileLock(m_FileOpsMutex);
+        m_FileOpsCv.wait(fileLock, [this]{ return !m_isFileOpsRunning; });
+        m_isFileOpsRunning = true;
+        std::error_code ec;
+        fileSize = std::filesystem::file_size(m_FilePathObj, ec);
+        m_isFileOpsRunning = false;
+        fileLock.unlock();
+        m_FileOpsCv.notify_one();
+        if (ec)
+        {
+            std::ostringstream os;
+            os << "Exception occured while reading file size-->";
+            os << "Thread[" << std::this_thread::get_id() << "], ";
+            os << "Excp Msg: " << ec.message() << std::endl;
+            throw std::runtime_error(os.str());
+        }
     }
-    return 0;
+    return fileSize;
 }
 
 bool FileOps::createFile()
@@ -388,8 +404,6 @@ void FileOps::readFile()
     flush();
 
     DataQ().swap(m_FileContent); // Clear the file content queue
-    // Wait for any ongoing file operations to finish
-    std::this_thread::sleep_for(std::chrono::microseconds(500));
 
     std::unique_lock<std::mutex> fileLock(m_FileOpsMutex);
     m_FileOpsCv.wait(fileLock, [this]{ return !m_isFileOpsRunning; });
@@ -468,6 +482,8 @@ void FileOps::writeDataTo(const std::string_view data)
              * for further logging/writting. Throw
              * exception for any runtime error case.
              */
+            flush(); //Flush the data whatever in the queue waiting to be written
+            // Now get the file size
             auto currFileSize = getFileSize();
             if ((currFileSize + data.size()) >= m_MaxFileSize)
             {
@@ -544,7 +560,6 @@ void FileOps::writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& ex
 bool FileOps::isEmpty()
 {
     flush();
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));  //Wait a while for the flushing to be finished.
     std::unique_lock<std::mutex> fileLock(m_FileOpsMutex);
     m_FileOpsCv.wait(fileLock, [this]{ return !m_isFileOpsRunning; });
     m_isFileOpsRunning = true;
