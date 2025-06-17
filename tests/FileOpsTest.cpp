@@ -33,7 +33,6 @@
  */
 
 #include "FileOps.hpp"
-#include "Clock.hpp"
 #include "CommonFunc.hpp"
 
 class FileOpsTests : public CommonTestDataGenerator
@@ -907,27 +906,37 @@ TEST_F(FileOpsTests, testGetFileSize)
 TEST_F(FileOpsTests, testFileLimitExceed)
 {
     std::uintmax_t maxFileSize = 1024;
-    std::uintmax_t maxTextSize = 255;
+    std::uintmax_t maxTextSize = 3072;
     auto fileName = generateRandomFileName();
+    auto expFilePath = std::filesystem::current_path().string() + getPathSeperator();
     FileOps file(maxFileSize, fileName);
     std::vector<std::string> dataQueue;
-    for (auto cnt = 0; cnt < 200; ++cnt)
+    for (auto cnt = 0; cnt < 400; ++cnt)
     {
         auto text = generateRandomText(maxTextSize);
         file.append(text);
         dataQueue.push_back(text);
     }
-    EXPECT_FALSE(file.isEmpty());
-    /* file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    for (const auto& data : dataQueue)
+    size_t cnt = 0;
+    for (const auto& entry : std::filesystem::directory_iterator(std::filesystem::current_path()))
     {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        EXPECT_EQ(data, fileData->c_str());
-    } */
-    //ASSERT_TRUE(file.deleteFile());
+        if (entry.path().extension() == ".txt" && entry.is_regular_file())
+            ++cnt;
+    }
+    EXPECT_GT(cnt, static_cast<size_t>(1));
+    for (const auto& entry : std::filesystem::directory_iterator(std::filesystem::current_path()))
+    {
+        if (entry.path().extension() == ".txt" && entry.is_regular_file())
+            ASSERT_TRUE(FileOps::removeFile(entry.path()));
+    }
+    size_t newCnt = 0;
+    cnt = newCnt;
+    for (const auto& entry : std::filesystem::directory_iterator(std::filesystem::current_path()))
+    {
+        if (entry.path().extension() == ".txt" && entry.is_regular_file())
+            ++newCnt;
+    }
+    EXPECT_EQ(cnt, newCnt);
 }
 
 double findMedianSortedArrays(std::vector<int>& nums1, std::vector<int>& nums2) 
