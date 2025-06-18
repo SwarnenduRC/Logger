@@ -158,7 +158,7 @@ void LoggingOps::flush()
         m_dataReady = true;
         m_DataRecordsCv.notify_one();
         // Give it sometime to get flashed
-        std::this_thread::sleep_for(std::chrono::microseconds(100));
+        std::this_thread::sleep_for(std::chrono::microseconds(200));
     }
 }
 
