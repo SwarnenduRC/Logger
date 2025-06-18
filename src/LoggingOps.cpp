@@ -155,13 +155,11 @@ void LoggingOps::flush()
 {
     if (!m_DataRecords.empty())
     {
-        std::unique_lock<std::mutex> dataLock(m_DataRecordsMtx);
         m_dataReady = true;
-        dataLock.unlock();
         m_DataRecordsCv.notify_one();
+        // Give it sometime to get flashed
+        std::this_thread::sleep_for(std::chrono::microseconds(100));
     }
-    // Give the poor chap some breathing time
-    std::this_thread::sleep_for(std::chrono::microseconds(500));
 }
 
 void LoggingOps::write(const std::string_view data)
