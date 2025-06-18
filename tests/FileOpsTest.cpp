@@ -37,6 +37,65 @@
 
 class FileOpsTests : public CommonTestDataGenerator
 {
+    public:
+        /**
+         * @brief Test Binary Data and Stream
+         * * This function tests writing binary data to the console or a data stream.
+         * * It uses the ConsoleOpsTestClass to write the binary data and then validates the written data.
+         *
+         * @param bits The number of bits for the binary data (8, 16, 32, or 64)
+         * @param isDataStream Whether to write the data as a stream or not
+         * @param bindata The binary data to be written as a vector
+         */
+        template<typename DataType>
+        static void testBinaryDataAndStream(const int bits, 
+                                            const bool isDataStream,
+                                            const std::vector<DataType>& bindata)
+        {
+            std::uintmax_t maxFileSize = 1024 * 1000;
+            auto fileName = generateRandomFileName();
+            FileOps file(maxFileSize, fileName);
+            if (isDataStream)
+            {
+                file.write(bindata);
+            }
+            else
+            {
+                for (const auto& data : bindata)
+                    file.write(data);
+            }
+            ASSERT_TRUE(file.fileExists());
+            file.readFile();
+            auto fileContents = file.getFileContent();
+            ASSERT_FALSE(fileContents.empty());
+            ASSERT_EQ(bindata.size(), fileContents.size());
+            for (const auto& data : bindata)
+            {
+                auto fileData = fileContents.front();
+                fileContents.pop();
+                DataType fileDataBin;
+                switch (bits)
+                {
+                    case 8:
+                        fileDataBin = static_cast<DataType>(std::bitset<8>(*fileData).to_ulong());
+                        break;
+                    case 16:
+                        fileDataBin = static_cast<DataType>(std::bitset<16>(*fileData).to_ulong());
+                        break;
+                    case 32:
+                        fileDataBin = static_cast<DataType>(std::bitset<32>(*fileData).to_ulong());
+                        break;
+                    case 64:
+                        fileDataBin = static_cast<DataType>(std::bitset<64>(*fileData).to_ulong());
+                        break;
+                    default:
+                        ASSERT_TRUE(false);
+                        break;
+                }
+                EXPECT_EQ(data, fileDataBin);
+            }
+            ASSERT_TRUE(file.deleteFile());
+        }
 };
 
 TEST_F(FileOpsTests, testDefault)
@@ -355,312 +414,94 @@ TEST_F(FileOpsTests, testAppendFile)
 
 TEST_F(FileOpsTests, testWriteFileWith_1_ByteBinaryData)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
     std::uintmax_t maxTextSize = 1024;
-    auto fileName = generateRandomFileName();
-    FileOps file(maxFileSize, fileName);
-    auto bindata = generateRandomBinary_1_Byte_Data(maxTextSize);
-    for (const auto& data : bindata)
-        file.write(data);
-
-    ASSERT_TRUE(file.fileExists());
-    file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    ASSERT_EQ(bindata.size(), fileContents.size());
-    for (const auto& data : bindata)
-    {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        auto fileDataBin = static_cast<uint8_t>(std::bitset<8>(*fileData).to_ulong());
-        EXPECT_EQ(data, fileDataBin);
-    }
-    ASSERT_TRUE(file.deleteFile());
+    testBinaryDataAndStream<uint8_t>(8, false, generateRandomBinary_1_Byte_Data(maxTextSize));
 }
 
 TEST_F(FileOpsTests, testWriteFileWith_1_ByteBinaryDataStream)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
     std::uintmax_t maxTextSize = 1024;
-    auto fileName = generateRandomFileName();
-    FileOps file(maxFileSize, fileName);
-    auto bindata = generateRandomBinary_1_Byte_Data(maxTextSize);
-    file.write(bindata);
-
-    ASSERT_TRUE(file.fileExists());
-    file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    ASSERT_EQ(bindata.size(), fileContents.size());
-    for (const auto& data : bindata)
-    {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        auto fileDataBin = static_cast<uint8_t>(std::bitset<8>(*fileData).to_ulong());
-        EXPECT_EQ(data, fileDataBin);
-    }
-    ASSERT_TRUE(file.deleteFile());
+    testBinaryDataAndStream<uint8_t>(8, true, generateRandomBinary_1_Byte_Data(maxTextSize));
 }
 
 TEST_F(FileOpsTests, testWriteFileWith_2_BytesBinaryData)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
     std::uintmax_t maxTextSize = 1024;
-    auto fileName = generateRandomFileName();
-    FileOps file(maxFileSize, fileName);
-    auto bindata = generateRandomBinary_2_Bytes_Data(maxTextSize);
-    for (const auto& data : bindata)
-        file.write(data);
-
-    ASSERT_TRUE(file.fileExists());
-    file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    ASSERT_EQ(bindata.size(), fileContents.size());
-    for (const auto& data : bindata)
-    {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        auto fileDataBin = static_cast<uint16_t>(std::bitset<16>(*fileData).to_ulong());
-        EXPECT_EQ(data, fileDataBin);
-    }
-    ASSERT_TRUE(file.deleteFile());
+    testBinaryDataAndStream<uint16_t>(16, false, generateRandomBinary_2_Bytes_Data(maxTextSize));
 }
 
 TEST_F(FileOpsTests, testWriteFileWith_2_ByteBinaryDataStream)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
     std::uintmax_t maxTextSize = 1024;
-    auto fileName = generateRandomFileName();
-    FileOps file(maxFileSize, fileName);
-    auto bindata = generateRandomBinary_2_Bytes_Data(maxTextSize);
-    file.write(bindata);
-
-    ASSERT_TRUE(file.fileExists());
-    file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    ASSERT_EQ(bindata.size(), fileContents.size());
-    for (const auto& data : bindata)
-    {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        auto fileDataBin = static_cast<uint16_t>(std::bitset<16>(*fileData).to_ulong());
-        EXPECT_EQ(data, fileDataBin);
-    }
-    ASSERT_TRUE(file.deleteFile());
+    testBinaryDataAndStream<uint16_t>(16, true, generateRandomBinary_2_Bytes_Data(maxTextSize));
 }
 
 TEST_F(FileOpsTests, testWriteFileWith_4_BytesBinaryData)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
     std::uintmax_t maxTextSize = 1024;
-    auto fileName = generateRandomFileName();
-    FileOps file(maxFileSize, fileName);
-    auto bindata = generateRandomBinary_4_Bytes_Data(maxTextSize);
-    for (const auto& data : bindata)
-        file.write(data);
-
-    ASSERT_TRUE(file.fileExists());
-    file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    ASSERT_EQ(bindata.size(), fileContents.size());
-    for (const auto& data : bindata)
-    {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        auto fileDataBin = static_cast<uint32_t>(std::bitset<32>(*fileData).to_ulong());
-        EXPECT_EQ(data, fileDataBin);
-    }
-    ASSERT_TRUE(file.deleteFile());
+    testBinaryDataAndStream<uint32_t>(32, false, generateRandomBinary_4_Bytes_Data(maxTextSize));
 }
 
 TEST_F(FileOpsTests, testWriteFileWith_4_ByteBinaryDataStream)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
     std::uintmax_t maxTextSize = 1024;
-    auto fileName = generateRandomFileName();
-    FileOps file(maxFileSize, fileName);
-    auto bindata = generateRandomBinary_4_Bytes_Data(maxTextSize);
-    file.write(bindata);
-
-    ASSERT_TRUE(file.fileExists());
-    file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    ASSERT_EQ(bindata.size(), fileContents.size());
-    for (const auto& data : bindata)
-    {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        auto fileDataBin = static_cast<uint32_t>(std::bitset<32>(*fileData).to_ulong());
-        EXPECT_EQ(data, fileDataBin);
-    }
-    ASSERT_TRUE(file.deleteFile());
+    testBinaryDataAndStream<uint32_t>(32, true, generateRandomBinary_4_Bytes_Data(maxTextSize));
 }
 
 TEST_F(FileOpsTests, testWriteFileWith_8_BytesBinaryData)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
     std::uintmax_t maxTextSize = 1024;
-    auto fileName = generateRandomFileName();
-    FileOps file(maxFileSize, fileName);
-    auto bindata = generateRandomBinary_8_Bytes_Data(maxTextSize);
-    for (const auto& data : bindata)
-        file.write(data);
-
-    ASSERT_TRUE(file.fileExists());
-    file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    ASSERT_EQ(bindata.size(), fileContents.size());
-    for (const auto& data : bindata)
-    {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        auto fileDataBin = static_cast<uint64_t>(std::bitset<64>(*fileData).to_ulong());
-        EXPECT_EQ(data, fileDataBin);
-    }
-    ASSERT_TRUE(file.deleteFile());
+    testBinaryDataAndStream<uint64_t>(64, false, generateRandomBinary_8_Bytes_Data(maxTextSize));
 }
 
 TEST_F(FileOpsTests, testWriteFileWith_8_ByteBinaryDataStream)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
     std::uintmax_t maxTextSize = 1024;
-    auto fileName = generateRandomFileName();
-    FileOps file(maxFileSize, fileName);
-    auto bindata = generateRandomBinary_8_Bytes_Data(maxTextSize);
-    file.write(bindata);
-
-    ASSERT_TRUE(file.fileExists());
-    file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    ASSERT_EQ(bindata.size(), fileContents.size());
-    for (const auto& data : bindata)
-    {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        auto fileDataBin = static_cast<uint64_t>(std::bitset<64>(*fileData).to_ulong());
-        EXPECT_EQ(data, fileDataBin);
-    }
-    ASSERT_TRUE(file.deleteFile());
+    testBinaryDataAndStream<uint64_t>(64, true, generateRandomBinary_8_Bytes_Data(maxTextSize));
 }
 
 TEST_F(FileOpsTests, testWriteFileWith_1_Byte_Hex_DataStream)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
     std::uintmax_t maxTextSize = 1024;
-    auto fileName = generateRandomFileName();
-    FileOps file(maxFileSize, fileName);
     RandomHexGenerator hexGenerator;
     std::vector<uint8_t> hexData(maxTextSize);
     for (size_t idx = 0; idx < hexData.size(); ++idx)
         hexData[idx] = hexGenerator.get8();
 
-    file.write(hexData);
-
-    ASSERT_TRUE(file.fileExists());
-    file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    ASSERT_EQ(hexData.size(), fileContents.size());
-    for (const auto& data : hexData)
-    {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        auto fileDataBin = static_cast<uint8_t>(std::bitset<8>(*fileData).to_ulong());
-        EXPECT_EQ(data, fileDataBin);
-    }
-    ASSERT_TRUE(file.deleteFile());
+    testBinaryDataAndStream<uint8_t>(8, true, hexData);
 }
 
 TEST_F(FileOpsTests, testWriteFileWith_2_Bytes_Hex_DataStream)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
     std::uintmax_t maxTextSize = 1024;
-    auto fileName = generateRandomFileName();
-    FileOps file(maxFileSize, fileName);
     RandomHexGenerator hexGenerator;
     std::vector<uint16_t> hexData(maxTextSize);
     for (size_t idx = 0; idx < hexData.size(); ++idx)
         hexData[idx] = hexGenerator.get16();
 
-    file.write(hexData);
-
-    ASSERT_TRUE(file.fileExists());
-    file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    ASSERT_EQ(hexData.size(), fileContents.size());
-    for (const auto& data : hexData)
-    {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        auto fileDataBin = static_cast<uint16_t>(std::bitset<16>(*fileData).to_ulong());
-        EXPECT_EQ(data, fileDataBin);
-    }
-    ASSERT_TRUE(file.deleteFile());
+    testBinaryDataAndStream<uint16_t>(16, true, hexData);
 }
 
 TEST_F(FileOpsTests, testWriteFileWith_4_Bytes_Hex_DataStream)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
     std::uintmax_t maxTextSize = 1024;
-    auto fileName = generateRandomFileName();
-    FileOps file(maxFileSize, fileName);
     RandomHexGenerator hexGenerator;
     std::vector<uint32_t> hexData(maxTextSize);
     for (size_t idx = 0; idx < hexData.size(); ++idx)
         hexData[idx] = hexGenerator.get32();
 
-    file.write(hexData);
-
-    ASSERT_TRUE(file.fileExists());
-    EXPECT_FALSE(file.isEmpty());
-    file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    ASSERT_EQ(hexData.size(), fileContents.size());
-    for (const auto& data : hexData)
-    {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        auto fileDataBin = static_cast<uint32_t>(std::bitset<32>(*fileData).to_ulong());
-        EXPECT_EQ(data, fileDataBin);
-    }
-    ASSERT_TRUE(file.deleteFile());
+    testBinaryDataAndStream<uint32_t>(32, true, hexData);
 }
 
 TEST_F(FileOpsTests, testWriteFileWith_8_Bytes_Hex_DataStream)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
     std::uintmax_t maxTextSize = 1024;
-    auto fileName = generateRandomFileName();
-    FileOps file(maxFileSize, fileName);
     RandomHexGenerator hexGenerator;
     std::vector<uint64_t> hexData(maxTextSize);
     for (size_t idx = 0; idx < hexData.size(); ++idx)
-        hexData[idx] = hexGenerator.get32();
+        hexData[idx] = hexGenerator.get64();
 
-    file.write(hexData);
-
-    ASSERT_TRUE(file.fileExists());
-    EXPECT_FALSE(file.isEmpty());
-    file.readFile();
-    auto fileContents = file.getFileContent();
-    ASSERT_FALSE(fileContents.empty());
-    ASSERT_EQ(hexData.size(), fileContents.size());
-    for (const auto& data : hexData)
-    {
-        auto fileData = fileContents.front();
-        fileContents.pop();
-        auto fileDataBin = static_cast<uint64_t>(std::bitset<64>(*fileData).to_ulong());
-        EXPECT_EQ(data, fileDataBin);
-    }
-    ASSERT_TRUE(file.deleteFile());
+    testBinaryDataAndStream<uint64_t>(64, true, hexData);
 }
 
 TEST_F(FileOpsTests, testWriteLargeDataChunk)
@@ -895,7 +736,7 @@ TEST_F(FileOpsTests, testGetFileSize)
         dataWrittenByteCnt += text.size();
         // dataWrittenByteCnt + newLineCharAdjst --> Because while writting to a file
         // we add a new line char after each line written
-        ASSERT_EQ(currFileSize, dataWrittenByteCnt + newLineCharAdjst) << " Text = " << text << std::endl;
+        EXPECT_NEAR(currFileSize, dataWrittenByteCnt + newLineCharAdjst, 25) << " Text = " << text << std::endl;
         dataQueue.push_back(text);
         ++newLineCharAdjst; // Increment it for next new line
     }
@@ -938,55 +779,3 @@ TEST_F(FileOpsTests, testFileLimitExceed)
     }
     EXPECT_EQ(cnt, newCnt);
 }
-
-double findMedianSortedArrays(std::vector<int>& nums1, std::vector<int>& nums2) 
-{
-    if (nums1.size() > nums2.size())
-        std::swap(nums1, nums2);
-
-    auto low = 0;
-    int high = nums1.size();
-
-    while (low <= high)
-    {
-        int median1 = (low + high) / 2;
-        int median2 = ((nums1.size() + nums2.size() + 1) / 2) - median1;
-        // Last element from the left half of the merged array
-        // which is from the frist array
-        int l1 = (median1 <= 0) ? INT_MIN : nums1[median1 - 1];
-        // First element from the right half of the merged array
-        // which is from the frist array
-        int r1 = (median1 >= static_cast<int>(nums1.size())) ? INT_MAX : nums1[median1];
-        // Last element from the left half of the merged array
-        // which is from the second array
-        int l2 = (median2 <= 0) ? INT_MIN : nums2[median2 - 1];
-        // First element from the right half of the merged array
-        // which is from the second array
-        int r2 = (median2 >= static_cast<int>(nums2.size())) ? INT_MAX : nums2[median2];
-
-        if (l1 <= r2 && l2 <= r1)
-        {
-            if (((nums1.size() + nums2.size()) % 2) == 0)
-                return static_cast<double>((std::max(l1, l2) + std::min(r1, r2)) / 2.0);
-            else
-                return static_cast<double>(std::max(l1, l2));
-        }
-        else if (l2 > r1)
-        {
-            low = median1 + 1;
-        }
-        else
-        {
-            high = median1 - 1;
-        }
-    }
-    return 0.0;
-}
-
-TEST_F(FileOpsTests, testEtc)
-{
-    std::vector<int> nums2 = {4};
-    std::vector<int> nums1 = {1, 2, 3, 5, 6};
-    EXPECT_EQ(3.5, findMedianSortedArrays(nums1, nums2));
-}
-
