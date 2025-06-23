@@ -59,6 +59,7 @@ namespace logger
             Logger& setLineNo(const size_t val);
             Logger& setFunctionName(const std::string_view val);
             Logger& setFileName(const std::string_view val);
+            Logger& setMarker(const std::string_view val);
 
             inline const std::stringstream& getLogStream() const noexcept { return m_logStream; }
 
@@ -81,10 +82,6 @@ namespace logger
             }
 
         protected:
-            void vlog(const LOG_TYPE& logType, 
-                    const std::string_view formatStr, 
-                    std::format_args args);
-
             virtual void populatePrerequisitFileds(const LOG_TYPE& logType);
             virtual void constructLogMsgPrefix(const LOG_TYPE& logType);
             virtual void constructLogMsgPrefixFirstPart();
@@ -94,6 +91,10 @@ namespace logger
             static const UNORD_STRING_MAP m_stringToEnumMap;
             static const UNORD_LOG_TYPE_MAP m_EnumToStringMap;
 
+            void vlog(const LOG_TYPE& logType, 
+                    const std::string_view formatStr, 
+                    std::format_args args);
+
             std::unique_ptr<LoggingOps> m_pLogger;
 
             std::thread::id m_threadID;
@@ -102,6 +103,17 @@ namespace logger
             std::string m_funcName;
             std::string m_fileName;
             bool m_isFileNameRequired;
+            /**
+             * @brief Log marker
+             * Marks what kind of log function
+             * is in play. For function entry
+             * it should be >>, for function exit
+             * it is <<, for any other cases it
+             * is >, unless customized otherwise.
+             * 
+             * @note By default it is FORWARD_ANGLE(>)
+             */
+            std::string m_logMarker = FORWARD_ANGLE.data();
 
             std::stringstream m_logStream;
     };

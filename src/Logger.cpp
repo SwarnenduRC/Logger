@@ -56,7 +56,7 @@ namespace logger
         , m_lineNo(0)
         , m_isFileNameRequired(false)
     {
-#ifdef FILE_NAME_REQUIRED
+#if defined(__FILE_NAME_REQUIRED__) // Should have been defined either in make file or cmake during compilation
         m_isFileNameRequired = true;
 #endif
     }
@@ -86,6 +86,14 @@ namespace logger
     Logger& Logger::setThreadId(const std::thread::id& val)
     {
         m_threadID = val;
+        return *this;
+    }
+
+    Logger& Logger::setMarker(const std::string_view val)
+    {
+        if (!val.empty())
+            m_logMarker = val;
+
         return *this;
     }
 
@@ -120,27 +128,48 @@ namespace logger
 
     void Logger::constructLogMsgPrefixSecondPart()
     {
-        m_logStream << std::right << std::setw(sizeof(size_t)) << m_threadID << FIELD_SEPARATOR;
+        m_logStream << std::right 
+                    << std::setw(sizeof(size_t)) 
+                    << m_threadID 
+                    << FIELD_SEPARATOR;
+
         if (m_isFileNameRequired)
-            m_logStream << std::right << std::setw(128) << m_fileName << FIELD_SEPARATOR;
+            m_logStream << std::right 
+                        << std::setw(128) 
+                        << m_fileName 
+                        << FIELD_SEPARATOR;
 
         std::string funcName;
         if (std::string::npos != m_funcName.find(":"))
         {
             auto className = m_funcName.substr(0, m_funcName.find_first_of(":") - 1);
             funcName = m_funcName.substr(m_funcName.find_last_of(":") + 1);
-            m_logStream << std::right << std::setw(128) << className << FIELD_SEPARATOR;
+            m_logStream << std::right 
+                        << std::setw(128) 
+                        << className 
+                        << FIELD_SEPARATOR;
         }
         else
         {
             funcName = m_funcName;
         }
         if (funcName.find("(") != std::string::npos)
-            m_logStream << std::right << std::setw(128) << funcName.substr(0, funcName.find_first_of("(")) << FIELD_SEPARATOR;
+            m_logStream << std::right 
+                        << std::setw(128) 
+                        << funcName.substr(0, funcName.find_first_of("(")) 
+                        << FIELD_SEPARATOR;
         else
-            m_logStream << std::right << std::setw(128) << m_funcName << FIELD_SEPARATOR;
+            m_logStream << std::right 
+                        << std::setw(128) 
+                        << m_funcName 
+                        << FIELD_SEPARATOR;
         
-        m_logStream << std::right << std::setw(sizeof(size_t)) << m_lineNo << FIELD_SEPARATOR;
+        m_logStream << std::right 
+                    << std::setw(sizeof(size_t)) 
+                    << m_lineNo 
+                    << FIELD_SEPARATOR
+                    << m_logMarker
+                    << ONE_SPACE;
     }
 
     void Logger::vlog(const LOG_TYPE& logType,
@@ -149,7 +178,7 @@ namespace logger
     {
         populatePrerequisitFileds(logType);
         auto logMsg = std::vformat(formatStr, args);
-        m_logStream << logMsg << "\n";
+        m_logStream << logMsg << "\n";  //Add a line break after each log message printed
     }
 }   //namespace logger
 

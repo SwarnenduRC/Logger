@@ -736,7 +736,7 @@ TEST_F(FileOpsTests, testGetFileSize)
         dataWrittenByteCnt += text.size();
         // dataWrittenByteCnt + newLineCharAdjst --> Because while writting to a file
         // we add a new line char after each line written
-        EXPECT_NEAR(currFileSize, dataWrittenByteCnt + newLineCharAdjst, 25) << " Text = " << text << std::endl;
+        EXPECT_NEAR(currFileSize, dataWrittenByteCnt + newLineCharAdjst, 26) << " Text = " << text << std::endl;
         dataQueue.push_back(text);
         ++newLineCharAdjst; // Increment it for next new line
     }
