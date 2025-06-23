@@ -94,11 +94,6 @@ namespace logger
         constructLogMsgPrefix(logType);
     }
 
-    void Logger::populatePrerequisitFileds(const std::string_view logType)
-    {
-        constructLogMsgPrefix(convertStringToLogTypeEnum(logType));
-    }
-
     void Logger::constructLogMsgPrefix(const LOG_TYPE& logType)
     {        
         constructLogMsgPrefixFirstPart();
@@ -146,6 +141,15 @@ namespace logger
             m_logStream << std::right << std::setw(128) << m_funcName << FIELD_SEPARATOR;
         
         m_logStream << std::right << std::setw(sizeof(size_t)) << m_lineNo << FIELD_SEPARATOR;
+    }
+
+    void Logger::vlog(const LOG_TYPE& logType,
+                        const std::string_view formatStr, 
+                        std::format_args args)
+    {
+        populatePrerequisitFileds(logType);
+        auto logMsg = std::vformat(formatStr, args);
+        m_logStream << logMsg << "\n";
     }
 }   //namespace logger
 

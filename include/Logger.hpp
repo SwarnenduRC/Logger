@@ -4,6 +4,10 @@
 #include "LoggingOps.hpp"
 #include "Clock.hpp"
 
+#include <format>
+#include <__format/format_arg_store.h>
+#include <cassert>
+
 namespace logger
 {
     enum class LOG_TYPE
@@ -58,10 +62,30 @@ namespace logger
 
             inline const std::stringstream& getLogStream() const noexcept { return m_logStream; }
 
-            virtual void populatePrerequisitFileds(const LOG_TYPE& logType);
-            virtual void populatePrerequisitFileds(const std::string_view logType);
+            template<typename ...Args>
+            void log(const LOG_TYPE& logType,
+                    const std::string_view formatStr,
+                    Args&&... args)
+            {
+                vlog(logType, formatStr, std::make_format_args(std::forward<Args>(args)...));
+            }
+
+            template<typename ...Args>
+            void log(const std::string_view logType,
+                    const std::string_view formatStr,
+                    Args&&... args)
+            {
+                log(convertStringToLogTypeEnum(logType),
+                    formatStr,
+                    std::forward(args...));
+            }
 
         protected:
+            void vlog(const LOG_TYPE& logType, 
+                    const std::string_view formatStr, 
+                    std::format_args args);
+
+            virtual void populatePrerequisitFileds(const LOG_TYPE& logType);
             virtual void constructLogMsgPrefix(const LOG_TYPE& logType);
             virtual void constructLogMsgPrefixFirstPart();
             virtual void constructLogMsgPrefixSecondPart();
