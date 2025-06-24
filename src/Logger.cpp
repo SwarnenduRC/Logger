@@ -4,9 +4,11 @@
 
 #include <iomanip>
 
-#define __FILE_LOGGING__
+//#define __FILE_LOGGING__
 #define __FILE_SIZE__ 1024
 #define __LOG_FILE_NAME__ "AppLogs.txt"
+#define __FILE_PATH__ "/tmp/"
+#define __FILE_EXTN__ ".log"
 
 namespace logger
 {
@@ -55,41 +57,55 @@ namespace logger
             return m_EnumToStringMap.cend()->second;
     }
 
-    /*static*/ void Logger::buildLogObject() noexcept
+    /*static*/ LoggingOps& Logger::buildLogObject() noexcept
     {
         static std::unique_ptr<LoggingOps> pLoggingOps;
         static auto initialize = true;  // First time TRUE and then always FALSE
         while (initialize)
         {
+#ifdef __FILE_LOGGING__ // Is it going to be a file logging ops?
             std::ostringstream parser;
             uintmax_t fileSize = 1024 * 1000;   // Default max log file size is 1 MB
             std::string fileName;
             std::string fileExtn;
             std::string filePath;
-
-#ifdef __FILE_LOGGING__ // Is it going to be a file logging ops?
 #ifdef __LOG_FILE_NAME__
-
             parser << __LOG_FILE_NAME__;
             fileName = parser.str();
-            parser.clear();
-
             // Break out then and there if file logging is requested
             // but log file name is not provided. We are not assuming
             // any log file name on our own in any case
             if (fileName.empty())
                 break;
-
+#endif  // __LOG_FILE_NAME__
 #ifdef __FILE_SIZE__    // Is the max log file size provided?
-
             parser << __FILE_SIZE__;
             char* pConverted = nullptr;
             fileSize = std::strtoul(parser.str().c_str(), &pConverted, 10);
 
+            if (pConverted == parser.str().c_str())
+                break; // Invalid file size not acceptable
 #endif // __FILE_SIZE__
-#endif  // __LOG_FILE_NAME__
+#ifdef __FILE_EXTN__    // IS there a separate file extn also available from user?
+            parser.clear();
+            parser << __FILE_EXTN__;
+            fileExtn = parser.str();
+#endif  // __FILE_EXTN__
+#ifdef __FILE_PATH__
+            parser.clear();
+            parser << __FILE_PATH__;
+            filePath = parser.str();
+            std::filesystem::path path(filePath);
+            if (!std::filesystem::exists(path) && std::filesystem::is_directory(path))
+                break;  // Invalid file path not allowed
+#endif // __FILE_PATH__
+            pLoggingOps.reset(new FileOps(fileSize, fileName, filePath, fileExtn));
+#else   // Plain console logging it is
+            pLoggingOps.reset(new ConsoleOps());
 #endif  // __FILE_LOGGING__
         }
+        initialize = false; // By this time initialization is completed
+        return *pLoggingOps;
     }
 
     Logger::Logger(const std::string_view timeFormat)

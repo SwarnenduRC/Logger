@@ -2,6 +2,7 @@
 #define LOGGER_HPP
 
 #include "Clock.hpp"
+#include "LoggingOps.hpp"
 
 #include <format>
 #include <__format/format_arg_store.h>
@@ -45,7 +46,7 @@ namespace logger
         public:
             static LOG_TYPE convertStringToLogTypeEnum(const std::string_view type) noexcept;
             static std::string covertLogTypeEnumToString(const LOG_TYPE& type) noexcept;
-            static void buildLogObject() noexcept;
+            static LoggingOps& buildLogObject() noexcept;
 
             Logger() = delete;
             Logger(const std::string_view timeFormat);
