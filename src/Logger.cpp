@@ -1,6 +1,12 @@
 #include "Logger.hpp"
+#include "FileOps.hpp"
+#include "ConsoleOps.hpp"
 
 #include <iomanip>
+
+#define __FILE_LOGGING__
+#define __FILE_SIZE__ 1024
+#define __LOG_FILE_NAME__ "AppLogs.txt"
 
 namespace logger
 {
@@ -49,9 +55,45 @@ namespace logger
             return m_EnumToStringMap.cend()->second;
     }
 
+    /*static*/ void Logger::buildLogObject() noexcept
+    {
+        static std::unique_ptr<LoggingOps> pLoggingOps;
+        static auto initialize = true;  // First time TRUE and then always FALSE
+        while (initialize)
+        {
+            std::ostringstream parser;
+            uintmax_t fileSize = 1024 * 1000;   // Default max log file size is 1 MB
+            std::string fileName;
+            std::string fileExtn;
+            std::string filePath;
+
+#ifdef __FILE_LOGGING__ // Is it going to be a file logging ops?
+#ifdef __LOG_FILE_NAME__
+
+            parser << __LOG_FILE_NAME__;
+            fileName = parser.str();
+            parser.clear();
+
+            // Break out then and there if file logging is requested
+            // but log file name is not provided. We are not assuming
+            // any log file name on our own in any case
+            if (fileName.empty())
+                break;
+
+#ifdef __FILE_SIZE__    // Is the max log file size provided?
+
+            parser << __FILE_SIZE__;
+            char* pConverted = nullptr;
+            fileSize = std::strtoul(parser.str().c_str(), &pConverted, 10);
+
+#endif // __FILE_SIZE__
+#endif  // __LOG_FILE_NAME__
+#endif  // __FILE_LOGGING__
+        }
+    }
+
     Logger::Logger(const std::string_view timeFormat)
-        : m_pLogger(nullptr)
-        , m_threadID()
+        : m_threadID()
         , m_clock(timeFormat)
         , m_lineNo(0)
         , m_isFileNameRequired(false)
