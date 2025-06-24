@@ -1,7 +1,6 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
-#include "LoggingOps.hpp"
 #include "Clock.hpp"
 
 #include <format>
@@ -46,6 +45,7 @@ namespace logger
         public:
             static LOG_TYPE convertStringToLogTypeEnum(const std::string_view type) noexcept;
             static std::string covertLogTypeEnumToString(const LOG_TYPE& type) noexcept;
+            static void buildLogObject() noexcept;
 
             Logger() = delete;
             Logger(const std::string_view timeFormat);
@@ -94,8 +94,6 @@ namespace logger
             void vlog(const LOG_TYPE& logType, 
                     const std::string_view formatStr, 
                     std::format_args args);
-
-            std::unique_ptr<LoggingOps> m_pLogger;
 
             std::thread::id m_threadID;
             Clock m_clock;
