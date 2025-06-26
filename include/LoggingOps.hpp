@@ -31,6 +31,7 @@
 
 #include <queue>
 #include <vector>
+#include <list>
 #include <array>
 #include <mutex>
 #include <thread>
@@ -42,6 +43,51 @@ using BufferQ = std::queue<std::array<char, 1025>>;
 class LoggingOps
 {
     public:
+        /**
+         * @brief Overloaded output operator for LoggingOps class
+         *
+         * @param [in] oss The output string stream
+         * @param [inout] obj The LoggingOps object
+         * @note Doesn't support chaining. It is used to write data to the LoggingOps object.
+         */
+        friend void operator<<(LoggingOps& obj, const std::ostringstream& oss);
+
+        /**
+         * @brief Overloaded output operator for LoggingOps class
+         *
+         * @param [in] iss The input string stream
+         * @param [inout] obj The LoggingOps object
+         * @note Doesn't support chaining. It is used to write data to the LoggingOps object.
+         */
+        friend void operator<<(LoggingOps& obj, const std::istringstream& iss);
+
+        /**
+         * @brief Overloaded output operator for LoggingOps class
+         *
+         * @param [in] data The data to be written to the LoggingOps object
+         * @param [inout] obj The LoggingOps object
+         * @note Doesn't support chaining. It is used to write data to the LoggingOps object.
+         */
+        friend void operator<<(LoggingOps& obj, const std::string_view data);
+
+        /**
+         * @brief Overloaded output operator for LoggingOps class
+         *
+         * @param [in] dataVec The data vector to be written to the LoggingOps object
+         * @param [inout] obj The LoggingOps object
+         * @note Doesn't support chaining. It is used to write data to the LoggingOps object.
+         */
+        friend void operator<<(LoggingOps& obj, const std::vector<std::string_view>& dataVec);
+
+        /**
+         * @brief Overloaded output operator for LoggingOps class
+         *
+         * @param [in] dataList The data list to be written to the LoggingOps object
+         * @param [inout] obj The LoggingOps object
+         * @note Doesn't support chaining. It is used to write data to the LoggingOps object.
+         */
+        friend void operator<<(LoggingOps& obj, const std::list<std::string_view>& dataList);
+
         /**
          * @brief Get all the exceptions happened during the file ops
          *
@@ -108,11 +154,28 @@ class LoggingOps
 
         /**
          * @brief write the data.
+         * Writes the data passed to it. The data is  pushed to the
+         * data records queue and then the watcher thread will pick it up.
+         *
+         * @param [in] dataVec The data in a vector to be written to the file
+         */
+        void write(const std::vector<std::string_view>& dataVec) noexcept;
+
+        /**
+         * @brief write the data.
+         * Writes the data passed to it. The data is  pushed to the
+         * data records queue and then the file watcher thread will pick it up.
+         *
+         * @param [in] dataList The data in a list to be written to the file
+         */
+        void write(const std::list<std::string_view>& dataList) noexcept;
+
+        /**
+         * @brief write the data.
          * Writes the binary data passed to it. The data is  pushed to the
          * data records queue and then the file watcher thread will pick it up.
          *
          * @param [in] data The data to be written to. Is of type uint8_t
-         * @note The data is converted to a string of 8 bits and then written to the out stream.
          */
         void write(const uint8_t data);
 

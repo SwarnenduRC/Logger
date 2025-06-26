@@ -57,9 +57,9 @@ namespace logger
             return m_EnumToStringMap.cend()->second;
     }
 
-    /*static*/ LoggingOps& Logger::buildLogObject() noexcept
+    /*static*/ LoggingOps* Logger::buildLoggingOpsObject() noexcept
     {
-        static std::unique_ptr<LoggingOps> pLoggingOps;
+        static LoggingOps* pLoggingOps = nullptr;
         static auto initialize = true;  // First time TRUE and then always FALSE
         while (initialize)
         {
@@ -99,13 +99,13 @@ namespace logger
             if (!std::filesystem::exists(path) && std::filesystem::is_directory(path))
                 break;  // Invalid file path not allowed
 #endif // __FILE_PATH__
-            pLoggingOps.reset(new FileOps(fileSize, fileName, filePath, fileExtn));
+            pLoggingOps = new FileOps(fileSize, fileName, filePath, fileExtn);
 #else   // Plain console logging it is
-            pLoggingOps.reset(new ConsoleOps());
+            pLoggingOps = new ConsoleOps();
 #endif  // __FILE_LOGGING__
+            initialize = false; // By this time initialization is completed
         }
-        initialize = false; // By this time initialization is completed
-        return *pLoggingOps;
+        return pLoggingOps;
     }
 
     Logger::Logger(const std::string_view timeFormat)
@@ -157,7 +157,32 @@ namespace logger
 
     void Logger::populatePrerequisitFileds(const LOG_TYPE& logType)
     {
+        m_logStream.clear();
         constructLogMsgPrefix(logType);
+        // Check if it is an entry or exit log. If so, then put
+        // [ClassName: FunctionName] SPACE before the actual log msg
+        if (FORWARD_ANGLES == m_logMarker || BACKWARD_ANGLES == m_logMarker)
+        {
+            std::string funcName;
+            std::string className;
+            if (std::string::npos != m_funcName.find(":"))
+            {
+                className = m_funcName.substr(0, m_funcName.find_first_of(":") - 1);
+                funcName = m_funcName.substr(m_funcName.find_last_of(":") + 1);
+            }
+            else
+            {
+                funcName = m_funcName;
+            }
+            funcName = funcName.substr(0, funcName.find_first_of("("));
+            m_logStream << LEFT_SQUARE_BRACE
+                        << className
+                        << COLONE_SEP
+                        << ONE_SPACE
+                        << funcName
+                        << RIGHT_SQUARE_BRACE
+                        << ONE_SPACE;
+        }
     }
 
     void Logger::constructLogMsgPrefix(const LOG_TYPE& logType)
@@ -187,7 +212,7 @@ namespace logger
     void Logger::constructLogMsgPrefixSecondPart()
     {
         m_logStream << std::right 
-                    << std::setw(sizeof(size_t)) 
+                    << std::setw(sizeof(std::thread::id)) 
                     << m_threadID 
                     << FIELD_SEPARATOR;
 
@@ -198,9 +223,10 @@ namespace logger
                         << FIELD_SEPARATOR;
 
         std::string funcName;
+        std::string className;
         if (std::string::npos != m_funcName.find(":"))
         {
-            auto className = m_funcName.substr(0, m_funcName.find_first_of(":") - 1);
+            className = m_funcName.substr(0, m_funcName.find_first_of(":") - 1);
             funcName = m_funcName.substr(m_funcName.find_last_of(":") + 1);
             m_logStream << std::right 
                         << std::setw(128) 

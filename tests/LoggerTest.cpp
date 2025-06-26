@@ -1,13 +1,18 @@
 //leaks --atExit --list -- ./bin/TestLogger_d --gtest_shuffle --gtest_repeat=3 --gtest_filter="LoggerTest.*"
-//leaks --atExit --list -- ./bin/TestLogger_d --gtest_shuffle --gtest_repeat=3 --gtest_filter=LoggerTest.testLogTypeStringToEnum
+//leaks --atExit --list -- ./bin/TestLogger_d --gtest_shuffle --gtest_repeat=3 --gtest_filter=LoggerTest.testLogEntryMacro
 
 #include "Logger.hpp"
 
-#include <gtest/gtest.h>
+#include "CommonFunc.hpp"
+
+#include "LOGGER_MACROS.hpp"
+
+#include "FileOps.hpp"
+#include "ConsoleOps.hpp"
 
 using namespace logger;
 
-class LoggerTest : public ::testing::Test
+class LoggerTest : public CommonTestDataGenerator
 {
     public:
         std::vector<std::string_view> logTypeStringVec = 
@@ -47,4 +52,34 @@ TEST_F(LoggerTest, testLogTypeEnumToString)
 {
     for (size_t idx = 0; idx < logTypeVec.size(); ++idx)
         EXPECT_EQ(Logger::covertLogTypeEnumToString(logTypeVec[idx]), logTypeStringVec[idx]);
+}
+
+TEST_F(LoggerTest, testLogEntryMacro)
+{
+    LOG_ENTRY()
+    EXPECT_TRUE(loggerObj.getLogStream().str().empty()) << loggerObj.getLogStream().str();
+}
+
+TEST_F(LoggerTest, testPolymorphomicIntegrity)
+{
+    {
+        LoggingOps* pLogger = new ConsoleOps();
+        delete pLogger;
+    }
+    {
+        std::unique_ptr<LoggingOps> pLogger(new ConsoleOps());
+    }
+    {
+        std::uintmax_t maxFileSize = 1024;
+        std::string fileName = "TestFile.txt";
+        auto expFilePath = std::filesystem::current_path().string() + getPathSeperator();
+        std::unique_ptr<LoggingOps> pLogger;
+        {
+            pLogger.reset(new FileOps(maxFileSize, fileName));
+        }
+        pLogger.reset(new ConsoleOps());
+        std::uintmax_t maxTextSize = 10;
+        auto text = generateRandomText(maxTextSize);
+        pLogger->write(text);
+    }
 }
