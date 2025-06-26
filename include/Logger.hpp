@@ -23,6 +23,7 @@ namespace logger
     };
 
     static constexpr std::string_view VERTICAL_SEP         = "|";
+    static constexpr std::string_view COLONE_SEP           = ":";
     static constexpr std::string_view DOT_SEP              = ".";
     static constexpr std::string_view ONE_SPACE            = " ";
     static constexpr std::string_view TWO_SPACES           = "  ";
@@ -36,6 +37,12 @@ namespace logger
     static constexpr std::string_view FORWARD_ANGLES       = ">>";
     static constexpr std::string_view BACKWARD_ANGLE       = ">>";
     static constexpr std::string_view BACKWARD_ANGLES      = "<<";
+    static constexpr std::string_view LEFT_SQUARE_BRACE    = "[";
+    static constexpr std::string_view RIGHT_SQUARE_BRACE   = "]";
+    static constexpr std::string_view LEFT_CURLEY_BRACE    = "{";
+    static constexpr std::string_view RIGHT_CURLEY_BRACE   = "}";
+    static constexpr std::string_view LEFT_OPENING_BRACE   = "(";
+    static constexpr std::string_view RIGHT_CLOSING_BRACE  = ")";
     static constexpr std::string_view FIELD_SEPARATOR      = VERTICAL_SEP;
 
     using UNORD_STRING_MAP = std::unordered_map<std::string, LOG_TYPE>;
@@ -46,7 +53,7 @@ namespace logger
         public:
             static LOG_TYPE convertStringToLogTypeEnum(const std::string_view type) noexcept;
             static std::string covertLogTypeEnumToString(const LOG_TYPE& type) noexcept;
-            static LoggingOps& buildLogObject() noexcept;
+            static LoggingOps* buildLoggingOpsObject() noexcept;
 
             Logger() = delete;
             Logger(const std::string_view timeFormat);

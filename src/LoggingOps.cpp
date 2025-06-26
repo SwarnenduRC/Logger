@@ -28,7 +28,35 @@
 
 #include "LoggingOps.hpp"
 
-///*static*/std::vector<std::exception_ptr> LoggingOps::m_excpPtrVec = {0};
+/*friend*/ void operator<<(LoggingOps& obj, const std::ostringstream& oss)
+{
+    if (oss.good())
+        obj.write(oss.str());
+}
+
+/*friend*/ void operator<<(LoggingOps& obj, const std::istringstream& iss)
+{
+    if (iss.good())
+        obj.write(iss.str());
+}
+
+/*friend*/ void operator<<(LoggingOps& obj, const std::string_view data)
+{
+    if (!data.empty())
+        obj.write(data);
+}
+
+/*friend*/ void operator<<(LoggingOps& obj, const std::vector<std::string_view>& dataVec)
+{
+    if (!dataVec.empty())
+        obj.write(dataVec);
+}
+
+/*friend*/ void operator<<(LoggingOps& obj, const std::list<std::string_view>& dataList)
+{
+    if (!dataList.empty())
+        obj.write(dataList);
+}
 
 LoggingOps::LoggingOps()
     : m_DataRecords()
@@ -168,6 +196,24 @@ void LoggingOps::write(const std::string_view data)
         return;
 
     writeDataTo(data);
+}
+
+void LoggingOps::write(const std::vector<std::string_view>& dataVec) noexcept
+{
+    if (!dataVec.empty())
+    {
+        for (const auto& data : dataVec)
+            write(data);
+    }
+}
+
+void LoggingOps::write(const std::list<std::string_view>& dataList) noexcept
+{
+    if (!dataList.empty())
+    {
+        for (const auto& data : dataList)
+            write(data);
+    }
 }
 
 void LoggingOps::write(const uint8_t data)
