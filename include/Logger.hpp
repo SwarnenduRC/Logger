@@ -53,7 +53,7 @@ namespace logger
         public:
             static LOG_TYPE convertStringToLogTypeEnum(const std::string_view type) noexcept;
             static std::string covertLogTypeEnumToString(const LOG_TYPE& type) noexcept;
-            static LoggingOps* buildLoggingOpsObject() noexcept;
+            static LoggingOps& buildLoggingOpsObject() noexcept;
 
             Logger() = delete;
             Logger(const std::string_view timeFormat);
@@ -63,35 +63,26 @@ namespace logger
             Logger& operator=(const Logger& rhs) = delete;
             Logger& operator=(Logger&& rhs) = delete;
 
-            Logger& setThreadId(const std::thread::id& val);
-            Logger& setLineNo(const size_t val);
-            Logger& setFunctionName(const std::string_view val);
-            Logger& setFileName(const std::string_view val);
-            Logger& setMarker(const std::string_view val);
+            Logger& setThreadId(const std::thread::id& val) noexcept;
+            Logger& setLineNo(const size_t val) noexcept;
+            Logger& setFunctionName(const std::string_view val) noexcept;
+            Logger& setFileName(const std::string_view val) noexcept;
+            Logger& setMarker(const std::string_view val) noexcept;
+            Logger& setLogType(const LOG_TYPE& logType) noexcept;
+            Logger& setLogType(const std::string_view logType) noexcept;
+
 
             inline const std::stringstream& getLogStream() const noexcept { return m_logStream; }
 
             template<typename ...Args>
-            void log(const LOG_TYPE& logType,
-                    const std::string_view formatStr,
-                    Args&&... args)
+            void log(const std::string_view formatStr, Args&&... args)
             {
-                vlog(logType, formatStr, std::make_format_args(std::forward<Args>(args)...));
-            }
-
-            template<typename ...Args>
-            void log(const std::string_view logType,
-                    const std::string_view formatStr,
-                    Args&&... args)
-            {
-                log(convertStringToLogTypeEnum(logType),
-                    formatStr,
-                    std::forward(args...));
+                vlog(formatStr, std::make_format_args(std::forward<Args>(args)...));
             }
 
         protected:
-            virtual void populatePrerequisitFileds(const LOG_TYPE& logType);
-            virtual void constructLogMsgPrefix(const LOG_TYPE& logType);
+            virtual void populatePrerequisitFileds();
+            virtual void constructLogMsgPrefix();
             virtual void constructLogMsgPrefixFirstPart();
             virtual void constructLogMsgPrefixSecondPart();
 
@@ -99,9 +90,7 @@ namespace logger
             static const UNORD_STRING_MAP m_stringToEnumMap;
             static const UNORD_LOG_TYPE_MAP m_EnumToStringMap;
 
-            void vlog(const LOG_TYPE& logType, 
-                    const std::string_view formatStr, 
-                    std::format_args args);
+            void vlog(const std::string_view formatStr, std::format_args args);
 
             std::thread::id m_threadID;
             Clock m_clock;
@@ -122,6 +111,7 @@ namespace logger
             std::string m_logMarker = FORWARD_ANGLE.data();
 
             std::stringstream m_logStream;
+            LOG_TYPE m_logType = LOG_TYPE::LOG_INFO;
     };
 };
 
