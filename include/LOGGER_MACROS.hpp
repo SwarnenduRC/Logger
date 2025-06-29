@@ -1,47 +1,47 @@
 #ifndef LOGGER_MACROS_HPP
 #define LOGGER_MACROS_HPP
 
-#include "Logger.hpp"
-
-#include <thread>
+#include "LogHelper.hpp"
 
 namespace logger
 {
-    static Logger loggerObj("%Y%m%d_%H%M%S");
+    #define LOG_ENTRY(fmt_str, __VA_ARGS__...)                                   \
+    log_entry(__FILE__, __PRETTY_FUNCTION__, __LINE__, #fmt_str, ##__VA_ARGS__);  \
 
-    void setupLoggerProperties( const std::string_view fileName,
-                                const std::string_view funcName,
-                                const size_t lineNo,
-                                const std::thread::id& runningThreadId,
-                                const std::string_view marker)
-    {
-        loggerObj.setFileName(fileName)
-                 .setFunctionName(funcName)
-                 .setLineNo(lineNo)
-                 .setThreadId(runningThreadId)
-                 .setMarker(marker);
-    }
+    #define LOG_EXIT(fmt_str, __VA_ARGS__...)                                   \
+    log_exit(__FILE__, __PRETTY_FUNCTION__, __LINE__, #fmt_str, ##__VA_ARGS__);  \
 
-    #define SETUP_LOGGING_PROPERTIES(MARKER)                    \
-    setupLoggerProperties(                                      \
-            __FILE__,                                           \
-            __PRETTY_FUNCTION__,                                \
-            __LINE__,                                           \
-            std::this_thread::get_id(),                         \
-            MARKER                                              \
-        );
+    #define LOG_INFO(fmt_str, __VA_ARGS__...)                                   \
+    log_info(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str, ##__VA_ARGS__);   \
 
-    #define LOG_ENTRY(fmt_str, __VA_ARGS__...)                  \
-    auto pLoggingOps = Logger::buildLoggingOpsObject();         \
-    if (pLoggingOps)                                            \
-    {                                                           \
-        SETUP_LOGGING_PROPERTIES(FORWARD_ANGLES)                \
-        loggerObj.log(  LOG_TYPE::LOG_INFO,                     \
-                        #fmt_str,                               \
-                        ##__VA_ARGS__);                         \
-        std::ostringstream oss;                                 \
-        oss << loggerObj.getLogStream().str();                  \
-    }
+    #define LOG_IMP(fmt_str, __VA_ARGS__...)                                    \
+    log_info(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str, ##__VA_ARGS__);   \
+
+    #define LOG_WARN(fmt_str, __VA_ARGS__...)                                   \
+    log_warn(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str, ##__VA_ARGS__);   \
+
+    #define LOG_ERR(fmt_str, __VA_ARGS__...)                                   \
+    log_err(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str, ##__VA_ARGS__);   \
+
+    #define LOG_DBG(fmt_str, __VA_ARGS__...)                                   \
+    log_dbg(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str, ##__VA_ARGS__);   \
+
+    #define LOG_ASSERT(cond, fmt_str...)                                               \
+    do                                                                                  \
+    {                                                                                    \
+        if (!(cond))                                                                      \
+            log_assert(__FILE__, __PRETTY_FUNCTION__, __LINE__, #cond, true, #fmt_str);    \
+    } while (0);                                                                            \
+
+    #define LOG_ASSERT_MSG(cond, fmt_str, __VA_ARGS__...)                                          \
+    do                                                                                              \
+    {                                                                                                \
+        if (!(cond))                                                                                  \
+            log_assert(__FILE__, __PRETTY_FUNCTION__, __LINE__, #cond, true, fmt_str, ##__VA_ARGS__);  \
+    } while (0);                                                                                        \
+
+    #define LOG_FATAL(fmt_str, __VA_ARGS__...)                                   \
+    log_fatal(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str, ##__VA_ARGS__);   \
 
 } // namespace logger
 

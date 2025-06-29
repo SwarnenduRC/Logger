@@ -56,12 +56,22 @@ TEST_F(LoggerTest, testLogTypeEnumToString)
 
 TEST_F(LoggerTest, testLogEntryMacro)
 {
-    LOG_ENTRY()
-    EXPECT_TRUE(loggerObj.getLogStream().str().empty()) << loggerObj.getLogStream().str();
+    std::string logMsg = "Testing LogEntryMacro";
+    LOG_ENTRY();
+    //EXPECT_TRUE(loggerObj.getLogStream().str().empty()) << loggerObj.getLogStream().str();
+    LOG_WARN("About to exit testLogEntryMacro")
+    LOG_WARN("Testing warning")
+    auto cnt = 2;
+    LOG_ASSERT(3 > 2);
+    LOG_ASSERT_MSG(1 < 2, "Assertion failure {}nd time", cnt)
+    LOG_EXIT()
 }
 
 TEST_F(LoggerTest, testPolymorphomicIntegrity)
 {
+    std::string logMsg = "Testing PolymorphomicIntegrity";
+    auto cnt = 10;
+    LOG_ENTRY("{} {:#x}", logMsg, cnt);
     {
         LoggingOps* pLogger = new ConsoleOps();
         delete pLogger;

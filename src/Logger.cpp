@@ -112,12 +112,7 @@ namespace logger
         : m_threadID()
         , m_clock(timeFormat)
         , m_lineNo(0)
-        , m_isFileNameRequired(false)
-    {
-#if defined(__FILE_NAME_REQUIRED__) // Should have been defined either in make file or cmake during compilation
-        m_isFileNameRequired = true;
-#endif
-    }
+    {}
 
     Logger& Logger::setFileName(const std::string_view val) noexcept
     {
@@ -130,7 +125,7 @@ namespace logger
     Logger& Logger::setFunctionName(const std::string_view val) noexcept
     {
         if (!val.empty())
-            m_fileName = val.data();
+            m_funcName = val.data();
         
         return *this;
     }
@@ -166,33 +161,50 @@ namespace logger
         return setLogType(convertStringToLogTypeEnum(logType));
     }
 
+    Logger& Logger::setAssertCondition(const std::string_view cond) noexcept
+    {
+        m_assertCond = cond.data();
+        return *this;
+    }
+
     void Logger::populatePrerequisitFileds()
     {
         m_logStream.clear();
         constructLogMsgPrefix();
-        // Check if it is an entry or exit log. If so, then put
-        // [ClassName: FunctionName] SPACE before the actual log msg
-        if (FORWARD_ANGLES == m_logMarker || BACKWARD_ANGLES == m_logMarker)
+        std::string funcName;
+        std::string className;
+        if (std::string::npos != m_funcName.find(":"))
         {
-            std::string funcName;
-            std::string className;
-            if (std::string::npos != m_funcName.find(":"))
-            {
-                className = m_funcName.substr(0, m_funcName.find_first_of(":") - 1);
-                funcName = m_funcName.substr(m_funcName.find_last_of(":") + 1);
-            }
-            else
-            {
-                funcName = m_funcName;
-            }
-            funcName = funcName.substr(0, funcName.find_first_of("("));
-            m_logStream << LEFT_SQUARE_BRACE
-                        << className
-                        << COLONE_SEP
-                        << ONE_SPACE
-                        << funcName
-                        << RIGHT_SQUARE_BRACE
-                        << ONE_SPACE;
+            className = m_funcName.substr(0, m_funcName.find_first_of(":"));
+            funcName = m_funcName.substr(m_funcName.find_last_of(":") + 1);
+        }
+        else
+        {
+            funcName = m_funcName;
+        }
+        funcName = funcName.substr(0, funcName.find_first_of("("));
+        m_logStream << LEFT_SQUARE_BRACE
+                    << className
+                    << ONE_SPACE
+                    << COLONE_SEP
+                    << ONE_SPACE
+                    << funcName
+                    << RIGHT_SQUARE_BRACE
+                    << ONE_SPACE;
+
+        // Check if the log message is due to an assertion failure. If so,
+        // then log the condition details along with file and line no details
+        if (!m_assertCond.empty())
+        {
+            auto assertionCond = m_assertCond;
+            m_assertCond.clear(); // Clear the condition for next log msg
+            m_logStream << "ASSERTION FAILURE in "
+                        << m_fileName
+                        << " at LN:"
+                        << m_lineNo
+                        << ", for [CONDITION: "
+                        << assertionCond << "]"
+                        << " evaluating to FALSE. ";
         }
     }
 
@@ -204,69 +216,60 @@ namespace logger
 
     void Logger::constructLogMsgPrefixFirstPart()
     {
-        m_logStream << m_clock.getLocalTimeStr();
+        m_logStream << FIELD_SEPARATOR << m_clock.getLocalTimeStr();
         m_logStream << FIELD_SEPARATOR << ONE_SPACE;
     }
 
     void Logger::constructLogMsgPrefixSecondPart()
     {
         m_logStream << std::right 
-                    << std::setw(sizeof(std::thread::id)) 
+                    << std::setw(5) 
                     << m_threadID 
                     << FIELD_SEPARATOR
                     << ONE_SPACE;
 
-        if (m_isFileNameRequired)
-            m_logStream << std::right 
-                        << std::setw(64) 
-                        << m_fileName 
-                        << FIELD_SEPARATOR
-                        << ONE_SPACE;
-
-        std::string funcName;
-        std::string className;
-        if (std::string::npos != m_funcName.find(":"))
-        {
-            className = m_funcName.substr(0, m_funcName.find_first_of(":") - 1);
-            funcName = m_funcName.substr(m_funcName.find_last_of(":") + 1);
-            m_logStream << std::right 
-                        << std::setw(64) 
-                        << className 
-                        << FIELD_SEPARATOR
-                        << ONE_SPACE;
-        }
-        else
-        {
-            funcName = m_funcName;
-        }
-        if (funcName.find("(") != std::string::npos)
-            m_logStream << std::right 
-                        << std::setw(64) 
-                        << funcName.substr(0, funcName.find_first_of("(")) 
-                        << FIELD_SEPARATOR
-                        << ONE_SPACE;
-        else
-            m_logStream << std::right 
-                        << std::setw(64) 
-                        << m_funcName 
-                        << FIELD_SEPARATOR
-                        << ONE_SPACE;
+        m_logStream << std::left
+                    << std::setw(15) 
+                    << m_fileName 
+                    << FIELD_SEPARATOR
+                    << ONE_SPACE;
         
         m_logStream << std::right 
                     << std::setw(4) 
                     << m_lineNo 
                     << FIELD_SEPARATOR
-                    << ONE_SPACE
                     << std::right
                     << covertLogTypeEnumToString(m_logType)
                     << m_logMarker
-                    << ONE_SPACE;
+                    << std::left;
+
+        // Beutify the pre requisits fields by aligning them properly (optional)
+        auto maxLogTypeSize = covertLogTypeEnumToString(LOG_TYPE::LOG_ASSERT).size();
+        auto currLogTypeSize = covertLogTypeEnumToString(m_logType).size();
+        auto currMarkerSize = m_logMarker.size();
+        while ((currLogTypeSize + currMarkerSize) < (maxLogTypeSize + 1))
+        {
+            m_logStream << ONE_SPACE;
+            ++currMarkerSize;
+        }
+        m_logStream << ONE_SPACE;   // Last space before next part begins
     }
 
     void Logger::vlog(const std::string_view formatStr, std::format_args args)
     {
         populatePrerequisitFileds();
         auto logMsg = std::vformat(formatStr, args);
+        // Remove any "\"" from the formed string, might have been left, due to
+        // MACRO expression expansion
+        if (logMsg.find(DOUBLE_QUOTES) != std::string::npos)
+        {
+            logMsg = logMsg.substr(logMsg.find_first_of(DOUBLE_QUOTES) + 1, 
+                        logMsg.find_last_of(DOUBLE_QUOTES) - 1);
+            // Recheck once again to be sure
+            if (logMsg.find(DOUBLE_QUOTES) != std::string::npos)
+                logMsg = logMsg.substr(logMsg.find_first_of(DOUBLE_QUOTES) + 1, 
+                        logMsg.find_last_of(DOUBLE_QUOTES) - 1);
+        }
         m_logStream << logMsg << "\n";  //Add a line break after each log message printed
     }
 }   //namespace logger

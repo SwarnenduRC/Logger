@@ -43,6 +43,8 @@ namespace logger
     static constexpr std::string_view RIGHT_CURLEY_BRACE   = "}";
     static constexpr std::string_view LEFT_OPENING_BRACE   = "(";
     static constexpr std::string_view RIGHT_CLOSING_BRACE  = ")";
+    static constexpr std::string_view DOUBLE_QUOTES        = "\"";
+    static constexpr std::string_view SINGLE_QUOTE         = "'";
     static constexpr std::string_view FIELD_SEPARATOR      = VERTICAL_SEP;
 
     using UNORD_STRING_MAP = std::unordered_map<std::string, LOG_TYPE>;
@@ -70,6 +72,7 @@ namespace logger
             Logger& setMarker(const std::string_view val) noexcept;
             Logger& setLogType(const LOG_TYPE& logType) noexcept;
             Logger& setLogType(const std::string_view logType) noexcept;
+            Logger& setAssertCondition(const std::string_view cond) noexcept;
 
 
             inline const std::stringstream& getLogStream() const noexcept { return m_logStream; }
@@ -97,7 +100,6 @@ namespace logger
             size_t m_lineNo;
             std::string m_funcName;
             std::string m_fileName;
-            bool m_isFileNameRequired;
             /**
              * @brief Log marker
              * Marks what kind of log function
@@ -112,6 +114,7 @@ namespace logger
 
             std::stringstream m_logStream;
             LOG_TYPE m_logType = LOG_TYPE::LOG_INFO;
+            std::string m_assertCond;
     };
 };
 
