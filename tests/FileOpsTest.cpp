@@ -506,9 +506,9 @@ TEST_F(FileOpsTests, testWriteFileWith_8_Bytes_Hex_DataStream)
 
 TEST_F(FileOpsTests, testWriteLargeDataChunk)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxFileSize = 4096 * 1000;
     std::uintmax_t maxTextSize = 3080;
-    std::size_t maxLineLen = 1024;
+    std::size_t maxLineLen = 4096;
     auto fileName = generateRandomFileName();
     FileOps file(maxFileSize, fileName);
     std::vector<std::string> dataQueue;
@@ -596,9 +596,9 @@ TEST_F(FileOpsTests, testReadFileBytesRangeExceptionCase)
 
 TEST_F(FileOpsTests, testReadFileLineRange)
 {
-    std::uintmax_t maxFileSize = 1024 * 1000;
+    std::uintmax_t maxFileSize = 4096 * 1000;
     std::uintmax_t maxTextSize = 3080;
-    std::size_t maxLineLen = 1024;
+    std::size_t maxLineLen = 4096;
     auto fileName = generateRandomFileName();
     FileOps file(maxFileSize, fileName);
     std::vector<std::string> dataQueue;

@@ -223,19 +223,19 @@ namespace logger
     void Logger::constructLogMsgPrefixSecondPart()
     {
         m_logStream << std::right 
-                    << std::setw(5) 
-                    << m_threadID 
+                    << std::setw(10) //Assuming a thread ID in decimal can be of max 10 digits
+                    << m_threadID
                     << FIELD_SEPARATOR
                     << ONE_SPACE;
 
         m_logStream << std::left
-                    << std::setw(15) 
+                    << std::setw(20) // Assuming a file name consists max 20 char
                     << m_fileName 
                     << FIELD_SEPARATOR
                     << ONE_SPACE;
         
         m_logStream << std::right 
-                    << std::setw(4) 
+                    << std::setw(5)     //Assuming a file may contain max 99,999 no of lines
                     << m_lineNo 
                     << FIELD_SEPARATOR
                     << std::right

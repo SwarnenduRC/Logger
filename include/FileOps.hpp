@@ -187,6 +187,10 @@ class FileOps : public LoggingOps
          * @param [in] fileName Name of the file (default blank)
          * @param [in] filePath Path where file would be placed eventually (default current path)
          * @param [in] fileExtension Extension of the file like .txt or .log etc. (default .txt)
+         * @note The max file size should be greater than
+         * the max line length allowed, which is 4096 bytes
+         * or 4KB, defined as bufferSize to prevent truncation
+         * if you are writing single line length to its full capacity.
          */
         FileOps(const std::uintmax_t maxFileSize,
                 const std::string_view fileName = "", 
@@ -256,6 +260,10 @@ class FileOps : public LoggingOps
          * @brief Set the maximum file size
          *
          * @param [in] fileSize Maximum size of the file
+         * @note The max file size should be greater than
+         * the max line length allowed, which is 4096 bytes
+         * or 4KB, defined as bufferSize to prevent truncation
+         * if you are writing single line length to its full capacity.
          * @return FileOps& Refrence to the current object
          */
         inline FileOps& setMaxFileSize(const std::uintmax_t fileSize)   { m_MaxFileSize = fileSize; return *this;           }

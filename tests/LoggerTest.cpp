@@ -59,7 +59,7 @@ TEST_F(LoggerTest, testLogEntryMacro)
     std::string logMsg = "Testing LogEntryMacro";
     LOG_ENTRY();
     //EXPECT_TRUE(loggerObj.getLogStream().str().empty()) << loggerObj.getLogStream().str();
-    LOG_WARN("About to exit testLogEntryMacro")
+    LOG_WARN("About to exit testLogEntryMacro in thread");
     LOG_WARN("Testing warning")
     auto cnt = 2;
     LOG_ASSERT(3 > 2);

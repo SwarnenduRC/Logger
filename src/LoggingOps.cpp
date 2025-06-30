@@ -86,7 +86,7 @@ void LoggingOps::push(const std::string_view data)
     if (data.empty())
         return;
 
-    auto push = [this](std::array<char, 1025>& dataRecord, const std::string_view data)
+    auto push = [this](std::array<char, bufferSize>& dataRecord, const std::string_view data)
     {
         std::copy(data.begin(), data.end(), dataRecord.begin());
         if (data.size() < dataRecord.size())
@@ -98,7 +98,7 @@ void LoggingOps::push(const std::string_view data)
     };
     
     {
-        std::array<char, 1025> dataRecord; // One extra byte for null termination
+        std::array<char, bufferSize> dataRecord; // One extra byte for null termination
         std::scoped_lock<std::mutex> lock(m_DataRecordsMtx);
         if (data.size() > dataRecord.size())
         {

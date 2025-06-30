@@ -38,7 +38,9 @@
 #include <atomic>
 #include <exception>
 
-using BufferQ = std::queue<std::array<char, 1025>>;
+constexpr size_t bufferSize = 4097; //4KB each line length max (+1 for NULL char)
+
+using BufferQ = std::queue<std::array<char, bufferSize>>;
 
 class LoggingOps
 {
