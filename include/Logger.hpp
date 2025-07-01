@@ -4,9 +4,15 @@
 #include "Clock.hpp"
 #include "LoggingOps.hpp"
 
-#include <format>
-#include <__format/format_arg_store.h>
 #include <cassert>
+
+#ifdef __linux__
+#include <fmt/core.h>
+#elif __APPLE__ || __MACH__
+#include <__format/format_arg_store.h>
+#endif
+
+#include <unordered_map>
 
 namespace logger
 {

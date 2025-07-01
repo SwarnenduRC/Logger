@@ -35,6 +35,8 @@
 #include "FileOps.hpp"
 #include "CommonFunc.hpp"
 
+#include <bitset>
+
 class FileOpsTests : public CommonTestDataGenerator
 {
     public:

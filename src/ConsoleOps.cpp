@@ -32,6 +32,7 @@
 #include "ConsoleOps.hpp"
 
 #include <iostream>
+#include <functional>
 
 ConsoleOps::ConsoleOps()
     : LoggingOps()

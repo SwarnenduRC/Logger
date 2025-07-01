@@ -5,6 +5,8 @@
 
 #include <string>
 #include <string_view>
+#include <sstream>
+#include <condition_variable>
 
 class ConsoleOps : public LoggingOps
 {
@@ -74,3 +76,4 @@ class ConsoleOps : public LoggingOps
 };
 
 #endif  //CONSOLE_OPS_HPP
+

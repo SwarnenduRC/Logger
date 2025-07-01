@@ -93,12 +93,12 @@ $(OBJ_DIR)/%_d.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 ##Make tests
 $(TEST_TARGET) : $(TEST_OBJS) | $(BIN_DIR)
 	@echo "Linking release test build...."
-	$(CXX) $(CXXFLAGS_TEST) -lgtest -lgmock -lpthread $(LD_FLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS_TEST) $^ -lgtest -lpthread $(LD_FLAGS) -o $@
 	@echo "Linking release test build completed"
 
 $(TEST_DBG_TARGET) : $(DBG_TEST_OBJS) | $(BIN_DIR)
 	@echo "Linking debug test build...."
-	$(CXX) $(CXXFLAGS_TEST) -lgtest -lgmock -lpthread $(LDD_FLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS_TEST) $^ -lgtest -lpthread $(LDD_FLAGS) -o $@
 	@echo "Linking debug test build completed"
 
 $(TEST_OBJ_DIR)/%.o: $(TEST_DIR)/%.cpp | $(TEST_OBJ_DIR)

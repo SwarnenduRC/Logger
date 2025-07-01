@@ -37,6 +37,7 @@
 #include <thread>
 #include <atomic>
 #include <exception>
+#include <condition_variable>
 
 constexpr size_t bufferSize = 4097; //4KB each line length max (+1 for NULL char)
 
@@ -417,3 +418,4 @@ class LoggingOps
 };
 
 #endif  //LOGGING_OPS_HPP
+

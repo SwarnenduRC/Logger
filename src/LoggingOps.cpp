@@ -28,6 +28,9 @@
 
 #include "LoggingOps.hpp"
 
+#include <sstream>
+#include <bitset>
+
 /*friend*/ void operator<<(LoggingOps& obj, const std::ostringstream& oss)
 {
     if (oss.good())

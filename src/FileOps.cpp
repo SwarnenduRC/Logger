@@ -30,6 +30,7 @@
 
 #include <tuple>
 #include <memory>
+#include <functional>
 
 // Necessary constants and static variables
 static constexpr std::string_view nullString = "";
