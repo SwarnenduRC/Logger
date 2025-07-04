@@ -122,7 +122,10 @@ class LoggingOps
 
         /**
          * @brief Destructor for LoggingOps class
-         * Stops the watcher thread and clears the data records queue
+         * Stops the watcher thread and clears the data records queue.
+         * 
+         * @note It also collects and prints any exceptions that occurred
+         * during the data operations before the object is destroyed.
          *
          * @note This function is thread safe. It uses mutex and condition variable
          * to ensure that only one thread can stop the watcher thread and clear the data records queue at a time.
@@ -415,6 +418,33 @@ class LoggingOps
          * during the data operations.
          */
         std::vector<std::exception_ptr> m_excpPtrVec;
+
+    private:
+        /**
+         * @brief Collect and print the exceptions occurred during the data operations
+         * This function will collect all the exceptions stored in the m_excpPtrVec (if any).
+         * It will then print them to a file named "LoggingExceptionsList.txt" 
+         * in the current working directory.
+         *
+         * @note This function is called at the end of the lifetime of the LoggingOps object
+         *       when the program is about to exit, or when the LoggingOps object is destroyed
+         *       to ensure that all the exceptions are logged before the program exits.
+         *
+         * @note This function is thread safe. It uses mutex to ensure that only one thread can collect and print the exceptions at a time.
+         */
+        void collectAndPrintExceptions();
+
+        /**
+         * @brief The name of the file where the exceptions will be logged
+         * It is a static constexpr string_view which is used to store the name of the file
+         * where the exceptions will be logged.
+         */
+        static constexpr std::string_view m_ExcpLogFileName = "LoggingExceptionsList.txt";
+        /**
+         * @brief The field separator used in the log file
+         * It is a static constexpr string_view which is used to separate the fields in the log file.
+         */
+        static constexpr std::string_view m_FieldSep = "|";
 };
 
 #endif  //LOGGING_OPS_HPP

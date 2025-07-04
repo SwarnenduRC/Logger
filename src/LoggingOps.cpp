@@ -27,9 +27,14 @@
  */
 
 #include "LoggingOps.hpp"
+#include "Clock.hpp"
 
 #include <sstream>
 #include <bitset>
+#include <filesystem>
+#include <fstream>
+
+static std::mutex m_excpFileMtx;
 
 /*friend*/ void operator<<(LoggingOps& obj, const std::ostringstream& oss)
 {
@@ -82,6 +87,8 @@ LoggingOps::LoggingOps()
 
     if (m_watcher.joinable())
         m_watcher.join();
+
+    collectAndPrintExceptions();
 }
 
 void LoggingOps::push(const std::string_view data)
@@ -333,6 +340,50 @@ void LoggingOps::write(const std::vector<uint64_t>& binaryStream)
     {
         for (const auto& bindata : binaryStream)
             write(bindata);
+    }
+}
+
+void LoggingOps::collectAndPrintExceptions()
+{
+    // Check for if there is any data write exceptions
+    // before quitting. If so, log them in a common file
+    if (!m_excpPtrVec.empty())
+    {
+        auto constructMsg = [](const std::exception& excp)
+        {
+            static std::stringstream ss;
+            ss.clear();
+            Clock clock("%Y%m%d_%H%M%S");
+            ss << m_FieldSep << clock.getLocalTimeStr() << m_FieldSep;
+            ss << std::this_thread::get_id() << m_FieldSep;
+            ss << ">> " << excp.what() << "\n";
+            return ss.str();
+        };
+
+        auto currFilePath = std::filesystem::current_path().string();
+        currFilePath += "/";
+        //Finally create the file path object
+        auto filePathObj = std::filesystem::path(currFilePath + m_ExcpLogFileName.data());
+
+        std::unique_lock<std::mutex> fileLock(m_excpFileMtx);
+        std::ofstream excpFile(filePathObj, std::ios::app | std::ios::binary | std::ios::out);
+        if (excpFile.is_open())
+        {
+            for (const auto& excp : m_excpPtrVec)
+            {
+                try
+                {
+                    if (excp)
+                        std::rethrow_exception(excp);
+                }
+                catch(const std::exception& e)
+                {
+                    excpFile << constructMsg(e);
+                }
+            }
+            excpFile.close();
+        }
+        fileLock.unlock();
     }
 }
 
