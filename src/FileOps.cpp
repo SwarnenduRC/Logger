@@ -523,11 +523,13 @@ void FileOps::writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& ex
         m_isFileOpsRunning = true;
 
         std::ofstream file(m_FilePathObj, std::ios::out | std::ios::app | std::ios::binary);
+        std::array<char, bufferSize> data;
         if (file.is_open())
         {
             while (!dataQueue.empty())
             {
-                auto data = dataQueue.front();
+                data.fill('\0');
+                data = dataQueue.front();
                 dataQueue.pop();
                 file << data.data() << std::endl;
                 file.flush();
@@ -539,7 +541,8 @@ void FileOps::writeToOutStreamObject(BufferQ&& dataQueue, std::exception_ptr& ex
             std::ostringstream osstr;
             osstr << "WRITING_ERROR : [";
             osstr << std::this_thread::get_id();
-            osstr << "]: File [" << m_FilePathObj.string() << "] can not be opened to write data;";
+            osstr << "]: File [" << m_FilePathObj.string();
+            osstr << "] can not be opened to write log data: " << data.data() << "\n";
             errMsg = osstr.str();
         }
         m_isFileOpsRunning = false;
