@@ -367,7 +367,7 @@ void LoggingOps::collectAndPrintExceptions()
         auto filePathObj = std::filesystem::path(currFilePath + m_ExcpLogFileName.data());
 
         std::unique_lock<std::mutex> fileLock(m_excpFileMtx);
-        std::ofstream excpFile(filePathObj, std::ios::app | std::ios::binary | std::ios::out);
+        std::ofstream excpFile(filePathObj, std::ios::app | std::ios::binary);
         if (excpFile.is_open())
         {
             for (const auto& excp : m_excpPtrVec)
