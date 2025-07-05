@@ -34,33 +34,35 @@
 #include <filesystem>
 #include <fstream>
 
+using namespace logger;
+
 static std::mutex m_excpFileMtx;
 
-/*friend*/ void operator<<(LoggingOps& obj, const std::ostringstream& oss)
+/*friend*/ void logger::operator<<(LoggingOps& obj, const std::ostringstream& oss)
 {
     if (oss.good())
         obj.write(oss.str());
 }
 
-/*friend*/ void operator<<(LoggingOps& obj, const std::istringstream& iss)
+/*friend*/ void logger::operator<<(LoggingOps& obj, const std::istringstream& iss)
 {
     if (iss.good())
         obj.write(iss.str());
 }
 
-/*friend*/ void operator<<(LoggingOps& obj, const std::string_view data)
+/*friend*/ void logger::operator<<(LoggingOps& obj, const std::string_view data)
 {
     if (!data.empty())
         obj.write(data);
 }
 
-/*friend*/ void operator<<(LoggingOps& obj, const std::vector<std::string_view>& dataVec)
+/*friend*/ void logger::operator<<(LoggingOps& obj, const std::vector<std::string_view>& dataVec)
 {
     if (!dataVec.empty())
         obj.write(dataVec);
 }
 
-/*friend*/ void operator<<(LoggingOps& obj, const std::list<std::string_view>& dataList)
+/*friend*/ void logger::operator<<(LoggingOps& obj, const std::list<std::string_view>& dataList)
 {
     if (!dataList.empty())
         obj.write(dataList);
@@ -351,8 +353,7 @@ void LoggingOps::collectAndPrintExceptions()
     {
         auto constructMsg = [](const std::exception& excp)
         {
-            static std::stringstream ss;
-            ss.clear();
+            std::stringstream ss;
             Clock clock("%Y%m%d_%H%M%S");
             ss << m_FieldSep << clock.getLocalTimeStr() << m_FieldSep;
             ss << std::this_thread::get_id() << m_FieldSep;

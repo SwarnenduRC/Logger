@@ -37,6 +37,8 @@
 
 #include <bitset>
 
+using namespace logger;
+
 class FileOpsTests : public CommonTestDataGenerator
 {
     public:

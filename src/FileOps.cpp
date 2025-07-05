@@ -32,6 +32,8 @@
 #include <memory>
 #include <functional>
 
+using namespace logger;
+
 // Necessary constants and static variables
 static constexpr std::string_view nullString = "";
 static constexpr std::string_view DEFAULT_FILE_EXTN = ".txt";

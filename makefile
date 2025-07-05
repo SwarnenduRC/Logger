@@ -28,10 +28,10 @@ TEST_DIR := tests
 ##Compiler flags
 CXX := clang++
 
-CXXFLAGS := -std=c++20 -g -Wall -Wextra -Werror -Wno-unused-function \
+CXXFLAGS := -std=c++20 -g -Wall -Wextra -Werror -Wno-unused-function -Wpedantic\
 			-I$(INC_DIR) $(addprefix -I, $(wildcard $(INC_DIR)/*))
 
-CXXFLAGS_TEST := -std=c++20 -g -Wall -Wextra -Werror -Wno-unused-function \
+CXXFLAGS_TEST := -std=c++20 -g -Wall -Wextra -Werror -Wno-unused-function -Wpedantic\
 			-I$(INC_DIR) -I$(TEST_DIR) \
 			$(addprefix -I, $(wildcard $(INC_DIR)/*), $(wildcard $(TEST_DIR)/*))
 

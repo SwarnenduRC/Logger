@@ -40,6 +40,8 @@
 
 #include <bitset>
 
+using namespace logger;
+
 /**
  * @brief A test class for ConsoleOps
  * * This class is used to test the ConsoleOps class.

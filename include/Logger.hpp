@@ -25,6 +25,8 @@ namespace logger
         LOG_WARN    = 0x05,
         LOG_IMP     = 0x06,
         LOG_ASSERT  = 0x07,
+        // Any new type/entry should be added above this. Also update the maps
+        // m_stringToEnumMap & m_EnumToStringMap, accordingly in the CPP file.
         LOG_DEFAULT = 0xFF
     };
 

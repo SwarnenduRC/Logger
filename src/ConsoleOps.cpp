@@ -34,6 +34,8 @@
 #include <iostream>
 #include <functional>
 
+using namespace logger;
+
 ConsoleOps::ConsoleOps()
     : LoggingOps()
     , m_testing(false)

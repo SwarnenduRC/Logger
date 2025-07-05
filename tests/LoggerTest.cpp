@@ -3,13 +3,12 @@
 // valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind.log ./bin/TestLogger_d
 
 #include "Logger.hpp"
-
 #include "CommonFunc.hpp"
-
 #include "LOGGER_MACROS.hpp"
-
 #include "FileOps.hpp"
 #include "ConsoleOps.hpp"
+
+#include <type_traits>
 
 using namespace logger;
 
@@ -17,7 +16,7 @@ class LoggerTest : public CommonTestDataGenerator
 {
     public:
         std::vector<std::string_view> logTypeStringVec = 
-            { "ERR", "INF", "WARN", "DBG", "FATAL", "DEFAULT" };
+            { "ERR", "INF", "WARN", "DBG", "FATAL", "ASRT", "DEFAULT" };
 
         std::vector<logger::LOG_TYPE> logTypeVec = 
         {   LOG_TYPE::LOG_ERR,
@@ -25,8 +24,51 @@ class LoggerTest : public CommonTestDataGenerator
             LOG_TYPE::LOG_WARN,
             LOG_TYPE::LOG_DBG,
             LOG_TYPE::LOG_FATAL,
+            LOG_TYPE::LOG_ASSERT,
             LOG_TYPE::LOG_DEFAULT
         };
+        static void assertionDeathTest()
+        {
+            LOG_ASSERT(2 > 3);
+        }
+        static void assertionMsgDeathTest()
+        {
+            LOG_ASSERT(0.62f < -0.51f, "Death at the end");
+        }
+        static void fatalDeathTest()
+        {
+            LOG_FATAL("FATAL error at line {}", __LINE__);
+        }
+        void testLoggedData(
+            const LOG_TYPE& expLogType,
+            const std::string_view funcName,
+            const std::string_view marker,
+            const std::string_view logMsg = "")
+        {
+            auto& logStream = loggerObj.getLogStream();
+            std::ostringstream oss;
+            oss << std::this_thread::get_id();
+            EXPECT_TRUE(logStream.str().find(oss.str()) != std::string::npos)
+                << "oss.str() = " << oss.str() << ", " << "logStream.str() = " << logStream.str();
+            std::ostringstream().swap(oss);
+            oss << __FILE__;
+            EXPECT_TRUE(logStream.str().find(oss.str()) != std::string::npos)
+                << "oss.str() = " << oss.str() << ", " << "logStream.str() = " << logStream.str();
+
+            EXPECT_TRUE(logStream.str().find(Logger::covertLogTypeEnumToString(expLogType)) != std::string::npos);
+
+            ASSERT_TRUE(std::string::npos != funcName.find(":"));
+            auto className = funcName.substr(0, funcName.find_first_of(":"));
+            auto funcNameWithoutClassName = funcName.substr(funcName.find_last_of(":") + 1);
+            funcNameWithoutClassName = funcNameWithoutClassName.substr(0, funcNameWithoutClassName.find_first_of("("));
+
+            EXPECT_TRUE(logStream.str().find(className) != std::string::npos);
+            EXPECT_TRUE(logStream.str().find(funcNameWithoutClassName) != std::string::npos) << funcNameWithoutClassName;
+            EXPECT_TRUE(logStream.str().find(marker) != std::string::npos);
+
+            if (!logMsg.empty())
+                EXPECT_TRUE(logStream.str().find(logMsg) != std::string::npos);
+        }
 };
 
 class LoggerTestObj final : public Logger
@@ -55,42 +97,55 @@ TEST_F(LoggerTest, testLogTypeEnumToString)
         EXPECT_EQ(Logger::covertLogTypeEnumToString(logTypeVec[idx]), logTypeStringVec[idx]);
 }
 
-TEST_F(LoggerTest, testLogEntryMacro)
+/**
+ * @note The following three tests should be marked disabled
+ * while running all the test cases for this test suite.
+ * Reasone being, assertion failure testing in a multithreaded
+ * enviornment is not guranteed to work as expected always without
+ * causing a deadlock. Eveven with the death test style
+ * set to threadsafe. So if you want to test the assertion failure,
+ * you can enable these tests and run them separately in isolation for each test.
+ * @see https://github.com/google/googletest/blob/main/docs/advanced.md#death-tests-and-threads
+ * for more details.
+ */
+TEST_F(LoggerTest, DISABLED_testAssertion)
 {
-    std::string logMsg = "Testing LogEntryMacro";
-    LOG_ENTRY();
-    //EXPECT_TRUE(loggerObj.getLogStream().str().empty()) << loggerObj.getLogStream().str();
-    LOG_WARN("About to exit testLogEntryMacro in thread");
-    LOG_WARN("Testing warning")
-    auto cnt = 2;
-    LOG_ASSERT(3 > 2);
-    LOG_ASSERT_MSG(1 < 2, "Assertion failure {}nd time", cnt)
-    LOG_EXIT()
+    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    ASSERT_DEATH(assertionDeathTest(), "");
 }
 
-TEST_F(LoggerTest, testPolymorphomicIntegrity)
+TEST_F(LoggerTest, DISABLED_testAssertionWithMsg)
 {
-    std::string logMsg = "Testing PolymorphomicIntegrity";
-    auto cnt = 10;
-    LOG_ENTRY("{} {:#x}", logMsg, cnt);
-    {
-        LoggingOps* pLogger = new ConsoleOps();
-        delete pLogger;
-    }
-    {
-        std::unique_ptr<LoggingOps> pLogger(new ConsoleOps());
-    }
-    {
-        std::uintmax_t maxFileSize = 1024;
-        std::string fileName = "TestFile.txt";
-        auto expFilePath = std::filesystem::current_path().string() + getPathSeperator();
-        std::unique_ptr<LoggingOps> pLogger;
-        {
-            pLogger.reset(new FileOps(maxFileSize, fileName));
-        }
-        pLogger.reset(new ConsoleOps());
-        std::uintmax_t maxTextSize = 10;
-        auto text = generateRandomText(maxTextSize);
-        pLogger->write(text);
-    }
+    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    ASSERT_DEATH(assertionMsgDeathTest(), "");
+}
+
+TEST_F(LoggerTest, DISABLED_testFatalError)
+{
+    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    ASSERT_DEATH(fatalDeathTest(), "");
+}
+
+TEST_F(LoggerTest, testLogEntryExit)
+{
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    LOG_ENTRY();
+    testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, FORWARD_ANGLES);
+    LOG_EXIT();
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, BACKWARD_ANGLES);
+}
+
+TEST_F(LoggerTest, testLogEntryExitWithMsg)
+{
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    auto logType = static_cast<std::underlying_type_t<LOG_TYPE>>(LOG_TYPE::LOG_INFO);
+    LOG_ENTRY("Entering now {} with LOG_TYPE as {:#08x} and log marker as {}", 
+        std::string("testLogEntryExitWithMsg"), logType, FORWARD_ANGLES);
+    testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, FORWARD_ANGLES);
+
+    LOG_EXIT("Exiting {} with LOG_TYPE as {:#08x} and log marker as {}", 
+        std::string("testLogEntryExitWithMsg"), logType, BACKWARD_ANGLES);
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, BACKWARD_ANGLES);
 }
