@@ -270,6 +270,7 @@ FileOps::FileOps(const std::uintmax_t maxFileSize,
     , m_FileName(fileName)
     , m_FilePath(filePath)
     , m_FileExtension(fileExtension)
+    , m_FileContent(DataQ())
     , m_MaxFileSize(maxFileSize)
     , m_isFileOpsRunning(false)
 {
