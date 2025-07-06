@@ -5,13 +5,7 @@
 #include "LoggingOps.hpp"
 
 #include <cassert>
-
-#ifdef __linux__
-#include <fmt/core.h>
-#elif __APPLE__ || __MACH__
-#include <__format/format_arg_store.h>
-#endif
-
+#include <fmtmsg.h>
 #include <unordered_map>
 
 namespace logger

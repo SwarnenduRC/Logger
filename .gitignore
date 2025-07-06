@@ -31,6 +31,10 @@
 *.out
 *.app
 
+# Log and text files
+*.Log
+*.txt
+
 ## Ignore IDE specific files
 .vscode/
 
