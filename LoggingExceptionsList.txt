@@ -1,0 +1,4 @@
+|20250706_153826|0x1f9095f00|>> Out of bound: Start pos is greater than end pos
+|20250706_153826|0x1f9095f00|>> File /Users/swarnendu/Documents/Learning/CodeBase/Logger/tmp_a4kSbie7.txt empty to read
+|20250706_153826|0x1f9095f00|>> Out of bound: End pos is greater than file size
+|20250706_153826|0x1f9095f00|>> Out of bound: Start pos is greater than end pos

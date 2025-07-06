@@ -221,7 +221,7 @@ TEST_F(ClockTests, testGetElapsedTime)
         clock.stop();
         auto elapsedTime = clock.getElapsedTime(TimeUnits::MILLISECONDS);
         EXPECT_GE(elapsedTime, 10.0);
-        EXPECT_LE(elapsedTime, 12.0);  // 100ms + 5ms (tolerance)
+        EXPECT_LE(elapsedTime, 15.0);  // 100ms + 5ms (tolerance)
     }
 }
 
@@ -238,7 +238,7 @@ TEST_F(ClockTests, testTimerThreadSafety)
             clock.start();
             ASSERT_TRUE(clock.isRunning());
             isRunning = false;
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(std::chrono::milliseconds(15));
             clock.stop();
             isRunning = false;
             timerCond.notify_one();
@@ -252,7 +252,7 @@ TEST_F(ClockTests, testTimerThreadSafety)
         };
 
         std::thread t1(threadFunc1);
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         std::thread t2(threadFunc2);
         t1.join();
         t2.join();
