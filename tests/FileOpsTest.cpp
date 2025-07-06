@@ -409,9 +409,9 @@ TEST_F(FileOpsTests, testAppendFile)
     ASSERT_FALSE(fileContents.empty());
     for (const auto& data : dataQueue)
     {
-        auto fileData = fileContents.front();
+        std::string fileData = fileContents.front()->c_str();
+        EXPECT_EQ(data, fileData);
         fileContents.pop();
-        EXPECT_EQ(data, fileData->c_str());
     }
     ASSERT_TRUE(file.deleteFile());
 }
@@ -534,9 +534,9 @@ TEST_F(FileOpsTests, testWriteLargeDataChunk)
     ASSERT_FALSE(fileContents.empty());
     for (const auto& data : dataQueue)
     {
-        auto fileData = fileContents.front();
+        std::string fileData = fileContents.front()->c_str();
+        EXPECT_EQ(data, fileData);
         fileContents.pop();
-        EXPECT_EQ(data, fileData->c_str());
     }
     ASSERT_TRUE(file.deleteFile());
 }
@@ -700,7 +700,7 @@ TEST_F(FileOpsTests, testClearFile)
     file.readFile();
     auto fileContents = file.getFileContent();
     ASSERT_FALSE(fileContents.empty());
-    std::vector<std::string> readDataQueue;
+    std::vector<std::string> readDataQueue = {};
     while (!fileContents.empty())
     {
         auto fileData = *(fileContents.front());
@@ -711,6 +711,7 @@ TEST_F(FileOpsTests, testClearFile)
         EXPECT_EQ(dataQueue[idx], readDataQueue[idx]);
 
     EXPECT_TRUE(fileContents.empty());
+    DataQ().swap(fileContents);
     for (size_t idx = 0; idx < 3; idx++)
         fileContents.emplace(std::make_shared<std::string>(readDataQueue[idx]));
 
