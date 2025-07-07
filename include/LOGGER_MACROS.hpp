@@ -15,7 +15,7 @@ namespace logger
     log_info(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__);   \
 
     #define LOG_IMP(fmt_str, ...)                                                          \
-    log_info(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__);   \
+    log_imp(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__);    \
 
     #define LOG_WARN(fmt_str, ...)                                                        \
     log_warn(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__);  \

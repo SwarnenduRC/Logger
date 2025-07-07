@@ -149,3 +149,55 @@ TEST_F(LoggerTest, testLogEntryExitWithMsg)
     std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
     testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, BACKWARD_ANGLES);
 }
+
+TEST_F(LoggerTest, testLogWarning)
+{
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    auto logType = static_cast<std::underlying_type_t<LOG_TYPE>>(LOG_TYPE::LOG_WARN);
+    LOG_WARN("Going to exit {} with LOG_TYPE as {:#08x} and log marker as {}",
+        std::string("testLogWarning"), logType, FORWARD_ANGLE);
+    testLoggedData(LOG_TYPE::LOG_WARN, __PRETTY_FUNCTION__, FORWARD_ANGLE);
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+}
+
+TEST_F(LoggerTest, testLogInfo)
+{
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    auto logType = static_cast<std::underlying_type_t<LOG_TYPE>>(LOG_TYPE::LOG_INFO);
+    LOG_INFO("In {} with LOG_TYPE as {:#08x} and log marker as {}",
+        std::string("testLogInfo"), logType, FORWARD_ANGLE);
+    testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, FORWARD_ANGLE);
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+}
+
+TEST_F(LoggerTest, testLogError)
+{
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    auto logType = static_cast<std::underlying_type_t<LOG_TYPE>>(LOG_TYPE::LOG_ERR);
+    LOG_ERR("No error to exit {} with LOG_TYPE as {:#08x} and log marker as {}",
+        std::string("testLogInfo"), logType, FORWARD_ANGLE);
+    testLoggedData(LOG_TYPE::LOG_ERR, __PRETTY_FUNCTION__, FORWARD_ANGLE);
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+}
+
+TEST_F(LoggerTest, testLogImp)
+{
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    auto logType = static_cast<std::underlying_type_t<LOG_TYPE>>(LOG_TYPE::LOG_IMP);
+    LOG_IMP("It should be working for {} as well with LOG_TYPE as {:#08x} and log marker as {}",
+        std::string("testLogImp"), logType, FORWARD_ANGLE);
+    testLoggedData(LOG_TYPE::LOG_IMP, __PRETTY_FUNCTION__, FORWARD_ANGLE);
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+}
+
+TEST_F(LoggerTest, testLogDbg)
+{
+#if defined (DEBUG) || defined(__DEBUG__)
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    auto logType = static_cast<std::underlying_type_t<LOG_TYPE>>(LOG_TYPE::LOG_DBG);
+    LOG_DBG("It should be working for {} in debug mode as well with LOG_TYPE as {:#08x} and log marker as {}",
+        std::string("testLogDbg"), logType, FORWARD_ANGLE);
+    testLoggedData(LOG_TYPE::LOG_DBG, __PRETTY_FUNCTION__, FORWARD_ANGLE);
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+#endif
+}
