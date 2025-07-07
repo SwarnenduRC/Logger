@@ -81,16 +81,16 @@ class FileOpsTests : public CommonTestDataGenerator
                 switch (bits)
                 {
                     case 8:
-                        fileDataBin = static_cast<DataType>(std::bitset<8>(*fileData).to_ulong());
+                        fileDataBin = static_cast<DataType>(std::bitset<8>(fileData).to_ulong());
                         break;
                     case 16:
-                        fileDataBin = static_cast<DataType>(std::bitset<16>(*fileData).to_ulong());
+                        fileDataBin = static_cast<DataType>(std::bitset<16>(fileData).to_ulong());
                         break;
                     case 32:
-                        fileDataBin = static_cast<DataType>(std::bitset<32>(*fileData).to_ulong());
+                        fileDataBin = static_cast<DataType>(std::bitset<32>(fileData).to_ulong());
                         break;
                     case 64:
-                        fileDataBin = static_cast<DataType>(std::bitset<64>(*fileData).to_ulong());
+                        fileDataBin = static_cast<DataType>(std::bitset<64>(fileData).to_ulong());
                         break;
                     default:
                         ASSERT_TRUE(false);
@@ -381,7 +381,7 @@ TEST_F(FileOpsTests, testReadWrite)
     auto fileContents = file.getFileContent();
     ASSERT_FALSE(fileContents.empty());
     auto data = fileContents.front();
-    EXPECT_EQ(text, data->c_str());
+    EXPECT_EQ(text, data);
     ASSERT_TRUE(file.deleteFile());
 }
 
@@ -409,7 +409,7 @@ TEST_F(FileOpsTests, testAppendFile)
     ASSERT_FALSE(fileContents.empty());
     for (const auto& data : dataQueue)
     {
-        std::string fileData = fileContents.front()->c_str();
+        std::string fileData = fileContents.front();
         EXPECT_EQ(data, fileData);
         fileContents.pop();
     }
@@ -534,7 +534,7 @@ TEST_F(FileOpsTests, testWriteLargeDataChunk)
     ASSERT_FALSE(fileContents.empty());
     for (const auto& data : dataQueue)
     {
-        std::string fileData = fileContents.front()->c_str();
+        std::string fileData = fileContents.front();
         EXPECT_EQ(data, fileData);
         fileContents.pop();
     }
@@ -703,7 +703,7 @@ TEST_F(FileOpsTests, testClearFile)
     std::vector<std::string> readDataQueue = {};
     while (!fileContents.empty())
     {
-        auto fileData = *(fileContents.front());
+        auto fileData = fileContents.front();
         fileContents.pop();
         readDataQueue.emplace_back(fileData);
     }
@@ -713,7 +713,7 @@ TEST_F(FileOpsTests, testClearFile)
     EXPECT_TRUE(fileContents.empty());
     DataQ().swap(fileContents);
     for (size_t idx = 0; idx < 3; idx++)
-        fileContents.emplace(std::make_shared<std::string>(readDataQueue[idx]));
+        fileContents.emplace(readDataQueue[idx]);
 
     ASSERT_FALSE(fileContents.empty());
 

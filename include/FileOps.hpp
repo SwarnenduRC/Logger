@@ -41,7 +41,7 @@
 
 namespace logger
 {
-    using DataQ = std::queue<std::shared_ptr<std::string>>;
+    using DataQ = std::queue<std::string>;
 
     class FileOps : public LoggingOps
     {

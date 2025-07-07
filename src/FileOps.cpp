@@ -418,7 +418,7 @@ void FileOps::readFile()
             std::string line;
             while (std::getline(file, line))
             {
-                m_FileContent.emplace(std::make_shared<std::string>(line.c_str()));
+                m_FileContent.emplace(line);
                 line.clear();
             }
         }
