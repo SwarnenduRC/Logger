@@ -56,13 +56,13 @@ static std::mutex m_excpFileMtx;
         obj.write(data);
 }
 
-/*friend*/ void logger::operator<<(LoggingOps& obj, const std::vector<std::string_view>& dataVec)
+/*friend*/ void logger::operator<<(LoggingOps& obj, const std::vector<std::string>& dataVec)
 {
     if (!dataVec.empty())
         obj.write(dataVec);
 }
 
-/*friend*/ void logger::operator<<(LoggingOps& obj, const std::list<std::string_view>& dataList)
+/*friend*/ void logger::operator<<(LoggingOps& obj, const std::list<std::string>& dataList)
 {
     if (!dataList.empty())
         obj.write(dataList);
@@ -220,6 +220,24 @@ void LoggingOps::write(const std::vector<std::string_view>& dataVec) noexcept
 }
 
 void LoggingOps::write(const std::list<std::string_view>& dataList) noexcept
+{
+    if (!dataList.empty())
+    {
+        for (const auto& data : dataList)
+            write(data);
+    }
+}
+
+void LoggingOps::write(const std::vector<std::string>& dataVec) noexcept
+{
+    if (!dataVec.empty())
+    {
+        for (const auto& data : dataVec)
+            write(data);
+    }
+}
+
+void LoggingOps::write(const std::list<std::string>& dataList) noexcept
 {
     if (!dataList.empty())
     {

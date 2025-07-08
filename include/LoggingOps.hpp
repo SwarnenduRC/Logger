@@ -82,7 +82,7 @@ namespace logger
              * @param [inout] obj The LoggingOps object
              * @note Doesn't support chaining. It is used to write data to the LoggingOps object.
              */
-            friend void operator<<(LoggingOps& obj, const std::vector<std::string_view>& dataVec);
+            friend void operator<<(LoggingOps& obj, const std::vector<std::string>& dataVec);
 
             /**
              * @brief Overloaded output operator for LoggingOps class
@@ -91,7 +91,7 @@ namespace logger
              * @param [inout] obj The LoggingOps object
              * @note Doesn't support chaining. It is used to write data to the LoggingOps object.
              */
-            friend void operator<<(LoggingOps& obj, const std::list<std::string_view>& dataList);
+            friend void operator<<(LoggingOps& obj, const std::list<std::string>& dataList);
 
             /**
              * @brief Get all the exceptions happened during the file ops
@@ -177,6 +177,24 @@ namespace logger
              * @param [in] dataList The data in a list to be written to the file
              */
             void write(const std::list<std::string_view>& dataList) noexcept;
+
+            /**
+             * @brief write the data.
+             * Writes the data passed to it. The data is  pushed to the
+             * data records queue and then the watcher thread will pick it up.
+             *
+             * @param [in] dataVec The data in a vector to be written to the file
+             */
+            void write(const std::vector<std::string>& dataVec) noexcept;
+
+            /**
+             * @brief write the data.
+             * Writes the data passed to it. The data is  pushed to the
+             * data records queue and then the file watcher thread will pick it up.
+             *
+             * @param [in] dataList The data in a list to be written to the file
+             */
+            void write(const std::list<std::string>& dataList) noexcept;
 
             /**
              * @brief write the data.

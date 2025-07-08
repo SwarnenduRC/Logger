@@ -5,6 +5,9 @@
 
 namespace logger
 {
+    #define LOG_LIST(LIST_OR_VEC_OF_STRINGS, fmt_str, ...)                                                        \
+    log_list(__FILE__, __PRETTY_FUNCTION__, __LINE__, LIST_OR_VEC_OF_STRINGS, #fmt_str __VA_OPT__(,) __VA_ARGS__)  \
+
     #define LOG_ENTRY(fmt_str, ...)                                                         \
     log_entry(__FILE__, __PRETTY_FUNCTION__, __LINE__, #fmt_str __VA_OPT__(,) __VA_ARGS__);  \
 

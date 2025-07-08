@@ -4,11 +4,13 @@
 
 #include <iomanip>
 
+//Only uncomment this if you want to run the LoggerTests to check
+//writing to a file rather than to the console (which is default)
+#define __TESTING__ 1
+
 //#define __FILE_LOGGING__
-#define __FILE_SIZE__ 1024
+#define __FILE_SIZE__ (1024 * 1024 * 10)
 #define __LOG_FILE_NAME__ "AppLogs.txt"
-#define __FILE_PATH__ "/tmp/"
-#define __FILE_EXTN__ ".log"
 
 using namespace logger;
 
@@ -64,7 +66,7 @@ using namespace logger;
     static auto initialize = true;  // First time TRUE and then always FALSE
     while (initialize)
     {
-#ifdef __FILE_LOGGING__ // Is it going to be a file logging ops?
+#if defined(__FILE_LOGGING__) || defined(__TESTING__) // Is it going to be a file logging ops?
         std::ostringstream parser;
         uintmax_t fileSize = 1024 * 1000;   // Default max log file size is 1 MB
         std::string fileName;
@@ -80,12 +82,7 @@ using namespace logger;
             break;
 #endif  // __LOG_FILE_NAME__
 #ifdef __FILE_SIZE__    // Is the max log file size provided?
-        parser << __FILE_SIZE__;
-        char* pConverted = nullptr;
-        fileSize = std::strtoul(parser.str().c_str(), &pConverted, 10);
-
-        if (pConverted == parser.str().c_str())
-            break; // Invalid file size not acceptable
+        fileSize = __FILE_SIZE__;
 #endif // __FILE_SIZE__
 #ifdef __FILE_EXTN__    // IS there a separate file extn also available from user?
         std::ostringstream().swap(parser);

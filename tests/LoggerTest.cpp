@@ -2,8 +2,8 @@
 //leaks --atExit --list -- ./bin/TestLogger_d --gtest_shuffle --gtest_repeat=3 --gtest_filter=LoggerTest.testLogEntryMacro
 //valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind.log ./bin/TestLogger_d
 
-#include "Logger.hpp"
 #include "CommonFunc.hpp"
+#include "Logger.hpp"
 #include "LOGGER_MACROS.hpp"
 #include "FileOps.hpp"
 #include "ConsoleOps.hpp"
@@ -95,6 +95,25 @@ TEST_F(LoggerTest, testLogTypeEnumToString)
 {
     for (size_t idx = 0; idx < logTypeVec.size(); ++idx)
         EXPECT_EQ(Logger::covertLogTypeEnumToString(logTypeVec[idx]), logTypeStringVec[idx]);
+}
+
+TEST_F(LoggerTest, testLogList)
+{
+    std::uintmax_t maxTextSize = 10;
+    std::vector<std::string> dataVec;
+    std::list<std::string> dataList;
+    for (auto cnt = 0; cnt < 5; ++cnt)
+    {
+        dataVec.push_back(generateRandomText(maxTextSize));
+        dataList.push_back(generateRandomText(maxTextSize));
+    }
+
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    LOG_LIST(dataVec, "Testing log msgs for list of size {:d}", dataVec.size());
+    testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, FORWARD_ANGLES);
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    LOG_LIST(dataList, "Testing log msgs for list of size {:d}", dataVec.size());
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
 }
 
 /**
