@@ -192,7 +192,7 @@ TEST_F(LoggerTest, testLogImp)
 
 TEST_F(LoggerTest, testLogDbg)
 {
-#if defined (DEBUG) || defined(__DEBUG__)
+#if defined (DEBUG) || defined (__DEBUG__)
     std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
     auto logType = static_cast<std::underlying_type_t<LOG_TYPE>>(LOG_TYPE::LOG_DBG);
     LOG_DBG("It should be working for {} in debug mode as well with LOG_TYPE as {:#08x} and log marker as {}",
