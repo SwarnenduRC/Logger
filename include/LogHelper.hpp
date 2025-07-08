@@ -5,6 +5,18 @@
 
 using namespace logger;
 
+template <typename T>
+struct is_vector : std::false_type{};
+
+template <typename T, typename Alloc>
+struct is_vector<std::vector<T, Alloc>> : std::true_type{};
+
+template <typename T>
+struct is_list : std::false_type{};
+
+template <typename T, typename Alloc>
+struct is_list<std::list<T, Alloc>> : std::true_type{};
+
 inline static Logger loggerObj("%Y%m%d_%H%M%S");
 inline static auto& loggingOps = Logger::buildLoggingOpsObject();
 
@@ -27,6 +39,29 @@ void setupAndLog(const std::string_view fileName,
 
     loggerObj.log(format_str, args...);
     loggingOps << loggerObj.getLogStream().str();
+}
+
+template<typename MsgList, typename ...Args>
+void setupAndLogListOfMsgs( const std::string_view fileName,
+                            const std::string_view funcName,
+                            const std::string_view marker,
+                            const size_t lineNo,
+                            const std::thread::id& tid,
+                            const LOG_TYPE& logType,
+                            const std::string_view format_str,
+                            const MsgList& msgs,
+                            Args&&... args)
+{
+    loggerObj.setFileName(fileName)
+            .setFunctionName(funcName)
+            .setLineNo(lineNo)
+            .setThreadId(tid)
+            .setMarker(marker)
+            .setLogType(logType);
+
+    loggerObj.log(format_str, args...);
+    loggingOps << loggerObj.getLogStream().str();
+
 }
 
 template<typename ...Args>
@@ -138,7 +173,7 @@ void log_dbg([[maybe_unused]] const std::string_view fileName,
             [[maybe_unused]] const std::string_view format_str,
             [[maybe_unused]] Args&&... args)
 {
-#if defined(DEBUG) || (__DEBUG__)
+#if defined (DEBUG) || (__DEBUG__)
     setupAndLog(fileName,
                 funcName,
                 FORWARD_ANGLE,
