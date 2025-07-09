@@ -1,0 +1,1306 @@
+\doxysection{logger\+::File\+Ops Class Reference}
+\hypertarget{classlogger_1_1_file_ops}{}\label{classlogger_1_1_file_ops}\index{logger::FileOps@{logger::FileOps}}
+Inheritance diagram for logger\+::File\+Ops\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classlogger_1_1_file_ops}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classlogger_1_1_file_ops_a03a64d1115c94ee0d130165a9aaf3af6}\label{classlogger_1_1_file_ops_a03a64d1115c94ee0d130165a9aaf3af6} 
+using {\bfseries Std\+Tupple} = std\+::tuple$<$std\+::string, std\+::string, std\+::string$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classlogger_1_1_file_ops_a1f012d226bc15231eafc6e922b9b0ba4}\label{classlogger_1_1_file_ops_a1f012d226bc15231eafc6e922b9b0ba4} 
+{\bfseries File\+Ops} ()=delete
+\begin{DoxyCompactList}\small\item\em Construct a new File Ops object This is a deleted constructor to prevent creating an object of \doxylink{classlogger_1_1_file_ops}{File\+Ops} without any parameters. It is not allowed to create a \doxylink{classlogger_1_1_file_ops}{File\+Ops} object without specifying the maximum file size. This is to ensure that the file operations are always performed with a valid file size limit. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classlogger_1_1_file_ops_af1cb2871962b4ba726065b9283a2ba46}{File\+Ops}} (const std\+::uintmax\+\_\+t max\+File\+Size, const std\+::string\+\_\+view file\+Name="{}"{}, const std\+::string\+\_\+view file\+Path="{}"{}, const std\+::string\+\_\+view file\+Extension="{}"{})
+\begin{DoxyCompactList}\small\item\em Construct a new File Ops object. \end{DoxyCompactList}\item 
+\Hypertarget{classlogger_1_1_file_ops_adf167b096f0d175a71884c36c58d7f11}\label{classlogger_1_1_file_ops_adf167b096f0d175a71884c36c58d7f11} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+File\+Ops} ()
+\begin{DoxyCompactList}\small\item\em Destroy the File Ops object Destructor for the \doxylink{classlogger_1_1_file_ops}{File\+Ops} class. It will stop the file watcher thread and clear the data records queue. \end{DoxyCompactList}\item 
+\Hypertarget{classlogger_1_1_file_ops_aef02033ffc14ebba02253364e0f0afd1}\label{classlogger_1_1_file_ops_aef02033ffc14ebba02253364e0f0afd1} 
+{\bfseries File\+Ops} (const \mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \&)=delete
+\begin{DoxyCompactList}\small\item\em Copy and move constructors and assignment operators are deleted. \end{DoxyCompactList}\item 
+\Hypertarget{classlogger_1_1_file_ops_acc4334f5646e3a5c8d8d1cd45d7c59fe}\label{classlogger_1_1_file_ops_acc4334f5646e3a5c8d8d1cd45d7c59fe} 
+\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \& {\bfseries operator=} (const \mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \&)=delete
+\begin{DoxyCompactList}\small\item\em Copy and move assignment operators are deleted. \end{DoxyCompactList}\item 
+\Hypertarget{classlogger_1_1_file_ops_ad5ca9f50abe2d3483478d4a550456965}\label{classlogger_1_1_file_ops_ad5ca9f50abe2d3483478d4a550456965} 
+{\bfseries File\+Ops} (\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \&\&)=delete
+\begin{DoxyCompactList}\small\item\em Copy and move assignment operators are deleted. \end{DoxyCompactList}\item 
+\Hypertarget{classlogger_1_1_file_ops_a22eba1838a92393a52521610f266e9e8}\label{classlogger_1_1_file_ops_a22eba1838a92393a52521610f266e9e8} 
+\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \& {\bfseries operator=} (\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \&\&)=delete
+\begin{DoxyCompactList}\small\item\em Copy and move assignment operators are deleted. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \& \mbox{\hyperlink{classlogger_1_1_file_ops_ac7340a53a75339977ee884aa20209bc4}{set\+File\+Name}} (const std\+::string\+\_\+view file\+Name)
+\begin{DoxyCompactList}\small\item\em Set the file name. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \& \mbox{\hyperlink{classlogger_1_1_file_ops_a56b96a1e03ae0eab84e4f78adaa031d8}{set\+File\+Path}} (const std\+::string\+\_\+view file\+Path)
+\begin{DoxyCompactList}\small\item\em Set the file path. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \& \mbox{\hyperlink{classlogger_1_1_file_ops_afe54e4b835129cb16d7f09c58a4a9d74}{set\+File\+Extension}} (const std\+::string\+\_\+view file\+Extension)
+\begin{DoxyCompactList}\small\item\em Set the file extension. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \& \mbox{\hyperlink{classlogger_1_1_file_ops_a9b5cd41f91e284aa1423efd294f5c66f}{set\+Max\+File\+Size}} (const std\+::uintmax\+\_\+t file\+Size)
+\begin{DoxyCompactList}\small\item\em Set the maximum file size. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classlogger_1_1_file_ops_a7e55ed93d49eacb8b33b605ff251bae9}{get\+File\+Name}} () const
+\begin{DoxyCompactList}\small\item\em Get the file name. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classlogger_1_1_file_ops_a58793ddb8dd9249820fb27235684761f}{get\+File\+Path}} () const
+\begin{DoxyCompactList}\small\item\em Get the file path. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classlogger_1_1_file_ops_a5e5979b0ef98619f6b8d40dd38268114}{get\+File\+Extension}} () const
+\begin{DoxyCompactList}\small\item\em Get the file extension. \end{DoxyCompactList}\item 
+std\+::filesystem\+::path \mbox{\hyperlink{classlogger_1_1_file_ops_acef98fa5c3a64c29072b8e230ca7c611}{get\+File\+Path\+Obj}} () const
+\begin{DoxyCompactList}\small\item\em Get the file path object. \end{DoxyCompactList}\item 
+std\+::uintmax\+\_\+t \mbox{\hyperlink{classlogger_1_1_file_ops_a4b7141a71606382d061b54a611d5d450}{get\+Max\+File\+Size}} () const
+\begin{DoxyCompactList}\small\item\em Get the maximum file size. \end{DoxyCompactList}\item 
+DataQ \mbox{\hyperlink{classlogger_1_1_file_ops_af47eefdccf36fdc9001d619e82532f1c}{get\+File\+Content}} () const
+\begin{DoxyCompactList}\small\item\em Get the file content. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classlogger_1_1_file_ops_ac4d10e7612d7fd403ff6733a89fbd060}{is\+File\+Path\+Empty}} () const
+\begin{DoxyCompactList}\small\item\em Checks if the file path is empty or not. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classlogger_1_1_file_ops_a6773f708fca6909f0c2ee085c252e364}{file\+Exists}} () const
+\begin{DoxyCompactList}\small\item\em Checks if the file exists or not. \end{DoxyCompactList}\item 
+const std\+::string \mbox{\hyperlink{classlogger_1_1_file_ops_ad06d07e750fb6173901a2a2753d8f760}{get\+Class\+Id}} () const override
+\begin{DoxyCompactList}\small\item\em Get the Class Id for the object This function is used to get the class id of the object. \end{DoxyCompactList}\item 
+std\+::uintmax\+\_\+t \mbox{\hyperlink{classlogger_1_1_file_ops_a68fc3f3b24a641328b92f1fec4002c26}{get\+File\+Size}} ()
+\begin{DoxyCompactList}\small\item\em Get the file size. \end{DoxyCompactList}\item 
+\Hypertarget{classlogger_1_1_file_ops_a6e1c3f110c9bb8189343d78cacd62001}\label{classlogger_1_1_file_ops_a6e1c3f110c9bb8189343d78cacd62001} 
+bool {\bfseries is\+Empty} ()
+\item 
+bool \mbox{\hyperlink{classlogger_1_1_file_ops_aba03492301b7274d4ca9661b2260622f}{rename\+File}} (const std\+::string\+\_\+view new\+File\+Name)
+\begin{DoxyCompactList}\small\item\em Rename the file. Renames the file with the new name passed to it. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_file_ops_ae4da78385250d2c4b1a63c1563f2fbda}{read\+File}} ()
+\begin{DoxyCompactList}\small\item\em Read the file Reads the file and stores the content in the data records queue. The file is opened in binary and read mode. The file is closed after reading the data. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classlogger_1_1_file_ops_a8906ab84fdc28ccc37a7051bfd5de817}{create\+File}} ()
+\begin{DoxyCompactList}\small\item\em Create a File object. Creates a file if it does not exist. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classlogger_1_1_file_ops_a7c2d6c85f54a0a3908d6eab20e4d978b}{delete\+File}} ()
+\begin{DoxyCompactList}\small\item\em Delete the file. Deletes the file if it exists. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classlogger_1_1_file_ops_a1e535e2c4af474da97c4db88f4fb8742}{clear\+File}} ()
+\begin{DoxyCompactList}\small\item\em Clear the file. Clears the file contents if it exists. \end{DoxyCompactList}\item 
+const std\+::vector$<$ std\+::exception\+\_\+ptr $>$ \& \mbox{\hyperlink{classlogger_1_1_logging_ops_ad41560cfe12f3e5943b5f66ec1422495}{get\+All\+Exceptions}} () noexcept
+\begin{DoxyCompactList}\small\item\em Get all the exceptions happened during the file ops. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_acbac0f934d8475fbd6d1450f099d1e55}{add\+Raised\+Exception}} (const std\+::exception\+\_\+ptr \&excp\+Ptr) noexcept
+\begin{DoxyCompactList}\small\item\em Add a raised exception to the exception vector. \end{DoxyCompactList}\item 
+\Hypertarget{classlogger_1_1_logging_ops_ad1d945e1b1f6aa20e04aade8cf8c1a1d}\label{classlogger_1_1_logging_ops_ad1d945e1b1f6aa20e04aade8cf8c1a1d} 
+void {\bfseries flush} ()
+\begin{DoxyCompactList}\small\item\em flush the data records queue. It checks the data records queue and if it is not empty then notifies the watcher thread to write the data to the file/console immediately. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_a4f021ea67a3c42591cf67656ea8359bf}{write}} (const std\+::string\+\_\+view data)
+\begin{DoxyCompactList}\small\item\em write the data. Writes the data passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_ae032bf4987ff9d3dba6cf4971d2fce2c}{write}} (const std\+::vector$<$ std\+::string\+\_\+view $>$ \&data\+Vec) noexcept
+\begin{DoxyCompactList}\small\item\em write the data. Writes the data passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_a702f5641afb115265ae77d97d57b22dc}{write}} (const std\+::list$<$ std\+::string\+\_\+view $>$ \&data\+List) noexcept
+\begin{DoxyCompactList}\small\item\em write the data. Writes the data passed to it. The data is pushed to the data records queue and then the file watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_a57efb852bcd0d501adeafa7808b1f1fc}{write}} (const std\+::vector$<$ std\+::string $>$ \&data\+Vec) noexcept
+\begin{DoxyCompactList}\small\item\em write the data. Writes the data passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_a65fe4ab62f55f8723cc6ecb027e90ec5}{write}} (const std\+::list$<$ std\+::string $>$ \&data\+List) noexcept
+\begin{DoxyCompactList}\small\item\em write the data. Writes the data passed to it. The data is pushed to the data records queue and then the file watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_afdf1b871764378178fabcadc15d13ea7}{write}} (const uint8\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em write the data. Writes the binary data passed to it. The data is pushed to the data records queue and then the file watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_a6ff4afaf1dacc0c1de8f11391de7321c}{write}} (const uint16\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em write the data. Writes the data passed to it. The data is pushed to the data records queue and then the file watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_aa422fe2844d36bf4be48eee48119e535}{write}} (const uint64\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em write the data. Writes the data passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_aa6fb465559a5126231cdc04d5730638a}{write}} (const uint32\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em write the data. Writes the data passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_aa7e71cee1829cfd9eeb1c9d6f0fbff71}{write}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&binary\+Stream)
+\begin{DoxyCompactList}\small\item\em write the data. Writes the out stream with the binary data stream passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_a5dbdb4449d416ea351ea0b9ab128e189}{write}} (const std\+::vector$<$ uint16\+\_\+t $>$ \&binary\+Stream)
+\begin{DoxyCompactList}\small\item\em write the data. Writes the out stream with the binary data stream passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_a2ff4da15eedd1620ded41571aa13bd46}{write}} (const std\+::vector$<$ uint32\+\_\+t $>$ \&binary\+Stream)
+\begin{DoxyCompactList}\small\item\em write the data. Writes the out stream with the binary data stream passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_ae08c6edbac905753e2b75976b2ccc74c}{write}} (const std\+::vector$<$ uint64\+\_\+t $>$ \&binary\+Stream)
+\begin{DoxyCompactList}\small\item\em write the data. Writes the out stream with the binary data stream passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_a4bc34840b598f670b677049770db6aba}{append}} (const std\+::string\+\_\+view data)
+\begin{DoxyCompactList}\small\item\em Append the data. Appends the outstream object with the data passed to it. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_a0985b3458be1c9a8b3b94bad434c07c0}{append}} (const uint8\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Append the data. Appends the outstream object with the data passed to it. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_ab795f7144f9b87040c39e6bafbfc2bd2}{append}} (const uint16\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Append the data. Appends the outstream object with the data passed to it. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_af0e2fcb54f066b4989f3468854fbf045}{append}} (const uint64\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Append the data. Appends the outstream object with the data passed to it. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_aa7047809f2f2aba00796f079100b758a}{append}} (const uint32\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Append the data. Appends the outstream object with the data passed to it. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_a613f32aae902490bdd65c6d66a658ae1}{append}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&binary\+Stream)
+\begin{DoxyCompactList}\small\item\em Append the data. Appends the outstream object with the binary data stream passed to it. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_a370795b83a9e59f57ba02e06e3917d59}{append}} (const std\+::vector$<$ uint16\+\_\+t $>$ \&binary\+Stream)
+\begin{DoxyCompactList}\small\item\em Append the data. Appends the outstream object with the binary data stream passed to it. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_a0d592a94a432d967f2a30ab9f36430e7}{append}} (const std\+::vector$<$ uint32\+\_\+t $>$ \&binary\+Stream)
+\begin{DoxyCompactList}\small\item\em Append the data. Appends the outstream object with the binary data stream passed to it. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_af193e61b4e5789148efced1f161839f2}{append}} (const std\+::vector$<$ uint64\+\_\+t $>$ \&binary\+Stream)
+\begin{DoxyCompactList}\small\item\em Append the data. Appends the outstream object with the binary data stream passed to it. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{classlogger_1_1_file_ops_a2ae2898ef07f2614453dc709e049565c}{is\+File\+Empty}} (const std\+::filesystem\+::path \&file) noexcept
+\begin{DoxyCompactList}\small\item\em Checks if the file is empty or not. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{classlogger_1_1_file_ops_a6e2437fbb348cb358749b4fed55bd9ac}{file\+Exists}} (const std\+::filesystem\+::path \&file) noexcept
+\begin{DoxyCompactList}\small\item\em Check if the file does exist at all. Checks if a the file exists at all. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{classlogger_1_1_file_ops_a7b908f579121d2c1d4e5b7acc3f61add}{remove\+File}} (const std\+::filesystem\+::path \&file) noexcept
+\begin{DoxyCompactList}\small\item\em Remove the file if it exists Internally calls file\+Exists to check if the file exists. If it does, then it removes the file. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{classlogger_1_1_file_ops_a7a81c361464fe46757c23b07ac86af4a}{clear\+File}} (const std\+::filesystem\+::path \&file) noexcept
+\begin{DoxyCompactList}\small\item\em Clear the file if it exists Internally calls file\+Exists to check if the file exists. If it does, then it clears the file. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{classlogger_1_1_file_ops_ad5989004f053283802f2d0ffda189055}{create\+File}} (const std\+::filesystem\+::path \&file) noexcept
+\begin{DoxyCompactList}\small\item\em Create a file if it does not exist Internally calls file\+Exists to check if the file exists. If it does not, then it creates the file. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{classlogger_1_1_file_ops_ac63e44e5b1e172f1c5a76d0475323111}{read\+File\+Byte\+Range}} (\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \&file, const std\+::streampos start, const std\+::streampos end, std\+::vector$<$ char $>$ \&out\+Buff)
+\begin{DoxyCompactList}\small\item\em Read a range of bytes from the file. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{classlogger_1_1_file_ops_a9cbc5c930b531e306dd2046661edf88f}{read\+File\+Line\+Range}} (\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \&file, const size\+\_\+t start\+Line\+No, const size\+\_\+t end\+Line\+No, std\+::vector$<$ std\+::string $>$ \&out\+Buf)
+\begin{DoxyCompactList}\small\item\em Read a range of lines from the file Reads a range of lines from the file specified by the \doxylink{classlogger_1_1_file_ops}{File\+Ops} object. The range is specified by the start and end line numbers. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classlogger_1_1_file_ops_a8bb11e03b0b08eac82faddfaabbff483}{write\+To\+Out\+Stream\+Object}} (BufferQ \&\&data\+Queue, std\+::exception\+\_\+ptr \&excp\+Ptr) override
+\begin{DoxyCompactList}\small\item\em Write to the out stream object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_file_ops_a04fd0d77ff8a135a77a4ee1cebfbd840}{write\+Data\+To}} (const std\+::string\+\_\+view data) override
+\begin{DoxyCompactList}\small\item\em Write data to the out stream object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_afba9d3e1e49aa61ac234d9c24f0ab296}{keep\+Watch\+And\+Pull}} ()
+\begin{DoxyCompactList}\small\item\em Keep watch and pull the data from the data records queue. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classlogger_1_1_logging_ops_abce0236d18de61b82ca3ae3d37e4effc}{pop}} (BufferQ \&data)
+\begin{DoxyCompactList}\small\item\em Pops the data to a data buffer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classlogger_1_1_logging_ops_ac4b41603b60e34e37853f07aa06793b9}{push}} (const std\+::string\+\_\+view data)
+\begin{DoxyCompactList}\small\item\em Push the data to the data records queue. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classlogger_1_1_logging_ops_a45fd54c0ae14141b9cb42a970d10c39c}\label{classlogger_1_1_logging_ops_a45fd54c0ae14141b9cb42a970d10c39c} 
+BufferQ {\bfseries m\+\_\+\+Data\+Records}
+\item 
+\Hypertarget{classlogger_1_1_logging_ops_aa05b8bc4f8057c30484c5a923decba73}\label{classlogger_1_1_logging_ops_aa05b8bc4f8057c30484c5a923decba73} 
+std\+::mutex {\bfseries m\+\_\+\+Data\+Records\+Mtx}
+\item 
+\Hypertarget{classlogger_1_1_logging_ops_a36a155d54d37360a253aea7f775c7388}\label{classlogger_1_1_logging_ops_a36a155d54d37360a253aea7f775c7388} 
+std\+::condition\+\_\+variable {\bfseries m\+\_\+\+Data\+Records\+Cv}
+\item 
+\Hypertarget{classlogger_1_1_logging_ops_ac512380ed73bffaec28194e74aee09cc}\label{classlogger_1_1_logging_ops_ac512380ed73bffaec28194e74aee09cc} 
+std\+::atomic\+\_\+bool {\bfseries m\+\_\+data\+Ready}
+\item 
+\Hypertarget{classlogger_1_1_logging_ops_a233d7834db9dd507b6a6b4ceb3d8f98f}\label{classlogger_1_1_logging_ops_a233d7834db9dd507b6a6b4ceb3d8f98f} 
+std\+::atomic\+\_\+bool {\bfseries m\+\_\+shut\+And\+Exit}
+\item 
+\Hypertarget{classlogger_1_1_logging_ops_aedbc4b62915c7161a7513ef6b92cfcaf}\label{classlogger_1_1_logging_ops_aedbc4b62915c7161a7513ef6b92cfcaf} 
+std\+::thread {\bfseries m\+\_\+watcher}
+\item 
+\Hypertarget{classlogger_1_1_logging_ops_a6d053376574b6bc5f4e0325f44c450a4}\label{classlogger_1_1_logging_ops_a6d053376574b6bc5f4e0325f44c450a4} 
+std\+::vector$<$ std\+::exception\+\_\+ptr $>$ {\bfseries m\+\_\+excp\+Ptr\+Vec}
+\begin{DoxyCompactList}\small\item\em It is a vector of exception pointers which is used to store the exceptions occurred during the data operations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{classlogger_1_1_file_ops_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classlogger_1_1_file_ops_af1cb2871962b4ba726065b9283a2ba46}\index{logger::FileOps@{logger::FileOps}!FileOps@{FileOps}}
+\index{FileOps@{FileOps}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{FileOps()}{FileOps()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_af1cb2871962b4ba726065b9283a2ba46} 
+File\+Ops\+::\+File\+Ops (\begin{DoxyParamCaption}\item[{const std\+::uintmax\+\_\+t}]{max\+File\+Size}{, }\item[{const std\+::string\+\_\+view}]{file\+Name}{ = {\ttfamily "{}"{}}, }\item[{const std\+::string\+\_\+view}]{file\+Path}{ = {\ttfamily "{}"{}}, }\item[{const std\+::string\+\_\+view}]{file\+Extension}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Construct a new File Ops object. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em max\+File\+Size} & Maximum size of the file \\
+\hline
+\mbox{\texttt{in}}  & {\em file\+Name} & Name of the file (default blank) \\
+\hline
+\mbox{\texttt{in}}  & {\em file\+Path} & Path where file would be placed eventually (default current path) \\
+\hline
+\mbox{\texttt{in}}  & {\em file\+Extension} & Extension of the file like .txt or .log etc. (default .txt) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The max file size should be greater than the max line length allowed, which is 4096 bytes or 4KB, defined as buffer\+Size to prevent truncation if you are writing single line length to its full capacity. 
+\end{DoxyNote}
+
+
+\label{doc-func-members}
+\Hypertarget{classlogger_1_1_file_ops_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classlogger_1_1_logging_ops_acbac0f934d8475fbd6d1450f099d1e55}\index{logger::FileOps@{logger::FileOps}!addRaisedException@{addRaisedException}}
+\index{addRaisedException@{addRaisedException}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{addRaisedException()}{addRaisedException()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_acbac0f934d8475fbd6d1450f099d1e55} 
+void logger\+::\+Logging\+Ops\+::add\+Raised\+Exception (\begin{DoxyParamCaption}\item[{const std\+::exception\+\_\+ptr \&}]{excp\+Ptr}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}, {\ttfamily [inherited]}}
+
+
+
+Add a raised exception to the exception vector. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em excp\+Ptr} & The exception pointer to be added \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This function is thread safe. It uses mutex to ensure that only one thread can add an exception at a time. 
+\end{DoxyNote}
+\Hypertarget{classlogger_1_1_logging_ops_a4bc34840b598f670b677049770db6aba}\index{logger::FileOps@{logger::FileOps}!append@{append}}
+\index{append@{append}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{append()}{append()}\hspace{0.1cm}{\footnotesize\ttfamily [1/9]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_a4bc34840b598f670b677049770db6aba} 
+void Logging\+Ops\+::append (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+Append the data. Appends the outstream object with the data passed to it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data} & The data to be appended to the outstream object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_a4f021ea67a3c42591cf67656ea8359bf}{write(const std\+::string\+\_\+view data)} 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_a4f021ea67a3c42591cf67656ea8359bf}{write(const std\+::string\+\_\+view data)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_a370795b83a9e59f57ba02e06e3917d59}\index{logger::FileOps@{logger::FileOps}!append@{append}}
+\index{append@{append}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{append()}{append()}\hspace{0.1cm}{\footnotesize\ttfamily [2/9]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_a370795b83a9e59f57ba02e06e3917d59} 
+void Logging\+Ops\+::append (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint16\+\_\+t $>$ \&}]{binary\+Stream}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+Append the data. Appends the outstream object with the binary data stream passed to it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em binary\+Stream} & The binary data stream (uint16\+\_\+t) to be appended to the outstream object. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_a5dbdb4449d416ea351ea0b9ab128e189}{write(const std\+::vector$<$uint16\+\_\+t$>$\& binary\+Stream)} 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_a5dbdb4449d416ea351ea0b9ab128e189}{write(const std\+::vector$<$uint16\+\_\+t$>$\& binary\+Stream)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_a0d592a94a432d967f2a30ab9f36430e7}\index{logger::FileOps@{logger::FileOps}!append@{append}}
+\index{append@{append}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{append()}{append()}\hspace{0.1cm}{\footnotesize\ttfamily [3/9]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_a0d592a94a432d967f2a30ab9f36430e7} 
+void Logging\+Ops\+::append (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint32\+\_\+t $>$ \&}]{binary\+Stream}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+Append the data. Appends the outstream object with the binary data stream passed to it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em binary\+Stream} & The binary data stream (uint32\+\_\+t) to be appended to the outstream object. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_a2ff4da15eedd1620ded41571aa13bd46}{write(const std\+::vector$<$uint32\+\_\+t$>$\& binary\+Stream)} 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_a2ff4da15eedd1620ded41571aa13bd46}{write(const std\+::vector$<$uint32\+\_\+t$>$\& binary\+Stream)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_af193e61b4e5789148efced1f161839f2}\index{logger::FileOps@{logger::FileOps}!append@{append}}
+\index{append@{append}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{append()}{append()}\hspace{0.1cm}{\footnotesize\ttfamily [4/9]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_af193e61b4e5789148efced1f161839f2} 
+void Logging\+Ops\+::append (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint64\+\_\+t $>$ \&}]{binary\+Stream}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+Append the data. Appends the outstream object with the binary data stream passed to it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em binary\+Stream} & The binary data stream (uint64\+\_\+t) to be appended to the outstream object. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_ae08c6edbac905753e2b75976b2ccc74c}{write(const std\+::vector$<$uint64\+\_\+t$>$\& binary\+Stream)} 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_ae08c6edbac905753e2b75976b2ccc74c}{write(const std\+::vector$<$uint64\+\_\+t$>$\& binary\+Stream)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_a613f32aae902490bdd65c6d66a658ae1}\index{logger::FileOps@{logger::FileOps}!append@{append}}
+\index{append@{append}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{append()}{append()}\hspace{0.1cm}{\footnotesize\ttfamily [5/9]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_a613f32aae902490bdd65c6d66a658ae1} 
+void Logging\+Ops\+::append (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{binary\+Stream}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+Append the data. Appends the outstream object with the binary data stream passed to it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em binary\+Stream} & The binary data stream (uint8\+\_\+t) to be appended to the outstream object. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_aa7e71cee1829cfd9eeb1c9d6f0fbff71}{write(const std\+::vector$<$uint8\+\_\+t$>$\& binary\+Stream)} 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_aa7e71cee1829cfd9eeb1c9d6f0fbff71}{write(const std\+::vector$<$uint8\+\_\+t$>$\& binary\+Stream)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_ab795f7144f9b87040c39e6bafbfc2bd2}\index{logger::FileOps@{logger::FileOps}!append@{append}}
+\index{append@{append}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{append()}{append()}\hspace{0.1cm}{\footnotesize\ttfamily [6/9]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_ab795f7144f9b87040c39e6bafbfc2bd2} 
+void Logging\+Ops\+::append (\begin{DoxyParamCaption}\item[{const uint16\+\_\+t}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+Append the data. Appends the outstream object with the data passed to it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data} & The data to be appended to the outstream object. Is of type uint16\+\_\+t \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_a6ff4afaf1dacc0c1de8f11391de7321c}{write(const uint16\+\_\+t data)} 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_a6ff4afaf1dacc0c1de8f11391de7321c}{write(const uint16\+\_\+t data)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_aa7047809f2f2aba00796f079100b758a}\index{logger::FileOps@{logger::FileOps}!append@{append}}
+\index{append@{append}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{append()}{append()}\hspace{0.1cm}{\footnotesize\ttfamily [7/9]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_aa7047809f2f2aba00796f079100b758a} 
+void Logging\+Ops\+::append (\begin{DoxyParamCaption}\item[{const uint32\+\_\+t}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+Append the data. Appends the outstream object with the data passed to it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data} & The data to be appended to the outstream object. Is of type uint32\+\_\+t \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_aa6fb465559a5126231cdc04d5730638a}{write(const uint32\+\_\+t data)} 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_aa6fb465559a5126231cdc04d5730638a}{write(const uint32\+\_\+t data)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_af0e2fcb54f066b4989f3468854fbf045}\index{logger::FileOps@{logger::FileOps}!append@{append}}
+\index{append@{append}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{append()}{append()}\hspace{0.1cm}{\footnotesize\ttfamily [8/9]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_af0e2fcb54f066b4989f3468854fbf045} 
+void Logging\+Ops\+::append (\begin{DoxyParamCaption}\item[{const uint64\+\_\+t}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+Append the data. Appends the outstream object with the data passed to it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data} & The data to be appended to the outstream object. Is of type uint64\+\_\+t \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_aa422fe2844d36bf4be48eee48119e535}{write(const uint64\+\_\+t data)} 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_aa422fe2844d36bf4be48eee48119e535}{write(const uint64\+\_\+t data)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_a0985b3458be1c9a8b3b94bad434c07c0}\index{logger::FileOps@{logger::FileOps}!append@{append}}
+\index{append@{append}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{append()}{append()}\hspace{0.1cm}{\footnotesize\ttfamily [9/9]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_a0985b3458be1c9a8b3b94bad434c07c0} 
+void Logging\+Ops\+::append (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+Append the data. Appends the outstream object with the data passed to it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data} & The data to be appended to the outstream object. Is of type uint8\+\_\+t \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_afdf1b871764378178fabcadc15d13ea7}{write(const uint8\+\_\+t data)} 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_afdf1b871764378178fabcadc15d13ea7}{write(const uint8\+\_\+t data)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_file_ops_a1e535e2c4af474da97c4db88f4fb8742}\index{logger::FileOps@{logger::FileOps}!clearFile@{clearFile}}
+\index{clearFile@{clearFile}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{clearFile()}{clearFile()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a1e535e2c4af474da97c4db88f4fb8742} 
+bool File\+Ops\+::clear\+File (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Clear the file. Clears the file contents if it exists. 
+
+\begin{DoxyReturn}{Returns}
+true If the file was cleared successfully, otherwise 
+
+false
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+This function is thread safe. It uses mutex and condition variable to ensure that only one thread can clear the file at a time. 
+\end{DoxyNote}
+\Hypertarget{classlogger_1_1_file_ops_a7a81c361464fe46757c23b07ac86af4a}\index{logger::FileOps@{logger::FileOps}!clearFile@{clearFile}}
+\index{clearFile@{clearFile}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{clearFile()}{clearFile()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a7a81c361464fe46757c23b07ac86af4a} 
+bool File\+Ops\+::clear\+File (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{file}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+Clear the file if it exists Internally calls file\+Exists to check if the file exists. If it does, then it clears the file. 
+
+\begin{DoxyNote}{Note}
+Throws no exception 
+
+This function is not thread safe. The caller must ensure thread safety.
+\end{DoxyNote}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file} & The file to be cleared \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true If the file was cleared successfully, otherwise 
+
+false 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_a8906ab84fdc28ccc37a7051bfd5de817}\index{logger::FileOps@{logger::FileOps}!createFile@{createFile}}
+\index{createFile@{createFile}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{createFile()}{createFile()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a8906ab84fdc28ccc37a7051bfd5de817} 
+bool File\+Ops\+::create\+File (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Create a File object. Creates a file if it does not exist. 
+
+\begin{DoxyReturn}{Returns}
+true If the file was created successfully, otherwise 
+
+false
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+This function is thread safe. It uses mutex and condition variable to ensure that only one thread can create the file at a time. 
+\end{DoxyNote}
+\Hypertarget{classlogger_1_1_file_ops_ad5989004f053283802f2d0ffda189055}\index{logger::FileOps@{logger::FileOps}!createFile@{createFile}}
+\index{createFile@{createFile}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{createFile()}{createFile()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_ad5989004f053283802f2d0ffda189055} 
+bool File\+Ops\+::create\+File (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{file}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+Create a file if it does not exist Internally calls file\+Exists to check if the file exists. If it does not, then it creates the file. 
+
+\begin{DoxyNote}{Note}
+Throws no exception 
+
+This function is not thread safe. The caller must ensure thread safety.
+\end{DoxyNote}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file} & The file to be created \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true If the file was created successfully, otherwise 
+
+false 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_a7c2d6c85f54a0a3908d6eab20e4d978b}\index{logger::FileOps@{logger::FileOps}!deleteFile@{deleteFile}}
+\index{deleteFile@{deleteFile}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{deleteFile()}{deleteFile()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a7c2d6c85f54a0a3908d6eab20e4d978b} 
+bool File\+Ops\+::delete\+File (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Delete the file. Deletes the file if it exists. 
+
+\begin{DoxyReturn}{Returns}
+true If the file was deleted successfully, otherwise 
+
+false
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+This function is thread safe. It uses mutex and condition variable to ensure that only one thread can delete the file at a time. 
+\end{DoxyNote}
+\Hypertarget{classlogger_1_1_file_ops_a6773f708fca6909f0c2ee085c252e364}\index{logger::FileOps@{logger::FileOps}!fileExists@{fileExists}}
+\index{fileExists@{fileExists}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{fileExists()}{fileExists()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a6773f708fca6909f0c2ee085c252e364} 
+bool logger\+::\+File\+Ops\+::file\+Exists (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Checks if the file exists or not. 
+
+\begin{DoxyReturn}{Returns}
+true If the file exists, otherwise 
+
+false 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_a6e2437fbb348cb358749b4fed55bd9ac}\index{logger::FileOps@{logger::FileOps}!fileExists@{fileExists}}
+\index{fileExists@{fileExists}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{fileExists()}{fileExists()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a6e2437fbb348cb358749b4fed55bd9ac} 
+bool File\+Ops\+::file\+Exists (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{file}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+Check if the file does exist at all. Checks if a the file exists at all. 
+
+\begin{DoxyNote}{Note}
+Throws no exception 
+
+This function is not thread safe. The caller must ensure thread safety.
+\end{DoxyNote}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file} & The file to be checked for\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true If the file does exist, otherwise 
+
+false 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_logging_ops_ad41560cfe12f3e5943b5f66ec1422495}\index{logger::FileOps@{logger::FileOps}!getAllExceptions@{getAllExceptions}}
+\index{getAllExceptions@{getAllExceptions}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{getAllExceptions()}{getAllExceptions()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_ad41560cfe12f3e5943b5f66ec1422495} 
+const std\+::vector$<$ std\+::exception\+\_\+ptr $>$ \& logger\+::\+Logging\+Ops\+::get\+All\+Exceptions (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}, {\ttfamily [inherited]}}
+
+
+
+Get all the exceptions happened during the file ops. 
+
+\begin{DoxyReturn}{Returns}
+std\+::filesystem\+::path The file path object 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_ad06d07e750fb6173901a2a2753d8f760}\index{logger::FileOps@{logger::FileOps}!getClassId@{getClassId}}
+\index{getClassId@{getClassId}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{getClassId()}{getClassId()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_ad06d07e750fb6173901a2a2753d8f760} 
+const std\+::string logger\+::\+File\+Ops\+::get\+Class\+Id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Get the Class Id for the object This function is used to get the class id of the object. 
+
+\begin{DoxyReturn}{Returns}
+std\+::string The class id of the object 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+This function is used to identify the class of the object in the polymorphic hierarchy. It is used to identify the class of the object at runtime. 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+Logging\+Ops\+::get\+Class\+Id() 
+
+Logging\+Ops\+::get\+Class\+Id() for more details 
+\end{DoxySeeAlso}
+
+
+Implements \mbox{\hyperlink{classlogger_1_1_logging_ops}{logger\+::\+Logging\+Ops}}.
+
+\Hypertarget{classlogger_1_1_file_ops_af47eefdccf36fdc9001d619e82532f1c}\index{logger::FileOps@{logger::FileOps}!getFileContent@{getFileContent}}
+\index{getFileContent@{getFileContent}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{getFileContent()}{getFileContent()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_af47eefdccf36fdc9001d619e82532f1c} 
+DataQ logger\+::\+File\+Ops\+::get\+File\+Content (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the file content. 
+
+\begin{DoxyReturn}{Returns}
+DataQ The file content which is a queue of shared pointers to strings. The strings are the lines of the file. The queue is thread safe and can be accessed by multiple threads at the same time. 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_a5e5979b0ef98619f6b8d40dd38268114}\index{logger::FileOps@{logger::FileOps}!getFileExtension@{getFileExtension}}
+\index{getFileExtension@{getFileExtension}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{getFileExtension()}{getFileExtension()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a5e5979b0ef98619f6b8d40dd38268114} 
+std\+::string logger\+::\+File\+Ops\+::get\+File\+Extension (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the file extension. 
+
+\begin{DoxyReturn}{Returns}
+std\+::string The file extension 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_a7e55ed93d49eacb8b33b605ff251bae9}\index{logger::FileOps@{logger::FileOps}!getFileName@{getFileName}}
+\index{getFileName@{getFileName}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{getFileName()}{getFileName()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a7e55ed93d49eacb8b33b605ff251bae9} 
+std\+::string logger\+::\+File\+Ops\+::get\+File\+Name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the file name. 
+
+\begin{DoxyReturn}{Returns}
+std\+::string The file name 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_a58793ddb8dd9249820fb27235684761f}\index{logger::FileOps@{logger::FileOps}!getFilePath@{getFilePath}}
+\index{getFilePath@{getFilePath}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{getFilePath()}{getFilePath()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a58793ddb8dd9249820fb27235684761f} 
+std\+::string logger\+::\+File\+Ops\+::get\+File\+Path (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the file path. 
+
+\begin{DoxyReturn}{Returns}
+std\+::string The file path 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_acef98fa5c3a64c29072b8e230ca7c611}\index{logger::FileOps@{logger::FileOps}!getFilePathObj@{getFilePathObj}}
+\index{getFilePathObj@{getFilePathObj}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{getFilePathObj()}{getFilePathObj()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_acef98fa5c3a64c29072b8e230ca7c611} 
+std\+::filesystem\+::path logger\+::\+File\+Ops\+::get\+File\+Path\+Obj (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the file path object. 
+
+\begin{DoxyReturn}{Returns}
+std\+::filesystem\+::path The file path object 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_a68fc3f3b24a641328b92f1fec4002c26}\index{logger::FileOps@{logger::FileOps}!getFileSize@{getFileSize}}
+\index{getFileSize@{getFileSize}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{getFileSize()}{getFileSize()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a68fc3f3b24a641328b92f1fec4002c26} 
+std\+::uintmax\+\_\+t File\+Ops\+::get\+File\+Size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Get the file size. 
+
+\begin{DoxyReturn}{Returns}
+std\+::uintmax\+\_\+t The file size 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_a4b7141a71606382d061b54a611d5d450}\index{logger::FileOps@{logger::FileOps}!getMaxFileSize@{getMaxFileSize}}
+\index{getMaxFileSize@{getMaxFileSize}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{getMaxFileSize()}{getMaxFileSize()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a4b7141a71606382d061b54a611d5d450} 
+std\+::uintmax\+\_\+t logger\+::\+File\+Ops\+::get\+Max\+File\+Size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the maximum file size. 
+
+\begin{DoxyReturn}{Returns}
+std\+::uintmax\+\_\+t The maximum file size 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_a2ae2898ef07f2614453dc709e049565c}\index{logger::FileOps@{logger::FileOps}!isFileEmpty@{isFileEmpty}}
+\index{isFileEmpty@{isFileEmpty}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{isFileEmpty()}{isFileEmpty()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a2ae2898ef07f2614453dc709e049565c} 
+bool File\+Ops\+::is\+File\+Empty (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{file}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+Checks if the file is empty or not. 
+
+Checks if a file specified by the input file path object, is empty or not. The function is static to the class and not thread safe.
+
+\begin{DoxyNote}{Note}
+Throws no exception 
+
+This function is not thread safe. The caller must ensure thread safety.
+\end{DoxyNote}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file} & The file to be checked for\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true If the file contains some data 
+
+false otherwise. Also if the file is non existing (internally calls file\+Exists) then it also returns false.
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_file_ops_a6e2437fbb348cb358749b4fed55bd9ac}{file\+Exists} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_file_ops_ac4d10e7612d7fd403ff6733a89fbd060}\index{logger::FileOps@{logger::FileOps}!isFilePathEmpty@{isFilePathEmpty}}
+\index{isFilePathEmpty@{isFilePathEmpty}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{isFilePathEmpty()}{isFilePathEmpty()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_ac4d10e7612d7fd403ff6733a89fbd060} 
+bool logger\+::\+File\+Ops\+::is\+File\+Path\+Empty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Checks if the file path is empty or not. 
+
+\begin{DoxyReturn}{Returns}
+true If the file path is empty, otherwise 
+
+false 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_logging_ops_afba9d3e1e49aa61ac234d9c24f0ab296}\index{logger::FileOps@{logger::FileOps}!keepWatchAndPull@{keepWatchAndPull}}
+\index{keepWatchAndPull@{keepWatchAndPull}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{keepWatchAndPull()}{keepWatchAndPull()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_afba9d3e1e49aa61ac234d9c24f0ab296} 
+void Logging\+Ops\+::keep\+Watch\+And\+Pull (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+
+
+Keep watch and pull the data from the data records queue. 
+
+\begin{DoxyNote}{Note}
+This function is thread safe. It uses mutex and condition variable to ensure that only one thread can keep watch and pull the data at a time.
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+write\+To\+File 
+
+\doxylink{classlogger_1_1_logging_ops_abce0236d18de61b82ca3ae3d37e4effc}{pop} 
+
+\doxylink{classlogger_1_1_logging_ops_ac4b41603b60e34e37853f07aa06793b9}{push} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_abce0236d18de61b82ca3ae3d37e4effc}\index{logger::FileOps@{logger::FileOps}!pop@{pop}}
+\index{pop@{pop}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{pop()}{pop()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_abce0236d18de61b82ca3ae3d37e4effc} 
+bool Logging\+Ops\+::pop (\begin{DoxyParamCaption}\item[{BufferQ \&}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+
+
+Pops the data to a data buffer. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{out}}  & {\em data} & The data to be popped from the data records queue \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true If the data was popped successfully, otherwise 
+
+false 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_logging_ops_ac4b41603b60e34e37853f07aa06793b9}\index{logger::FileOps@{logger::FileOps}!push@{push}}
+\index{push@{push}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_ac4b41603b60e34e37853f07aa06793b9} 
+void Logging\+Ops\+::push (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+
+
+Push the data to the data records queue. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data} & The data to be pushed to the data records queue \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This function is thread safe. It uses mutex and condition variable to ensure that only one thread can push the data at a time. 
+\end{DoxyNote}
+\Hypertarget{classlogger_1_1_file_ops_ae4da78385250d2c4b1a63c1563f2fbda}\index{logger::FileOps@{logger::FileOps}!readFile@{readFile}}
+\index{readFile@{readFile}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{readFile()}{readFile()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_ae4da78385250d2c4b1a63c1563f2fbda} 
+void File\+Ops\+::read\+File (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Read the file Reads the file and stores the content in the data records queue. The file is opened in binary and read mode. The file is closed after reading the data. 
+
+\begin{DoxyNote}{Note}
+Before reading it makes sure if there is any data in the data records queue which is yet to be processed. If there is, then it signals the file watcher thread to process the data first before reading the file. Thread safe.
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_afba9d3e1e49aa61ac234d9c24f0ab296}{keep\+Watch\+And\+Pull} 
+
+write\+To\+File 
+
+\doxylink{classlogger_1_1_logging_ops_abce0236d18de61b82ca3ae3d37e4effc}{pop} 
+
+\doxylink{classlogger_1_1_logging_ops_ac4b41603b60e34e37853f07aa06793b9}{push} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_file_ops_ac63e44e5b1e172f1c5a76d0475323111}\index{logger::FileOps@{logger::FileOps}!readFileByteRange@{readFileByteRange}}
+\index{readFileByteRange@{readFileByteRange}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{readFileByteRange()}{readFileByteRange()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_ac63e44e5b1e172f1c5a76d0475323111} 
+bool File\+Ops\+::read\+File\+Byte\+Range (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \&}]{file}{, }\item[{const std\+::streampos}]{start}{, }\item[{const std\+::streampos}]{end}{, }\item[{std\+::vector$<$ char $>$ \&}]{out\+Buff}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Read a range of bytes from the file. 
+
+Reads a range of bytes from the file specified by the \doxylink{classlogger_1_1_file_ops}{File\+Ops} object. The range is specified by the start and end positions.
+
+\begin{DoxyNote}{Note}
+Throws exceptions which is collected in the static std\+::vector$<$std\+::exception\+\_\+ptr$>$ m\+\_\+excp\+Ptr\+Vec and can be accessed using \doxylink{classlogger_1_1_logging_ops_ad41560cfe12f3e5943b5f66ec1422495}{get\+All\+Exceptions()} function. 
+
+This function is not thread safe. The caller must ensure thread safety.
+\end{DoxyNote}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file} & The \doxylink{classlogger_1_1_file_ops}{File\+Ops} object \\
+\hline
+\mbox{\texttt{in}}  & {\em start} & The start position of the range \\
+\hline
+\mbox{\texttt{in}}  & {\em end} & The end position of the range \\
+\hline
+\mbox{\texttt{out}}  & {\em out\+Buff} & The output buffer to store the read bytes\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true If the read was successful, otherwise 
+
+false 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_a9cbc5c930b531e306dd2046661edf88f}\index{logger::FileOps@{logger::FileOps}!readFileLineRange@{readFileLineRange}}
+\index{readFileLineRange@{readFileLineRange}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{readFileLineRange()}{readFileLineRange()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a9cbc5c930b531e306dd2046661edf88f} 
+bool File\+Ops\+::read\+File\+Line\+Range (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \&}]{file}{, }\item[{const size\+\_\+t}]{start\+Line\+No}{, }\item[{const size\+\_\+t}]{end\+Line\+No}{, }\item[{std\+::vector$<$ std\+::string $>$ \&}]{out\+Buf}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Read a range of lines from the file Reads a range of lines from the file specified by the \doxylink{classlogger_1_1_file_ops}{File\+Ops} object. The range is specified by the start and end line numbers. 
+
+\begin{DoxyNote}{Note}
+Throws exceptions which is collected in the static std\+::vector$<$std\+::exception\+\_\+ptr$>$ m\+\_\+excp\+Ptr\+Vec and can be accessed using \doxylink{classlogger_1_1_logging_ops_ad41560cfe12f3e5943b5f66ec1422495}{get\+All\+Exceptions()} function. 
+
+This function is not thread safe. The caller must ensure thread safety.
+\end{DoxyNote}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file} & The \doxylink{classlogger_1_1_file_ops}{File\+Ops} object \\
+\hline
+\mbox{\texttt{in}}  & {\em start\+Line\+No} & The starting line number (1-\/based index) \\
+\hline
+\mbox{\texttt{in}}  & {\em end\+Line\+No} & The ending line number (1-\/based index) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The line numbers are inclusive, meaning both start\+Line\+No and end\+Line\+No are included in the range. 
+
+If start\+Line\+No is greater than end\+Line\+No, the function will return false and will throw an exception. 
+\end{DoxyNote}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{out}}  & {\em out\+Buf} & The output buffer to store the read lines \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The out\+Buf will be cleared before reading the lines. If no lines are read, it will remain empty. 
+\end{DoxyNote}
+\begin{DoxyReturn}{Returns}
+true If the read was successful and lines were read, otherwise 
+
+false 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_a7b908f579121d2c1d4e5b7acc3f61add}\index{logger::FileOps@{logger::FileOps}!removeFile@{removeFile}}
+\index{removeFile@{removeFile}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{removeFile()}{removeFile()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a7b908f579121d2c1d4e5b7acc3f61add} 
+bool File\+Ops\+::remove\+File (\begin{DoxyParamCaption}\item[{const std\+::filesystem\+::path \&}]{file}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+Remove the file if it exists Internally calls file\+Exists to check if the file exists. If it does, then it removes the file. 
+
+\begin{DoxyNote}{Note}
+Throws no exception 
+
+This function is not thread safe. The caller must ensure thread safety.
+\end{DoxyNote}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file} & The file to be removed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true If the file was removed successfully, otherwise 
+
+false 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_aba03492301b7274d4ca9661b2260622f}\index{logger::FileOps@{logger::FileOps}!renameFile@{renameFile}}
+\index{renameFile@{renameFile}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{renameFile()}{renameFile()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_aba03492301b7274d4ca9661b2260622f} 
+bool File\+Ops\+::rename\+File (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{new\+File\+Name}{}\end{DoxyParamCaption})}
+
+
+
+Rename the file. Renames the file with the new name passed to it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em new\+File\+Name} & The new name of the file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true If the file was renamed successfully, otherwise 
+
+false 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_file_ops_afe54e4b835129cb16d7f09c58a4a9d74}\index{logger::FileOps@{logger::FileOps}!setFileExtension@{setFileExtension}}
+\index{setFileExtension@{setFileExtension}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{setFileExtension()}{setFileExtension()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_afe54e4b835129cb16d7f09c58a4a9d74} 
+\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \& File\+Ops\+::set\+File\+Extension (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Extension}{}\end{DoxyParamCaption})}
+
+
+
+Set the file extension. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Extension} & Extension of the file like .txt or .log etc. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{classlogger_1_1_file_ops}{File\+Ops}\& Refrence to the current object
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+It internally calls populate\+File\+Path\+Obj to adjust full path of the file (if required) 
+\end{DoxyNote}
+\Hypertarget{classlogger_1_1_file_ops_ac7340a53a75339977ee884aa20209bc4}\index{logger::FileOps@{logger::FileOps}!setFileName@{setFileName}}
+\index{setFileName@{setFileName}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{setFileName()}{setFileName()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_ac7340a53a75339977ee884aa20209bc4} 
+\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \& File\+Ops\+::set\+File\+Name (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Name}{}\end{DoxyParamCaption})}
+
+
+
+Set the file name. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Name} & Name of the file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{classlogger_1_1_file_ops}{File\+Ops}\& Refrence to the current object
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+It internally calls populate\+File\+Path\+Obj to adjust full path of the file (if required) 
+\end{DoxyNote}
+\Hypertarget{classlogger_1_1_file_ops_a56b96a1e03ae0eab84e4f78adaa031d8}\index{logger::FileOps@{logger::FileOps}!setFilePath@{setFilePath}}
+\index{setFilePath@{setFilePath}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{setFilePath()}{setFilePath()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a56b96a1e03ae0eab84e4f78adaa031d8} 
+\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \& File\+Ops\+::set\+File\+Path (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Path}{}\end{DoxyParamCaption})}
+
+
+
+Set the file path. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Path} & Path where file would be placed eventually \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{classlogger_1_1_file_ops}{File\+Ops}\& Refrence to the current object
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+It internally calls populate\+File\+Path\+Obj to adjust full path of the file (if required) 
+\end{DoxyNote}
+\Hypertarget{classlogger_1_1_file_ops_a9b5cd41f91e284aa1423efd294f5c66f}\index{logger::FileOps@{logger::FileOps}!setMaxFileSize@{setMaxFileSize}}
+\index{setMaxFileSize@{setMaxFileSize}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{setMaxFileSize()}{setMaxFileSize()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a9b5cd41f91e284aa1423efd294f5c66f} 
+\mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}} \& logger\+::\+File\+Ops\+::set\+Max\+File\+Size (\begin{DoxyParamCaption}\item[{const std\+::uintmax\+\_\+t}]{file\+Size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set the maximum file size. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Size} & Maximum size of the file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The max file size should be greater than the max line length allowed, which is 4096 bytes or 4KB, defined as buffer\+Size to prevent truncation if you are writing single line length to its full capacity. 
+\end{DoxyNote}
+\begin{DoxyReturn}{Returns}
+\doxylink{classlogger_1_1_file_ops}{File\+Ops}\& Refrence to the current object 
+\end{DoxyReturn}
+\Hypertarget{classlogger_1_1_logging_ops_a65fe4ab62f55f8723cc6ecb027e90ec5}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [1/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_a65fe4ab62f55f8723cc6ecb027e90ec5} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const std\+::list$<$ std\+::string $>$ \&}]{data\+List}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}, {\ttfamily [inherited]}}
+
+
+
+write the data. Writes the data passed to it. The data is pushed to the data records queue and then the file watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data\+List} & The data in a list to be written to the file \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classlogger_1_1_logging_ops_a702f5641afb115265ae77d97d57b22dc}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [2/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_a702f5641afb115265ae77d97d57b22dc} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const std\+::list$<$ std\+::string\+\_\+view $>$ \&}]{data\+List}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}, {\ttfamily [inherited]}}
+
+
+
+write the data. Writes the data passed to it. The data is pushed to the data records queue and then the file watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data\+List} & The data in a list to be written to the file \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classlogger_1_1_logging_ops_a4f021ea67a3c42591cf67656ea8359bf}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [3/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_a4f021ea67a3c42591cf67656ea8359bf} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+write the data. Writes the data passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data} & The data to be written to the file \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classlogger_1_1_logging_ops_a57efb852bcd0d501adeafa7808b1f1fc}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [4/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_a57efb852bcd0d501adeafa7808b1f1fc} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{data\+Vec}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}, {\ttfamily [inherited]}}
+
+
+
+write the data. Writes the data passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data\+Vec} & The data in a vector to be written to the file \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classlogger_1_1_logging_ops_ae032bf4987ff9d3dba6cf4971d2fce2c}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [5/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_ae032bf4987ff9d3dba6cf4971d2fce2c} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string\+\_\+view $>$ \&}]{data\+Vec}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}, {\ttfamily [inherited]}}
+
+
+
+write the data. Writes the data passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data\+Vec} & The data in a vector to be written to the file \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classlogger_1_1_logging_ops_a5dbdb4449d416ea351ea0b9ab128e189}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [6/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_a5dbdb4449d416ea351ea0b9ab128e189} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint16\+\_\+t $>$ \&}]{binary\+Stream}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+write the data. Writes the out stream with the binary data stream passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em binary\+Stream} & The binary data stream (uint16\+\_\+t) to be written to. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_a6ff4afaf1dacc0c1de8f11391de7321c}{write(const uint16\+\_\+t data)} in a loop 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_a6ff4afaf1dacc0c1de8f11391de7321c}{write(const uint16\+\_\+t data)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_a2ff4da15eedd1620ded41571aa13bd46}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [7/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_a2ff4da15eedd1620ded41571aa13bd46} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint32\+\_\+t $>$ \&}]{binary\+Stream}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+write the data. Writes the out stream with the binary data stream passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em binary\+Stream} & The binary data stream (uint32\+\_\+t) to be written to. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_aa6fb465559a5126231cdc04d5730638a}{write(const uint32\+\_\+t data)} in a loop 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_aa6fb465559a5126231cdc04d5730638a}{write(const uint32\+\_\+t data)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_ae08c6edbac905753e2b75976b2ccc74c}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [8/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_ae08c6edbac905753e2b75976b2ccc74c} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint64\+\_\+t $>$ \&}]{binary\+Stream}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+write the data. Writes the out stream with the binary data stream passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em binary\+Stream} & The binary data stream (uint64\+\_\+t) to be written to. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_aa422fe2844d36bf4be48eee48119e535}{write(const uint64\+\_\+t data)} in a loop 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_aa422fe2844d36bf4be48eee48119e535}{write(const uint64\+\_\+t data)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_aa7e71cee1829cfd9eeb1c9d6f0fbff71}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [9/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_aa7e71cee1829cfd9eeb1c9d6f0fbff71} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{binary\+Stream}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+write the data. Writes the out stream with the binary data stream passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em binary\+Stream} & The binary data stream (uint8\+\_\+t) to be written to. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+It internally calls \doxylink{classlogger_1_1_logging_ops_afdf1b871764378178fabcadc15d13ea7}{write(const uint8\+\_\+t data)} in a loop 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\doxylink{classlogger_1_1_logging_ops_afdf1b871764378178fabcadc15d13ea7}{write(const uint8\+\_\+t data)} 
+\end{DoxySeeAlso}
+\Hypertarget{classlogger_1_1_logging_ops_a6ff4afaf1dacc0c1de8f11391de7321c}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [10/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_a6ff4afaf1dacc0c1de8f11391de7321c} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const uint16\+\_\+t}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+write the data. Writes the data passed to it. The data is pushed to the data records queue and then the file watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data} & The data to be written to the out stream. Is of type uint16\+\_\+t \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The data is converted to a string of 16 bits and then written to the out stream. 
+\end{DoxyNote}
+\Hypertarget{classlogger_1_1_logging_ops_aa6fb465559a5126231cdc04d5730638a}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [11/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_aa6fb465559a5126231cdc04d5730638a} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const uint32\+\_\+t}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+write the data. Writes the data passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data} & The data to be written to the outstream. Is of type uint32\+\_\+t \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The data is converted to a string of 32 bits and then written to. 
+\end{DoxyNote}
+\Hypertarget{classlogger_1_1_logging_ops_aa422fe2844d36bf4be48eee48119e535}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [12/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_aa422fe2844d36bf4be48eee48119e535} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const uint64\+\_\+t}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+write the data. Writes the data passed to it. The data is pushed to the data records queue and then the watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data} & The data to be written to the outstream. Is of type uint64\+\_\+t \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The data is converted to a string of 64 bits and then written to. 
+\end{DoxyNote}
+\Hypertarget{classlogger_1_1_logging_ops_afdf1b871764378178fabcadc15d13ea7}\index{logger::FileOps@{logger::FileOps}!write@{write}}
+\index{write@{write}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [13/13]}}
+{\footnotesize\ttfamily \label{classlogger_1_1_logging_ops_afdf1b871764378178fabcadc15d13ea7} 
+void Logging\+Ops\+::write (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+write the data. Writes the binary data passed to it. The data is pushed to the data records queue and then the file watcher thread will pick it up. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data} & The data to be written to. Is of type uint8\+\_\+t \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classlogger_1_1_file_ops_a04fd0d77ff8a135a77a4ee1cebfbd840}\index{logger::FileOps@{logger::FileOps}!writeDataTo@{writeDataTo}}
+\index{writeDataTo@{writeDataTo}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{writeDataTo()}{writeDataTo()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a04fd0d77ff8a135a77a4ee1cebfbd840} 
+void File\+Ops\+::write\+Data\+To (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Write data to the out stream object. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data} & The data to be written to the out stream object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This function is pure virtual and must be implemented by the derived classes. It is used to write the data to the out stream object. 
+\end{DoxyNote}
+First check if the current log file size and the data size to be written exceeds the max file size limit set by the user. If so then rename the existing file with the current time stamp and create a new blank file for further logging/writting. Throw exception for any runtime error case.
+
+Implements \mbox{\hyperlink{classlogger_1_1_logging_ops_af4f15c575d0891f4c1124b89fc48e16e}{logger\+::\+Logging\+Ops}}.
+
+\Hypertarget{classlogger_1_1_file_ops_a8bb11e03b0b08eac82faddfaabbff483}\index{logger::FileOps@{logger::FileOps}!writeToOutStreamObject@{writeToOutStreamObject}}
+\index{writeToOutStreamObject@{writeToOutStreamObject}!logger::FileOps@{logger::FileOps}}
+\doxysubsubsection{\texorpdfstring{writeToOutStreamObject()}{writeToOutStreamObject()}}
+{\footnotesize\ttfamily \label{classlogger_1_1_file_ops_a8bb11e03b0b08eac82faddfaabbff483} 
+void File\+Ops\+::write\+To\+Out\+Stream\+Object (\begin{DoxyParamCaption}\item[{BufferQ \&\&}]{data\+Queue}{, }\item[{std\+::exception\+\_\+ptr \&}]{excp\+Ptr}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Write to the out stream object. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em data\+Queue} & The data queue to be written to the out stream object \\
+\hline
+\mbox{\texttt{out}}  & {\em excp\+Ptr} & The exception pointer to be used for exception handling\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This function is thread safe. It uses mutex and condition variable to ensure that only one thread can write to the outstream object at a time. 
+\end{DoxyNote}
+
+
+Reimplemented from \mbox{\hyperlink{classlogger_1_1_logging_ops_aa2b1fbef0bd58bcadbf5d40e67085369}{logger\+::\+Logging\+Ops}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_file_ops_8hpp}{File\+Ops.\+hpp}}\item 
+src/File\+Ops.\+cpp\end{DoxyCompactItemize}

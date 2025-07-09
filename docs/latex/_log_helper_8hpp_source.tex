@@ -1,0 +1,304 @@
+\doxysection{Log\+Helper.\+hpp}
+\hypertarget{_log_helper_8hpp_source}{}\label{_log_helper_8hpp_source}\index{include/LogHelper.hpp@{include/LogHelper.hpp}}
+\mbox{\hyperlink{_log_helper_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ MIT\ License}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ }}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2025\ Swarnendu\ RC}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ }}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ Permission\ is\ hereby\ granted,\ free\ of\ charge,\ to\ any\ person\ obtaining\ a\ copy}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ of\ this\ software\ and\ associated\ documentation\ files\ (the\ "{}Software"{}),\ to\ deal}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ in\ the\ Software\ without\ restriction,\ including\ without\ limitation\ the\ rights}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ to\ use,\ copy,\ modify,\ merge,\ publish,\ distribute,\ sublicense,\ and/or\ sell}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ copies\ of\ the\ Software,\ and\ to\ permit\ persons\ to\ whom\ the\ Software\ is}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ furnished\ to\ do\ so,\ subject\ to\ the\ following\ conditions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ }}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ The\ above\ copyright\ notice\ and\ this\ permission\ notice\ shall\ be\ included\ in\ all}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ copies\ or\ substantial\ portions\ of\ the\ Software.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ }}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ THE\ SOFTWARE\ IS\ PROVIDED\ "{}AS\ IS"{},\ WITHOUT\ WARRANTY\ OF\ ANY\ KIND,\ EXPRESS\ OR}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ IMPLIED,\ INCLUDING\ BUT\ NOT\ LIMITED\ TO\ THE\ WARRANTIES\ OF\ MERCHANTABILITY,}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE\ AND\ NONINFRINGEMENT.\ IN\ NO\ EVENT\ SHALL\ THE}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ AUTHORS\ OR\ COPYRIGHT\ HOLDERS\ BE\ LIABLE\ FOR\ ANY\ CLAIM,\ DAMAGES\ OR\ OTHER}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ LIABILITY,\ WHETHER\ IN\ AN\ ACTION\ OF\ CONTRACT,\ TORT\ OR\ OTHERWISE,\ ARISING\ FROM,}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ OUT\ OF\ OR\ IN\ CONNECTION\ WITH\ THE\ SOFTWARE\ OR\ THE\ USE\ OR\ OTHER\ DEALINGS\ IN\ THE}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ SOFTWARE.}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#ifndef\ LOGGER\_HELPER\_HPP}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ LOGGER\_HELPER\_HPP}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_logger_8hpp}{Logger.hpp}}"{}}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{using\ namespace\ }logger;}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00043\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structis__vector}{is\_vector}}\ :\ std::false\_type\{\};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Alloc>}
+\DoxyCodeLine{00046\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structis__vector}{is\_vector}}<std::vector<T,\ Alloc>>\ :\ std::true\_type\{\};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00049\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structis__list}{is\_list}}\ :\ std::false\_type\{\};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Alloc>}
+\DoxyCodeLine{00052\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structis__list}{is\_list}}<std::list<T,\ Alloc>>\ :\ std::true\_type\{\};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \mbox{\hyperlink{classlogger_1_1_logger}{Logger}}\ loggerObj(\textcolor{stringliteral}{"{}\%Y\%m\%d\_\%H\%M\%S"{}});}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00067\ \textcolor{keyword}{inline}\ \textcolor{keyword}{static}\ \textcolor{keyword}{auto}\&\ loggingOps\ =\ \mbox{\hyperlink{classlogger_1_1_logger_a5860d37148e388561b4aea10f9e85885}{Logger::buildLoggingOpsObject}}();}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00087\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}{setLoggerProperties}}}
+\DoxyCodeLine{00088\ (\ \ \ \textcolor{keyword}{const}\ std::string\_view\ fileName,}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ funcName,}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ marker,}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ lineNo,}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{const}\ std::thread::id\&\ tid,}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{_logger_8hpp_a360891ff5fbdf7b5e6da916beebaa107}{LOG\_TYPE}}\&\ logType}
+\DoxyCodeLine{00094\ )}
+\DoxyCodeLine{00095\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ loggerObj.setFileName(fileName)}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ .setFunctionName(funcName)}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ .setLineNo(lineNo)}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ .setThreadId(tid)}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ .setMarker(marker)}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ .setLogType(logType);}
+\DoxyCodeLine{00102\ \}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00119\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ ...Args>}
+\DoxyCodeLine{00120\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}{logMsg}}(\textcolor{keyword}{const}\ std::string\_view\ format\_str,\ Args\&\&...\ args)}
+\DoxyCodeLine{00121\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ loggerObj.log(format\_str,\ args...);}
+\DoxyCodeLine{00123\ \ \ \ \ loggingOps\ <<\ loggerObj.getLogStream().str();}
+\DoxyCodeLine{00124\ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00142\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ List,\ \textcolor{keyword}{typename}\ ...Args>}
+\DoxyCodeLine{00143\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_log_helper_8hpp_a1ad522beed0895ac0fe014b60f2691b0}{log\_list}}}
+\DoxyCodeLine{00144\ (}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ fileName,}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ funcName,}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ lineNo,}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{const}\ List\&\ msgList,}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ format\_str,}
+\DoxyCodeLine{00150\ \ \ \ \ Args\&\&...\ args}
+\DoxyCodeLine{00151\ )}
+\DoxyCodeLine{00152\ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{comment}{//\ If\ and\ only\ if,\ it\ is\ either\ a\ vector\ or\ std::list\ of\ strings}}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (\mbox{\hyperlink{structis__list}{is\_list<List>::value}}\ ||\ \mbox{\hyperlink{structis__vector}{is\_vector<List>::value}})}
+\DoxyCodeLine{00155\ \ \ \ \ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}{setLoggerProperties}}(fileName,}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ funcName,}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FORWARD\_ANGLES,}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lineNo,}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::get\_id(),}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LOG\_TYPE::LOG\_INFO);}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}{logMsg}}(format\_str,\ args...);}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ loggingOps\ <<\ msgList;}
+\DoxyCodeLine{00165\ \ \ \ \ \}}
+\DoxyCodeLine{00166\ \}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00182\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ ...Args>}
+\DoxyCodeLine{00183\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_log_helper_8hpp_ae814eed433cedc3f32dceffb27bc2298}{log\_entry}}}
+\DoxyCodeLine{00184\ (}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ fileName,}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ funcName,}
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ lineNo,}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ format\_str,}
+\DoxyCodeLine{00189\ \ \ \ \ Args\&\&...\ args}
+\DoxyCodeLine{00190\ )}
+\DoxyCodeLine{00191\ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}{setLoggerProperties}}(fileName,}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ funcName,}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FORWARD\_ANGLES,}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lineNo,}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::get\_id(),}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LOG\_TYPE::LOG\_INFO);}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}{logMsg}}(format\_str,\ args...);}
+\DoxyCodeLine{00200\ \}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00216\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ ...Args>}
+\DoxyCodeLine{00217\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_log_helper_8hpp_a2b6902b3374f4fdcb85455b002193bd7}{log\_exit}}}
+\DoxyCodeLine{00218\ (}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ fileName,}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ funcName,}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ lineNo,}
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ format\_str,}
+\DoxyCodeLine{00223\ \ \ \ \ Args\&\&...\ args}
+\DoxyCodeLine{00224\ )}
+\DoxyCodeLine{00225\ \{}
+\DoxyCodeLine{00226\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}{setLoggerProperties}}(fileName,}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ funcName,}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ BACKWARD\_ANGLES,}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lineNo,}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::get\_id(),}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LOG\_TYPE::LOG\_INFO);}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}{logMsg}}(format\_str,\ args...);}
+\DoxyCodeLine{00234\ \}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00250\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ ...Args>}
+\DoxyCodeLine{00251\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_log_helper_8hpp_a15d225014f1295b17e25c8e5896ce923}{log\_err}}}
+\DoxyCodeLine{00252\ (}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ fileName,}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ funcName,}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ lineNo,}
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ format\_str,}
+\DoxyCodeLine{00257\ \ \ \ \ Args\&\&...\ args}
+\DoxyCodeLine{00258\ )}
+\DoxyCodeLine{00259\ \{}
+\DoxyCodeLine{00260\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}{setLoggerProperties}}(fileName,}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ funcName,}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FORWARD\_ANGLE,}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lineNo,}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::get\_id(),}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LOG\_TYPE::LOG\_ERR);}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}{logMsg}}(format\_str,\ args...);}
+\DoxyCodeLine{00268\ \}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00284\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ ...Args>}
+\DoxyCodeLine{00285\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_log_helper_8hpp_a119976b1488771a2c921c69c9c2b9f41}{log\_warn}}}
+\DoxyCodeLine{00286\ (}
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ fileName,}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ funcName,}
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ lineNo,}
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ format\_str,}
+\DoxyCodeLine{00291\ \ \ \ \ Args\&\&...\ args}
+\DoxyCodeLine{00292\ )}
+\DoxyCodeLine{00293\ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}{setLoggerProperties}}(fileName,}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ funcName,}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FORWARD\_ANGLE,}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lineNo,}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::get\_id(),}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LOG\_TYPE::LOG\_WARN);}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}{logMsg}}(format\_str,\ args...);}
+\DoxyCodeLine{00302\ \}}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00318\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ ...Args>}
+\DoxyCodeLine{00319\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_log_helper_8hpp_a75ba5e3b916557686f3512cea13cf679}{log\_info}}}
+\DoxyCodeLine{00320\ (}
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ fileName,}
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ funcName,}
+\DoxyCodeLine{00323\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ lineNo,}
+\DoxyCodeLine{00324\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ format\_str,}
+\DoxyCodeLine{00325\ \ \ \ \ Args\&\&...\ args}
+\DoxyCodeLine{00326\ )}
+\DoxyCodeLine{00327\ \{}
+\DoxyCodeLine{00328\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}{setLoggerProperties}}(fileName,}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ funcName,}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FORWARD\_ANGLE,}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lineNo,}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::get\_id(),}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LOG\_TYPE::LOG\_INFO);}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}{logMsg}}(format\_str,\ args...);}
+\DoxyCodeLine{00336\ \}}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00352\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ ...Args>}
+\DoxyCodeLine{00353\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_log_helper_8hpp_abcac3ce3335f7c73a565538fbd78f81c}{log\_imp}}}
+\DoxyCodeLine{00354\ (}
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ fileName,}
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ funcName,}
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ lineNo,}
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ format\_str,}
+\DoxyCodeLine{00359\ \ \ \ \ Args\&\&...\ args}
+\DoxyCodeLine{00360\ )}
+\DoxyCodeLine{00361\ \{}
+\DoxyCodeLine{00362\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}{setLoggerProperties}}(fileName,}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ funcName,}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FORWARD\_ANGLE,}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lineNo,}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::get\_id(),}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LOG\_TYPE::LOG\_IMP);}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}{logMsg}}(format\_str,\ args...);}
+\DoxyCodeLine{00370\ \}}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ ...Args>}
+\DoxyCodeLine{00392\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_log_helper_8hpp_a6a444d5c626cad52e736835e96c74b97}{log\_dbg}}}
+\DoxyCodeLine{00393\ (}
+\DoxyCodeLine{00394\ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{const}\ std::string\_view\ fileName,}
+\DoxyCodeLine{00395\ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{const}\ std::string\_view\ funcName,}
+\DoxyCodeLine{00396\ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ lineNo,}
+\DoxyCodeLine{00397\ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{const}\ std::string\_view\ format\_str,}
+\DoxyCodeLine{00398\ \ \ \ \ [[maybe\_unused]]\ Args\&\&...\ args}
+\DoxyCodeLine{00399\ )}
+\DoxyCodeLine{00400\ \{}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#if\ defined\ (DEBUG)\ ||\ (\_\_DEBUG\_\_)}}
+\DoxyCodeLine{00402\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}{setLoggerProperties}}(fileName,}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ funcName,}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FORWARD\_ANGLE,}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lineNo,}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::get\_id(),}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LOG\_TYPE::LOG\_DBG);}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00409\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}{logMsg}}(format\_str,\ args...);}
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00411\ \}}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00429\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ ...Args>}
+\DoxyCodeLine{00430\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_log_helper_8hpp_a9ded78ff1c8a3c04bbde4c0fc64d49fa}{log\_assert}}}
+\DoxyCodeLine{00431\ (}
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ fileName,}
+\DoxyCodeLine{00433\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ funcName,}
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ lineNo,}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ cond,}
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ exitGracefuly,}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ format\_str,}
+\DoxyCodeLine{00438\ \ \ \ \ Args\&\&...\ args}
+\DoxyCodeLine{00439\ )}
+\DoxyCodeLine{00440\ \{}
+\DoxyCodeLine{00441\ \ \ \ \ \textcolor{keywordflow}{if}\ (cond.empty())}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00443\ }
+\DoxyCodeLine{00444\ \ \ \ \ loggerObj.setAssertCondition(cond);\ \textcolor{comment}{//\ Set\ the\ assertion\ condition}}
+\DoxyCodeLine{00445\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}{setLoggerProperties}}(fileName,}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ funcName,}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FORWARD\_ANGLE,}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lineNo,}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::get\_id(),}
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LOG\_TYPE::LOG\_ASSERT);}
+\DoxyCodeLine{00451\ }
+\DoxyCodeLine{00452\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}{logMsg}}(format\_str,\ args...);}
+\DoxyCodeLine{00453\ \ \ \ \ \textcolor{keywordflow}{if}\ (exitGracefuly)}
+\DoxyCodeLine{00454\ \ \ \ \ \{}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ loggingOps.\string~LoggingOps();}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ loggerObj.\string~Logger();}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ std::exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00458\ \ \ \ \ \}}
+\DoxyCodeLine{00459\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00460\ \ \ \ \ \{}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ std::abort();}
+\DoxyCodeLine{00462\ \ \ \ \ \}}
+\DoxyCodeLine{00463\ \}}
+\DoxyCodeLine{00464\ }
+\DoxyCodeLine{00479\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ ...Args>}
+\DoxyCodeLine{00480\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_log_helper_8hpp_a5369fc2496bf75b73402e97978f6cd2f}{log\_fatal}}}
+\DoxyCodeLine{00481\ (}
+\DoxyCodeLine{00482\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ fileName,}
+\DoxyCodeLine{00483\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ funcName,}
+\DoxyCodeLine{00484\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ lineNo,}
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ format\_str,}
+\DoxyCodeLine{00486\ \ \ \ \ Args\&\&...\ args}
+\DoxyCodeLine{00487\ )}
+\DoxyCodeLine{00488\ \{}
+\DoxyCodeLine{00489\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}{setLoggerProperties}}(fileName,}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ funcName,}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FORWARD\_ANGLE,}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lineNo,}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::get\_id(),}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LOG\_TYPE::LOG\_FATAL);}
+\DoxyCodeLine{00495\ }
+\DoxyCodeLine{00496\ \ \ \ \ \mbox{\hyperlink{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}{logMsg}}(format\_str,\ args...);}
+\DoxyCodeLine{00497\ \ \ \ \ std::abort();}
+\DoxyCodeLine{00498\ \}}
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ LOGGER\_HELPER\_HPP}}
+
+\end{DoxyCode}

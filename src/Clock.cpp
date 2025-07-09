@@ -1,14 +1,12 @@
 /**
- * @file Clock.cpp
- * @brief Implementation of the Clock class for time measurement and formatting.
+ * File: Clock.cpp
+ * Brief: Implementation of the Clock class for time measurement and formatting.
  * 
  * This file contains the implementation of the Clock class, which provides
  * functionalities for measuring elapsed time, getting the current time in
  * various formats, and retrieving specific components of the current time.
  * 
- * @author Swarnendu Roy Chowdhury
- * @date 12/02/2025
- * @version 1.0
+ * Copyright (c) 2025 Swarnendu RC
  * 
  * @license MIT License
  * 

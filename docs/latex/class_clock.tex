@@ -1,0 +1,262 @@
+\doxysection{Clock Class Reference}
+\hypertarget{class_clock}{}\label{class_clock}\index{Clock@{Clock}}
+
+
+A class to provide time-\/related functionalities.  
+
+
+
+
+{\ttfamily \#include $<$Clock.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_clock_ab2954ecf7ba64e8ee715a7d980867d6b}\label{class_clock_ab2954ecf7ba64e8ee715a7d980867d6b} 
+{\bfseries Clock} ()=default
+\begin{DoxyCompactList}\small\item\em Default constructor for the \doxylink{class_clock}{Clock} class. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_clock_a15292dc045dc2dc4844bc6d4aebe9ec8}{Clock}} (const std\+::string\+\_\+view format)
+\begin{DoxyCompactList}\small\item\em Parameterized constructor for the \doxylink{class_clock}{Clock} class. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_clock_a8a050959dcff11c85d695989e9099a8c}{start}} ()
+\begin{DoxyCompactList}\small\item\em Starts the timer. \end{DoxyCompactList}\item 
+\Hypertarget{class_clock_a0b77c3e7f33eb7ae0f018e469d96a250}\label{class_clock_a0b77c3e7f33eb7ae0f018e469d96a250} 
+void {\bfseries stop} ()
+\begin{DoxyCompactList}\small\item\em Stops the timer. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_clock_af40c963e209c7b02bc7434f58793bcd6}{get\+Elapsed\+Time}} (const \mbox{\hyperlink{_clock_8hpp_a0423d00e0eb199de523a92031b5a1107}{Time\+Units}} \&units=Time\+Units\+::\+SECONDS)
+\begin{DoxyCompactList}\small\item\em Gets the elapsed time in the specified time units. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_clock_a5deab76244f8effa84068d2e21cc3658}{is\+Running}} () const
+\begin{DoxyCompactList}\small\item\em Checks if the timer is running. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_clock_acc930bf87cdd8fc870cc5d65e8c40021}{get\+Gmt\+Time}} () const
+\begin{DoxyCompactList}\small\item\em Gets the current GMT time as a string. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_clock_a6d47c4a455d7f8cf30b60b5be5bc84af}{get\+Local\+Time}} () const
+\begin{DoxyCompactList}\small\item\em Gets the current local time as a string. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_clock_aaa3b05a8d2f3a71762b3ba5c8cc686e8}{get\+Gmt\+Time\+Str}} (const std\+::string\+\_\+view format="{}"{}) const
+\begin{DoxyCompactList}\small\item\em Gets the current GMT time as a formatted string. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_clock_a7395deef9bcfeb4c1273eb00c2aa20e9}{get\+Local\+Time\+Str}} (const std\+::string\+\_\+view format="{}"{}) const
+\begin{DoxyCompactList}\small\item\em Gets the current local time as a formatted string. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_clock_ab4e9ffa12f81886952e291e4c7a896c1}{get\+Day\+Of\+Week}} () const
+\begin{DoxyCompactList}\small\item\em Gets the day of the week. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_clock_a2688cea926c861b3bbf648a98b1dde80}{get\+Month}} () const
+\begin{DoxyCompactList}\small\item\em Gets the month. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_clock_a08d6d1bee890b3690f4d4ad22d639602}{get\+Year}} () const
+\begin{DoxyCompactList}\small\item\em Gets the year. \end{DoxyCompactList}\item 
+std\+::tuple$<$ int, int, int $>$ \mbox{\hyperlink{class_clock_ab65778d362dbabd7f51472184f4a7290}{get\+Time\+Of\+The\+Day}} () const
+\begin{DoxyCompactList}\small\item\em Gets the current time of the day (hours, minutes, seconds). \end{DoxyCompactList}\item 
+std\+::tuple$<$ int, int, int $>$ \mbox{\hyperlink{class_clock_ada01e49dad2caec9089312789459d372}{get\+Gmt\+Time\+Of\+The\+Day}} () const
+\begin{DoxyCompactList}\small\item\em Gets the current GMT time of the day (hours, minutes, seconds). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A class to provide time-\/related functionalities. 
+
+The \doxylink{class_clock}{Clock} class provides various time-\/related functionalities such as measuring elapsed time, retrieving current time in different formats, and providing utilities to get the day of the week, month, year, etc. It supports different time units for measuring elapsed time and provides thread-\/safe timer operations. 
+
+\label{doc-constructors}
+\Hypertarget{class_clock_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_clock_a15292dc045dc2dc4844bc6d4aebe9ec8}\index{Clock@{Clock}!Clock@{Clock}}
+\index{Clock@{Clock}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{Clock()}{Clock()}}
+{\footnotesize\ttfamily \label{class_clock_a15292dc045dc2dc4844bc6d4aebe9ec8} 
+Clock\+::\+Clock (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{format}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Parameterized constructor for the \doxylink{class_clock}{Clock} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em format} & A string view representing the format for time strings. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_clock_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_clock_ab4e9ffa12f81886952e291e4c7a896c1}\index{Clock@{Clock}!getDayOfWeek@{getDayOfWeek}}
+\index{getDayOfWeek@{getDayOfWeek}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{getDayOfWeek()}{getDayOfWeek()}}
+{\footnotesize\ttfamily \label{class_clock_ab4e9ffa12f81886952e291e4c7a896c1} 
+std\+::string Clock\+::get\+Day\+Of\+Week (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Gets the day of the week. 
+
+\begin{DoxyReturn}{Returns}
+The day of the week as a string. 
+\end{DoxyReturn}
+\Hypertarget{class_clock_af40c963e209c7b02bc7434f58793bcd6}\index{Clock@{Clock}!getElapsedTime@{getElapsedTime}}
+\index{getElapsedTime@{getElapsedTime}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{getElapsedTime()}{getElapsedTime()}}
+{\footnotesize\ttfamily \label{class_clock_af40c963e209c7b02bc7434f58793bcd6} 
+double Clock\+::get\+Elapsed\+Time (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{_clock_8hpp_a0423d00e0eb199de523a92031b5a1107}{Time\+Units}} \&}]{units}{ = {\ttfamily TimeUnits\+:\+:SECONDS}}\end{DoxyParamCaption})}
+
+
+
+Gets the elapsed time in the specified time units. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em units} & The time units for the elapsed time (default\+: seconds). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The elapsed time in the specified units. 
+\end{DoxyReturn}
+\Hypertarget{class_clock_acc930bf87cdd8fc870cc5d65e8c40021}\index{Clock@{Clock}!getGmtTime@{getGmtTime}}
+\index{getGmtTime@{getGmtTime}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{getGmtTime()}{getGmtTime()}}
+{\footnotesize\ttfamily \label{class_clock_acc930bf87cdd8fc870cc5d65e8c40021} 
+std\+::string Clock\+::get\+Gmt\+Time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Gets the current GMT time as a string. 
+
+\begin{DoxyReturn}{Returns}
+The current GMT time as a string. 
+\end{DoxyReturn}
+\Hypertarget{class_clock_ada01e49dad2caec9089312789459d372}\index{Clock@{Clock}!getGmtTimeOfTheDay@{getGmtTimeOfTheDay}}
+\index{getGmtTimeOfTheDay@{getGmtTimeOfTheDay}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{getGmtTimeOfTheDay()}{getGmtTimeOfTheDay()}}
+{\footnotesize\ttfamily \label{class_clock_ada01e49dad2caec9089312789459d372} 
+std\+::tuple$<$ int, int, int $>$ Clock\+::get\+Gmt\+Time\+Of\+The\+Day (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Gets the current GMT time of the day (hours, minutes, seconds). 
+
+\begin{DoxyReturn}{Returns}
+A tuple containing the current GMT time of the day. 
+\end{DoxyReturn}
+\Hypertarget{class_clock_aaa3b05a8d2f3a71762b3ba5c8cc686e8}\index{Clock@{Clock}!getGmtTimeStr@{getGmtTimeStr}}
+\index{getGmtTimeStr@{getGmtTimeStr}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{getGmtTimeStr()}{getGmtTimeStr()}}
+{\footnotesize\ttfamily \label{class_clock_aaa3b05a8d2f3a71762b3ba5c8cc686e8} 
+std\+::string Clock\+::get\+Gmt\+Time\+Str (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{format}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption}) const}
+
+
+
+Gets the current GMT time as a formatted string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em format} & The format for the time string (default\+: empty which translates to class\textquotesingle{}s default format "{}\%d/\%m/\%\+Y \%\+H\+:\%\+M\+:\%\+S"{} or anything else if was setup during the object construction via parameterized constructor of this class). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current GMT time as a formatted string. 
+\end{DoxyReturn}
+\Hypertarget{class_clock_a6d47c4a455d7f8cf30b60b5be5bc84af}\index{Clock@{Clock}!getLocalTime@{getLocalTime}}
+\index{getLocalTime@{getLocalTime}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{getLocalTime()}{getLocalTime()}}
+{\footnotesize\ttfamily \label{class_clock_a6d47c4a455d7f8cf30b60b5be5bc84af} 
+std\+::string Clock\+::get\+Local\+Time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Gets the current local time as a string. 
+
+\begin{DoxyReturn}{Returns}
+The current local time as a string. 
+\end{DoxyReturn}
+\Hypertarget{class_clock_a7395deef9bcfeb4c1273eb00c2aa20e9}\index{Clock@{Clock}!getLocalTimeStr@{getLocalTimeStr}}
+\index{getLocalTimeStr@{getLocalTimeStr}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{getLocalTimeStr()}{getLocalTimeStr()}}
+{\footnotesize\ttfamily \label{class_clock_a7395deef9bcfeb4c1273eb00c2aa20e9} 
+std\+::string Clock\+::get\+Local\+Time\+Str (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{format}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption}) const}
+
+
+
+Gets the current local time as a formatted string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em format} & The format for the time string (default\+: empty which translates to class\textquotesingle{}s default format "{}\%d/\%m/\%\+Y \%\+H\+:\%\+M\+:\%\+S"{} or anything else if was setup during the object construction via parameterized constructor of this class). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The current local time as a formatted string. 
+\end{DoxyReturn}
+\Hypertarget{class_clock_a2688cea926c861b3bbf648a98b1dde80}\index{Clock@{Clock}!getMonth@{getMonth}}
+\index{getMonth@{getMonth}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{getMonth()}{getMonth()}}
+{\footnotesize\ttfamily \label{class_clock_a2688cea926c861b3bbf648a98b1dde80} 
+std\+::string Clock\+::get\+Month (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Gets the month. 
+
+\begin{DoxyReturn}{Returns}
+The month as a string. 
+\end{DoxyReturn}
+\Hypertarget{class_clock_ab65778d362dbabd7f51472184f4a7290}\index{Clock@{Clock}!getTimeOfTheDay@{getTimeOfTheDay}}
+\index{getTimeOfTheDay@{getTimeOfTheDay}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{getTimeOfTheDay()}{getTimeOfTheDay()}}
+{\footnotesize\ttfamily \label{class_clock_ab65778d362dbabd7f51472184f4a7290} 
+std\+::tuple$<$ int, int, int $>$ Clock\+::get\+Time\+Of\+The\+Day (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Gets the current time of the day (hours, minutes, seconds). 
+
+\begin{DoxyReturn}{Returns}
+A tuple containing the current time of the day. 
+\end{DoxyReturn}
+\Hypertarget{class_clock_a08d6d1bee890b3690f4d4ad22d639602}\index{Clock@{Clock}!getYear@{getYear}}
+\index{getYear@{getYear}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{getYear()}{getYear()}}
+{\footnotesize\ttfamily \label{class_clock_a08d6d1bee890b3690f4d4ad22d639602} 
+std\+::string Clock\+::get\+Year (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Gets the year. 
+
+\begin{DoxyReturn}{Returns}
+The year as a string. 
+\end{DoxyReturn}
+\Hypertarget{class_clock_a5deab76244f8effa84068d2e21cc3658}\index{Clock@{Clock}!isRunning@{isRunning}}
+\index{isRunning@{isRunning}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{isRunning()}{isRunning()}}
+{\footnotesize\ttfamily \label{class_clock_a5deab76244f8effa84068d2e21cc3658} 
+bool Clock\+::is\+Running (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Checks if the timer is running. 
+
+\begin{DoxyReturn}{Returns}
+A boolean value indicating if the timer is running. 
+\end{DoxyReturn}
+\Hypertarget{class_clock_a8a050959dcff11c85d695989e9099a8c}\index{Clock@{Clock}!start@{start}}
+\index{start@{start}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily \label{class_clock_a8a050959dcff11c85d695989e9099a8c} 
+void Clock\+::start (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Starts the timer. 
+
+File\+: Clock.\+cpp Brief\+: Implementation of the \doxylink{class_clock}{Clock} class for time measurement and formatting.
+
+This file contains the implementation of the \doxylink{class_clock}{Clock} class, which provides functionalities for measuring elapsed time, getting the current time in various formats, and retrieving specific components of the current time.
+
+Copyright (c) 2025 Swarnendu RC
+
+@license MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "{}\+Software"{}), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions\+:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "{}\+AS IS"{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_clock_8hpp}{Clock.\+hpp}}\item 
+src/Clock.\+cpp\end{DoxyCompactItemize}
