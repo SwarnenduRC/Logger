@@ -17,8 +17,7 @@ A class to provide time-\/related functionalities.
 \begin{DoxyCompactList}\small\item\em Default constructor for the \doxylink{class_clock}{Clock} class. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_clock_a15292dc045dc2dc4844bc6d4aebe9ec8}{Clock}} (const std\+::string\+\_\+view format)
 \begin{DoxyCompactList}\small\item\em Parameterized constructor for the \doxylink{class_clock}{Clock} class. \end{DoxyCompactList}\item 
-\Hypertarget{class_clock_a8a050959dcff11c85d695989e9099a8c}\label{class_clock_a8a050959dcff11c85d695989e9099a8c} 
-void {\bfseries start} ()
+void \mbox{\hyperlink{class_clock_a8a050959dcff11c85d695989e9099a8c}{start}} ()
 \begin{DoxyCompactList}\small\item\em Starts the timer. \end{DoxyCompactList}\item 
 \Hypertarget{class_clock_a0b77c3e7f33eb7ae0f018e469d96a250}\label{class_clock_a0b77c3e7f33eb7ae0f018e469d96a250} 
 void {\bfseries stop} ()
@@ -233,9 +232,31 @@ Checks if the timer is running.
 \begin{DoxyReturn}{Returns}
 A boolean value indicating if the timer is running. 
 \end{DoxyReturn}
+\Hypertarget{class_clock_a8a050959dcff11c85d695989e9099a8c}\index{Clock@{Clock}!start@{start}}
+\index{start@{start}!Clock@{Clock}}
+\doxysubsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily \label{class_clock_a8a050959dcff11c85d695989e9099a8c} 
+void Clock\+::start (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
+
+
+Starts the timer. 
+
+File\+: Clock.\+cpp Brief\+: Implementation of the \doxylink{class_clock}{Clock} class for time measurement and formatting.
+
+This file contains the implementation of the \doxylink{class_clock}{Clock} class, which provides functionalities for measuring elapsed time, getting the current time in various formats, and retrieving specific components of the current time.
+
+Copyright (c) 2025 Swarnendu RC
+
+@license MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "{}\+Software"{}), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions\+:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "{}\+AS IS"{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
 include/\mbox{\hyperlink{_clock_8hpp}{Clock.\+hpp}}\item 
-src/\mbox{\hyperlink{_clock_8cpp}{Clock.\+cpp}}\end{DoxyCompactItemize}
+src/Clock.\+cpp\end{DoxyCompactItemize}

@@ -1,6 +1,5 @@
 var NAVTREEINDEX0 =
 {
-"_clock_8cpp.html":[2,0,1,0],
 "_clock_8hpp.html":[2,0,0,0],
 "_clock_8hpp.html#a0423d00e0eb199de523a92031b5a1107":[2,0,0,0,1],
 "_clock_8hpp.html#a0423d00e0eb199de523a92031b5a1107a5b3b43ddfdecac6712fd1dbc20798e6b":[2,0,0,0,1,3],
@@ -218,7 +217,6 @@ var NAVTREEINDEX0 =
 "classlogger_1_1_logging_ops.html#af4f15c575d0891f4c1124b89fc48e16e":[1,0,0,3,31],
 "classlogger_1_1_logging_ops.html#afba9d3e1e49aa61ac234d9c24f0ab296":[1,0,0,3,15],
 "classlogger_1_1_logging_ops.html#afdf1b871764378178fabcadc15d13ea7":[1,0,0,3,30],
-"dir_68267d1309a1af8e8297ef4c3efbcdba.html":[2,0,1],
 "dir_d44c64559bbebec7f509842c48db8b23.html":[2,0,0],
 "files.html":[2,0],
 "functions.html":[1,3,0],
