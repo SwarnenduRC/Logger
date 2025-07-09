@@ -1,0 +1,76 @@
+\doxysection{include/\+Logger.hpp File Reference}
+\hypertarget{_logger_8hpp}{}\label{_logger_8hpp}\index{include/Logger.hpp@{include/Logger.hpp}}
+
+
+Defines the Logger class and related types for structured logging.  
+
+
+{\ttfamily \#include "{}Clock.\+hpp"{}}\newline
+{\ttfamily \#include "{}Logging\+Ops.\+hpp"{}}\newline
+{\ttfamily \#include $<$cassert$>$}\newline
+{\ttfamily \#include $<$fmtmsg.\+h$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classlogger_1_1_logger}{logger\+::\+Logger}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{_logger_8hpp_aa03da5c1793d833ea43707770f5ca485}{logger\+::\+UNORD\+\_\+\+STRING\+\_\+\+MAP}} = std\+::unordered\+\_\+map$<$std\+::string, \mbox{\hyperlink{_logger_8hpp_a360891ff5fbdf7b5e6da916beebaa107}{LOG\+\_\+\+TYPE}}$>$
+\begin{DoxyCompactList}\small\item\em Type alias for amps used in logging. \end{DoxyCompactList}\item 
+\Hypertarget{_logger_8hpp_a62b8078f90b526e1713f0c10834bd94e}\label{_logger_8hpp_a62b8078f90b526e1713f0c10834bd94e} 
+using {\bfseries logger\+::\+UNORD\+\_\+\+LOG\+\_\+\+TYPE\+\_\+\+MAP} = std\+::unordered\+\_\+map$<$\mbox{\hyperlink{_logger_8hpp_a360891ff5fbdf7b5e6da916beebaa107}{LOG\+\_\+\+TYPE}}, std\+::string$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{_logger_8hpp_a360891ff5fbdf7b5e6da916beebaa107}{logger\+::\+LOG\+\_\+\+TYPE}} \{ \newline
+{\bfseries LOG\+\_\+\+ERR} = 0x01
+, {\bfseries LOG\+\_\+\+INFO} = 0x02
+, {\bfseries LOG\+\_\+\+DBG} = 0x03
+, {\bfseries LOG\+\_\+\+FATAL} = 0x04
+, \newline
+{\bfseries LOG\+\_\+\+WARN} = 0x05
+, {\bfseries LOG\+\_\+\+IMP} = 0x06
+, {\bfseries LOG\+\_\+\+ASSERT} = 0x07
+, {\bfseries LOG\+\_\+\+DEFAULT} = 0x\+FF
+ \}
+\begin{DoxyCompactList}\small\item\em Enum class for different log types. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Defines the Logger class and related types for structured logging. 
+
+This file provides the declaration of the Logger class, which supports configurable, thread-\/aware, and type-\/based logging with customizable formatting. It also defines log type enumerations, string constants for formatting, and utility functions for log type conversions. 
+
+\label{doc-typedef-members}
+\Hypertarget{_logger_8hpp_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{_logger_8hpp_aa03da5c1793d833ea43707770f5ca485}\index{Logger.hpp@{Logger.hpp}!UNORD\_STRING\_MAP@{UNORD\_STRING\_MAP}}
+\index{UNORD\_STRING\_MAP@{UNORD\_STRING\_MAP}!Logger.hpp@{Logger.hpp}}
+\doxysubsubsection{\texorpdfstring{UNORD\_STRING\_MAP}{UNORD\_STRING\_MAP}}
+{\footnotesize\ttfamily \label{_logger_8hpp_aa03da5c1793d833ea43707770f5ca485} 
+using \mbox{\hyperlink{_logger_8hpp_aa03da5c1793d833ea43707770f5ca485}{logger\+::\+UNORD\+\_\+\+STRING\+\_\+\+MAP}} = std\+::unordered\+\_\+map$<$std\+::string, LOG\+\_\+\+TYPE$>$}
+
+
+
+Type alias for amps used in logging. 
+
+This type alias defines two maps for converting between log type strings and their corresponding enum values. The first map converts strings to log type enums, and the second map converts log type enums to their string representations. 
+
+\label{doc-enum-members}
+\Hypertarget{_logger_8hpp_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{_logger_8hpp_a360891ff5fbdf7b5e6da916beebaa107}\index{Logger.hpp@{Logger.hpp}!LOG\_TYPE@{LOG\_TYPE}}
+\index{LOG\_TYPE@{LOG\_TYPE}!Logger.hpp@{Logger.hpp}}
+\doxysubsubsection{\texorpdfstring{LOG\_TYPE}{LOG\_TYPE}}
+{\footnotesize\ttfamily \label{_logger_8hpp_a360891ff5fbdf7b5e6da916beebaa107} 
+enum class \mbox{\hyperlink{_logger_8hpp_a360891ff5fbdf7b5e6da916beebaa107}{logger\+::\+LOG\+\_\+\+TYPE}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Enum class for different log types. 
+
+This enum class defines various log types that can be used to categorize log messages. Each type corresponds to a specific logging level or purpose. The values are used to control the verbosity and importance of log messages. 

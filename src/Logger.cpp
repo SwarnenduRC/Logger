@@ -6,11 +6,30 @@
 
 //Only uncomment this if you want to run the LoggerTests to check
 //writing to a file rather than to the console (which is default)
-#define __TESTING__ 1
+//#define __TESTING__ 1
 
-//#define __FILE_LOGGING__
-#define __FILE_SIZE__ (1024 * 1024 * 10)
-#define __LOG_FILE_NAME__ "AppLogs.txt"
+/**
+ * @brief During testing, we want to log to a file rather than to the console.
+ * This is useful for debugging and verifying the logging functionality.
+ * @note This is only for testing purposes. In production, we will log
+ * either to the console or to a file based on the configuration.
+ */
+#ifdef __TESTING__
+    #ifdef __FILE_LOGGING__
+    #undef __FILE_LOGGING__ // If file logging is defined, then undefine it
+    #endif // __FILE_LOGGING__
+    #define __FILE_LOGGING__ 1
+
+    #ifdef __FILE_SIZE__
+    #undef __FILE_SIZE__ // If file size is defined, then undefine it
+    #endif // __FILE_SIZE__
+    #define __FILE_SIZE__ (1024 * 1024 * 10) // 10 MB
+
+    #ifdef __LOG_FILE_NAME__
+    #undef __LOG_FILE_NAME__ // If log file name is defined, then undefine
+    #endif // __LOG_FILE_NAME__
+    #define __LOG_FILE_NAME__ "LoggerTestLogs.txt" // Default log file name
+#endif // __TESTING__
 
 using namespace logger;
 
@@ -76,7 +95,7 @@ using namespace logger;
         parser << __LOG_FILE_NAME__;
         fileName = parser.str();
         // Break out then and there if file logging is requested
-        // but log file name is not provided. We are not assuming
+        // but none provided. We are not assuming
         // any log file name on our own in any case
         if (fileName.empty())
             break;
@@ -167,8 +186,23 @@ Logger& Logger::setAssertCondition(const std::string_view cond) noexcept
 
 void Logger::populatePrerequisitFileds()
 {
+    // Clear the log stream before populating it with new log message
     std::stringstream().swap(m_logStream);
     constructLogMsgPrefix();
+    // Segregate the function name and class name from the
+    // m_funcName, if it is in the format "ClassName:FunctionName"
+    // If it is not in that format, then just use the function name
+    // as it is, without any class name.
+    // This is useful for logging purposes, to identify which class
+    // and function the log message is coming from.
+    // For example, if the function name is "Logger::log", then
+    // the class name will be "Logger" and the function name will be "log".
+    // If the function name is "log", then the class name will be empty
+    // and the function name will be "log".
+    // If the function name is "Logger::log()", then the class name will be "Logger"
+    // and the function name will be "log".
+    // If the function name is "Logger::log(const std::string&)", then the
+    // class name will be "Logger" and the function name will be "log".
     std::string funcName;
     std::string className;
     if (std::string::npos != m_funcName.find(":"))

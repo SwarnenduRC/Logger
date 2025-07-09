@@ -1,0 +1,432 @@
+\doxysection{include/\+Log\+Helper.hpp File Reference}
+\hypertarget{_log_helper_8hpp}{}\label{_log_helper_8hpp}\index{include/LogHelper.hpp@{include/LogHelper.hpp}}
+
+
+Helper utilities and wrapper functions for the \doxylink{classlogger_1_1_logger}{Logger} library.  
+
+
+{\ttfamily \#include "{}Logger.\+hpp"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structis__vector}{is\+\_\+vector$<$ T $>$}}
+\item 
+struct \mbox{\hyperlink{structis__vector_3_01std_1_1vector_3_01_t_00_01_alloc_01_4_01_4}{is\+\_\+vector$<$ std\+::vector$<$ T, Alloc $>$ $>$}}
+\item 
+struct \mbox{\hyperlink{structis__list}{is\+\_\+list$<$ T $>$}}
+\item 
+struct \mbox{\hyperlink{structis__list_3_01std_1_1list_3_01_t_00_01_alloc_01_4_01_4}{is\+\_\+list$<$ std\+::list$<$ T, Alloc $>$ $>$}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}{set\+Logger\+Properties}} (const std\+::string\+\_\+view file\+Name, const std\+::string\+\_\+view func\+Name, const std\+::string\+\_\+view marker, const size\+\_\+t line\+No, const std\+::thread\+::id \&tid, const \mbox{\hyperlink{_logger_8hpp_a360891ff5fbdf7b5e6da916beebaa107}{LOG\+\_\+\+TYPE}} \&log\+Type)
+\begin{DoxyCompactList}\small\item\em Set the logger properties for the current log message. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename ... Args$>$ }\\void \mbox{\hyperlink{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}{log\+Msg}} (const std\+::string\+\_\+view format\+\_\+str, Args \&\&... args)
+\begin{DoxyCompactList}\small\item\em Log a message with the specified format and arguments. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename List, typename ... Args$>$ }\\void \mbox{\hyperlink{_log_helper_8hpp_a1ad522beed0895ac0fe014b60f2691b0}{log\+\_\+list}} (const std\+::string\+\_\+view file\+Name, const std\+::string\+\_\+view func\+Name, const size\+\_\+t line\+No, const List \&msg\+List, const std\+::string\+\_\+view format\+\_\+str, Args \&\&... args)
+\begin{DoxyCompactList}\small\item\em Log a list or vector of messages. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename ... Args$>$ }\\void \mbox{\hyperlink{_log_helper_8hpp_ae814eed433cedc3f32dceffb27bc2298}{log\+\_\+entry}} (const std\+::string\+\_\+view file\+Name, const std\+::string\+\_\+view func\+Name, const size\+\_\+t line\+No, const std\+::string\+\_\+view format\+\_\+str, Args \&\&... args)
+\begin{DoxyCompactList}\small\item\em Log an entry point message. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename ... Args$>$ }\\void \mbox{\hyperlink{_log_helper_8hpp_a2b6902b3374f4fdcb85455b002193bd7}{log\+\_\+exit}} (const std\+::string\+\_\+view file\+Name, const std\+::string\+\_\+view func\+Name, const size\+\_\+t line\+No, const std\+::string\+\_\+view format\+\_\+str, Args \&\&... args)
+\begin{DoxyCompactList}\small\item\em Log an exit point message. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename ... Args$>$ }\\void \mbox{\hyperlink{_log_helper_8hpp_a15d225014f1295b17e25c8e5896ce923}{log\+\_\+err}} (const std\+::string\+\_\+view file\+Name, const std\+::string\+\_\+view func\+Name, const size\+\_\+t line\+No, const std\+::string\+\_\+view format\+\_\+str, Args \&\&... args)
+\begin{DoxyCompactList}\small\item\em Log an error message. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename ... Args$>$ }\\void \mbox{\hyperlink{_log_helper_8hpp_a119976b1488771a2c921c69c9c2b9f41}{log\+\_\+warn}} (const std\+::string\+\_\+view file\+Name, const std\+::string\+\_\+view func\+Name, const size\+\_\+t line\+No, const std\+::string\+\_\+view format\+\_\+str, Args \&\&... args)
+\begin{DoxyCompactList}\small\item\em Log a warning message. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename ... Args$>$ }\\void \mbox{\hyperlink{_log_helper_8hpp_a75ba5e3b916557686f3512cea13cf679}{log\+\_\+info}} (const std\+::string\+\_\+view file\+Name, const std\+::string\+\_\+view func\+Name, const size\+\_\+t line\+No, const std\+::string\+\_\+view format\+\_\+str, Args \&\&... args)
+\begin{DoxyCompactList}\small\item\em Log an informational message. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename ... Args$>$ }\\void \mbox{\hyperlink{_log_helper_8hpp_abcac3ce3335f7c73a565538fbd78f81c}{log\+\_\+imp}} (const std\+::string\+\_\+view file\+Name, const std\+::string\+\_\+view func\+Name, const size\+\_\+t line\+No, const std\+::string\+\_\+view format\+\_\+str, Args \&\&... args)
+\begin{DoxyCompactList}\small\item\em Log an important detail message. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename ... Args$>$ }\\void \mbox{\hyperlink{_log_helper_8hpp_a6a444d5c626cad52e736835e96c74b97}{log\+\_\+dbg}} (const std\+::string\+\_\+view file\+Name, const std\+::string\+\_\+view func\+Name, const size\+\_\+t line\+No, const std\+::string\+\_\+view format\+\_\+str, Args \&\&... args)
+\begin{DoxyCompactList}\small\item\em Log a debug message. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename ... Args$>$ }\\void \mbox{\hyperlink{_log_helper_8hpp_a9ded78ff1c8a3c04bbde4c0fc64d49fa}{log\+\_\+assert}} (const std\+::string\+\_\+view file\+Name, const std\+::string\+\_\+view func\+Name, const size\+\_\+t line\+No, const std\+::string\+\_\+view cond, const bool exit\+Gracefuly, const std\+::string\+\_\+view format\+\_\+str, Args \&\&... args)
+\begin{DoxyCompactList}\small\item\em Log an assertion failure message. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename ... Args$>$ }\\void \mbox{\hyperlink{_log_helper_8hpp_a5369fc2496bf75b73402e97978f6cd2f}{log\+\_\+fatal}} (const std\+::string\+\_\+view file\+Name, const std\+::string\+\_\+view func\+Name, const size\+\_\+t line\+No, const std\+::string\+\_\+view format\+\_\+str, Args \&\&... args)
+\begin{DoxyCompactList}\small\item\em Log a fatal error message and abort the program. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Helper utilities and wrapper functions for the \doxylink{classlogger_1_1_logger}{Logger} library. 
+
+This header provides a set of template utilities and convenience functions to simplify logging operations using the \doxylink{classlogger_1_1_logger}{Logger} class. It includes type traits for container detection, functions for setting logger properties, and various logging wrappers for different log levels (info, warning, error, debug, fatal, etc.), as well as support for logging lists and assertion failures. 
+
+\label{doc-func-members}
+\Hypertarget{_log_helper_8hpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_log_helper_8hpp_a9ded78ff1c8a3c04bbde4c0fc64d49fa}\index{LogHelper.hpp@{LogHelper.hpp}!log\_assert@{log\_assert}}
+\index{log\_assert@{log\_assert}!LogHelper.hpp@{LogHelper.hpp}}
+\doxysubsubsection{\texorpdfstring{log\_assert()}{log\_assert()}}
+{\footnotesize\ttfamily \label{_log_helper_8hpp_a9ded78ff1c8a3c04bbde4c0fc64d49fa} 
+template$<$typename ... Args$>$ \\
+void log\+\_\+assert (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Name}{, }\item[{const std\+::string\+\_\+view}]{func\+Name}{, }\item[{const size\+\_\+t}]{line\+No}{, }\item[{const std\+::string\+\_\+view}]{cond}{, }\item[{const bool}]{exit\+Gracefuly}{, }\item[{const std\+::string\+\_\+view}]{format\+\_\+str}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Log an assertion failure message. 
+
+This function logs an assertion failure message with the specified condition and format. It sets the logger properties such as file name, function name, line number, thread ID, and log type before logging the message. If {\ttfamily exit\+Gracefuly} is true, it will exit the program gracefully.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Args} & Variadic template parameters for additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Name} & The name of the file where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em func\+Name} & The name of the function where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em line\+No} & The line number in the source code where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em cond} & The condition that failed (assertion). \\
+\hline
+\mbox{\texttt{in}}  & {\em exit\+Gracefuly} & Whether to exit gracefully or abort on assertion failure. \\
+\hline
+\mbox{\texttt{in}}  & {\em format\+\_\+str} & The format string for the log message. \\
+\hline
+\mbox{\texttt{in}}  & {\em args} & Additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{_log_helper_8hpp_a6a444d5c626cad52e736835e96c74b97}\index{LogHelper.hpp@{LogHelper.hpp}!log\_dbg@{log\_dbg}}
+\index{log\_dbg@{log\_dbg}!LogHelper.hpp@{LogHelper.hpp}}
+\doxysubsubsection{\texorpdfstring{log\_dbg()}{log\_dbg()}}
+{\footnotesize\ttfamily \label{_log_helper_8hpp_a6a444d5c626cad52e736835e96c74b97} 
+template$<$typename ... Args$>$ \\
+void log\+\_\+dbg (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Name}{, }\item[{const std\+::string\+\_\+view}]{func\+Name}{, }\item[{const size\+\_\+t}]{line\+No}{, }\item[{const std\+::string\+\_\+view}]{format\+\_\+str}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Log a debug message. 
+
+This function logs a debug message with the specified format and arguments. It sets the logger properties such as file name, function name, line number, thread ID, and log type before logging the message.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Args} & Variadic template parameters for additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Name} & The name of the file where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em func\+Name} & The name of the function where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em line\+No} & The line number in the source code where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em format\+\_\+str} & The format string for the log message. \\
+\hline
+\mbox{\texttt{in}}  & {\em args} & Additional arguments to be formatted into the log message.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This function is only compiled and executed in debug mode. It is used to log debug information during development and testing. In release mode, this function will not be included in the binary. 
+\end{DoxyNote}
+\Hypertarget{_log_helper_8hpp_ae814eed433cedc3f32dceffb27bc2298}\index{LogHelper.hpp@{LogHelper.hpp}!log\_entry@{log\_entry}}
+\index{log\_entry@{log\_entry}!LogHelper.hpp@{LogHelper.hpp}}
+\doxysubsubsection{\texorpdfstring{log\_entry()}{log\_entry()}}
+{\footnotesize\ttfamily \label{_log_helper_8hpp_ae814eed433cedc3f32dceffb27bc2298} 
+template$<$typename ... Args$>$ \\
+void log\+\_\+entry (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Name}{, }\item[{const std\+::string\+\_\+view}]{func\+Name}{, }\item[{const size\+\_\+t}]{line\+No}{, }\item[{const std\+::string\+\_\+view}]{format\+\_\+str}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Log an entry point message. 
+
+This function logs a message indicating the entry point of a function or code block. It sets the logger properties such as file name, function name, line number, thread ID, and log type before logging the message.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Args} & Variadic template parameters for additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Name} & The name of the file where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em func\+Name} & The name of the function where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em line\+No} & The line number in the source code where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em format\+\_\+str} & The format string for the log message. \\
+\hline
+\mbox{\texttt{in}}  & {\em args} & Additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{_log_helper_8hpp_a15d225014f1295b17e25c8e5896ce923}\index{LogHelper.hpp@{LogHelper.hpp}!log\_err@{log\_err}}
+\index{log\_err@{log\_err}!LogHelper.hpp@{LogHelper.hpp}}
+\doxysubsubsection{\texorpdfstring{log\_err()}{log\_err()}}
+{\footnotesize\ttfamily \label{_log_helper_8hpp_a15d225014f1295b17e25c8e5896ce923} 
+template$<$typename ... Args$>$ \\
+void log\+\_\+err (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Name}{, }\item[{const std\+::string\+\_\+view}]{func\+Name}{, }\item[{const size\+\_\+t}]{line\+No}{, }\item[{const std\+::string\+\_\+view}]{format\+\_\+str}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Log an error message. 
+
+This function logs an error message with the specified format and arguments. It sets the logger properties such as file name, function name, line number, thread ID, and log type before logging the message.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Args} & Variadic template parameters for additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Name} & The name of the file where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em func\+Name} & The name of the function where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em line\+No} & The line number in the source code where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em format\+\_\+str} & The format string for the log message. \\
+\hline
+\mbox{\texttt{in}}  & {\em args} & Additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{_log_helper_8hpp_a2b6902b3374f4fdcb85455b002193bd7}\index{LogHelper.hpp@{LogHelper.hpp}!log\_exit@{log\_exit}}
+\index{log\_exit@{log\_exit}!LogHelper.hpp@{LogHelper.hpp}}
+\doxysubsubsection{\texorpdfstring{log\_exit()}{log\_exit()}}
+{\footnotesize\ttfamily \label{_log_helper_8hpp_a2b6902b3374f4fdcb85455b002193bd7} 
+template$<$typename ... Args$>$ \\
+void log\+\_\+exit (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Name}{, }\item[{const std\+::string\+\_\+view}]{func\+Name}{, }\item[{const size\+\_\+t}]{line\+No}{, }\item[{const std\+::string\+\_\+view}]{format\+\_\+str}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Log an exit point message. 
+
+This function logs a message indicating the exit point of a function or code block. It sets the logger properties such as file name, function name, line number, thread ID, and log type before logging the message.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Args} & Variadic template parameters for additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Name} & The name of the file where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em func\+Name} & The name of the function where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em line\+No} & The line number in the source code where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em format\+\_\+str} & The format string for the log message. \\
+\hline
+\mbox{\texttt{in}}  & {\em args} & Additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{_log_helper_8hpp_a5369fc2496bf75b73402e97978f6cd2f}\index{LogHelper.hpp@{LogHelper.hpp}!log\_fatal@{log\_fatal}}
+\index{log\_fatal@{log\_fatal}!LogHelper.hpp@{LogHelper.hpp}}
+\doxysubsubsection{\texorpdfstring{log\_fatal()}{log\_fatal()}}
+{\footnotesize\ttfamily \label{_log_helper_8hpp_a5369fc2496bf75b73402e97978f6cd2f} 
+template$<$typename ... Args$>$ \\
+void log\+\_\+fatal (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Name}{, }\item[{const std\+::string\+\_\+view}]{func\+Name}{, }\item[{const size\+\_\+t}]{line\+No}{, }\item[{const std\+::string\+\_\+view}]{format\+\_\+str}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Log a fatal error message and abort the program. 
+
+This function logs a fatal error message with the specified format and arguments. It sets the logger properties such as file name, function name, line number, thread ID, and log type before logging the message. After logging, it aborts the program.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Args} & Variadic template parameters for additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Name} & The name of the file where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em func\+Name} & The name of the function where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em line\+No} & The line number in the source code where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em format\+\_\+str} & The format string for the log message. \\
+\hline
+\mbox{\texttt{in}}  & {\em args} & Additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{_log_helper_8hpp_abcac3ce3335f7c73a565538fbd78f81c}\index{LogHelper.hpp@{LogHelper.hpp}!log\_imp@{log\_imp}}
+\index{log\_imp@{log\_imp}!LogHelper.hpp@{LogHelper.hpp}}
+\doxysubsubsection{\texorpdfstring{log\_imp()}{log\_imp()}}
+{\footnotesize\ttfamily \label{_log_helper_8hpp_abcac3ce3335f7c73a565538fbd78f81c} 
+template$<$typename ... Args$>$ \\
+void log\+\_\+imp (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Name}{, }\item[{const std\+::string\+\_\+view}]{func\+Name}{, }\item[{const size\+\_\+t}]{line\+No}{, }\item[{const std\+::string\+\_\+view}]{format\+\_\+str}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Log an important detail message. 
+
+This function logs a message indicating an importance of the logged message. It sets the logger properties such as file name, function name, line number, thread ID, and log type before logging the message.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Args} & Variadic template parameters for additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Name} & The name of the file where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em func\+Name} & The name of the function where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em line\+No} & The line number in the source code where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em format\+\_\+str} & The format string for the log message. \\
+\hline
+\mbox{\texttt{in}}  & {\em args} & Additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{_log_helper_8hpp_a75ba5e3b916557686f3512cea13cf679}\index{LogHelper.hpp@{LogHelper.hpp}!log\_info@{log\_info}}
+\index{log\_info@{log\_info}!LogHelper.hpp@{LogHelper.hpp}}
+\doxysubsubsection{\texorpdfstring{log\_info()}{log\_info()}}
+{\footnotesize\ttfamily \label{_log_helper_8hpp_a75ba5e3b916557686f3512cea13cf679} 
+template$<$typename ... Args$>$ \\
+void log\+\_\+info (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Name}{, }\item[{const std\+::string\+\_\+view}]{func\+Name}{, }\item[{const size\+\_\+t}]{line\+No}{, }\item[{const std\+::string\+\_\+view}]{format\+\_\+str}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Log an informational message. 
+
+This function logs an informational message with the specified format and arguments. It sets the logger properties such as file name, function name, line number, thread ID, and log type before logging the message.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Args} & Variadic template parameters for additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Name} & The name of the file where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em func\+Name} & The name of the function where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em line\+No} & The line number in the source code where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em format\+\_\+str} & The format string for the log message. \\
+\hline
+\mbox{\texttt{in}}  & {\em args} & Additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{_log_helper_8hpp_a1ad522beed0895ac0fe014b60f2691b0}\index{LogHelper.hpp@{LogHelper.hpp}!log\_list@{log\_list}}
+\index{log\_list@{log\_list}!LogHelper.hpp@{LogHelper.hpp}}
+\doxysubsubsection{\texorpdfstring{log\_list()}{log\_list()}}
+{\footnotesize\ttfamily \label{_log_helper_8hpp_a1ad522beed0895ac0fe014b60f2691b0} 
+template$<$typename List, typename ... Args$>$ \\
+void log\+\_\+list (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Name}{, }\item[{const std\+::string\+\_\+view}]{func\+Name}{, }\item[{const size\+\_\+t}]{line\+No}{, }\item[{const List \&}]{msg\+List}{, }\item[{const std\+::string\+\_\+view}]{format\+\_\+str}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Log a list or vector of messages. 
+
+This function logs a list or vector of messages using the specified format string and arguments. It checks if the provided List is either a std\+::vector or std\+::list of strings, and if so, it logs each message in the list.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em List} & The type of the list or vector to be logged. \\
+\hline
+{\em Args} & Variadic template parameters for additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Name} & The name of the file where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em func\+Name} & The name of the function where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em line\+No} & The line number in the source code where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em msg\+List} & The list or vector of messages to be logged. \\
+\hline
+\mbox{\texttt{in}}  & {\em format\+\_\+str} & The format string for the log message. \\
+\hline
+\mbox{\texttt{in}}  & {\em args} & Additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{_log_helper_8hpp_a119976b1488771a2c921c69c9c2b9f41}\index{LogHelper.hpp@{LogHelper.hpp}!log\_warn@{log\_warn}}
+\index{log\_warn@{log\_warn}!LogHelper.hpp@{LogHelper.hpp}}
+\doxysubsubsection{\texorpdfstring{log\_warn()}{log\_warn()}}
+{\footnotesize\ttfamily \label{_log_helper_8hpp_a119976b1488771a2c921c69c9c2b9f41} 
+template$<$typename ... Args$>$ \\
+void log\+\_\+warn (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Name}{, }\item[{const std\+::string\+\_\+view}]{func\+Name}{, }\item[{const size\+\_\+t}]{line\+No}{, }\item[{const std\+::string\+\_\+view}]{format\+\_\+str}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Log a warning message. 
+
+This function logs a warning message with the specified format and arguments. It sets the logger properties such as file name, function name, line number, thread ID, and log type before logging the message.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Args} & Variadic template parameters for additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Name} & The name of the file where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em func\+Name} & The name of the function where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em line\+No} & The line number in the source code where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em format\+\_\+str} & The format string for the log message. \\
+\hline
+\mbox{\texttt{in}}  & {\em args} & Additional arguments to be formatted into the log message. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8}\index{LogHelper.hpp@{LogHelper.hpp}!logMsg@{logMsg}}
+\index{logMsg@{logMsg}!LogHelper.hpp@{LogHelper.hpp}}
+\doxysubsubsection{\texorpdfstring{logMsg()}{logMsg()}}
+{\footnotesize\ttfamily \label{_log_helper_8hpp_acea3dcfbc3c45a6f6b0e304452ed48c8} 
+template$<$typename ... Args$>$ \\
+void log\+Msg (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{format\+\_\+str}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})}
+
+
+
+Log a message with the specified format and arguments. 
+
+This function formats the log message using the provided format string and arguments, and writes it to the log stream. It is a convenience wrapper around the \doxylink{classlogger_1_1_logger}{Logger}\textquotesingle{}s log method.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Args} & Variadic template parameters for the arguments to be formatted into the log message. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em format\+\_\+str} & The format string for the log message. It can contain placeholders for the arguments, similar to printf-\/style formatting. For example, "{}\+Log message\+: \{\}"{} where \{\} will be replaced by the provided arguments. \\
+\hline
+\mbox{\texttt{in}}  & {\em args} & The arguments to be formatted into the log message. These arguments will be formatted according to the format string. The number and types of arguments should match the placeholders in the format string. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f}\index{LogHelper.hpp@{LogHelper.hpp}!setLoggerProperties@{setLoggerProperties}}
+\index{setLoggerProperties@{setLoggerProperties}!LogHelper.hpp@{LogHelper.hpp}}
+\doxysubsubsection{\texorpdfstring{setLoggerProperties()}{setLoggerProperties()}}
+{\footnotesize\ttfamily \label{_log_helper_8hpp_adabc1d3e3e9e48bcca9b3c97cc12b98f} 
+void set\+Logger\+Properties (\begin{DoxyParamCaption}\item[{const std\+::string\+\_\+view}]{file\+Name}{, }\item[{const std\+::string\+\_\+view}]{func\+Name}{, }\item[{const std\+::string\+\_\+view}]{marker}{, }\item[{const size\+\_\+t}]{line\+No}{, }\item[{const std\+::thread\+::id \&}]{tid}{, }\item[{const \mbox{\hyperlink{_logger_8hpp_a360891ff5fbdf7b5e6da916beebaa107}{LOG\+\_\+\+TYPE}} \&}]{log\+Type}{}\end{DoxyParamCaption})}
+
+
+
+Set the logger properties for the current log message. 
+
+This function sets the file name, function name, marker, line number, thread ID, and log type for the logger object. It is used to prepare the logger object with necessary context before logging a message.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{in}}  & {\em file\+Name} & The name of the file where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em func\+Name} & The name of the function where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em marker} & A string marker to indicate the type of log (e.\+g., entry, exit). \\
+\hline
+\mbox{\texttt{in}}  & {\em line\+No} & The line number in the source code where the log is being generated. \\
+\hline
+\mbox{\texttt{in}}  & {\em tid} & The thread ID of the thread generating the log. \\
+\hline
+\mbox{\texttt{in}}  & {\em log\+Type} & The type of log (e.\+g., info, error, debug).\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This function is typically called before logging a message to ensure that the logger object has all the necessary context for generating a meaningful log entry. 
+\end{DoxyNote}

@@ -1,0 +1,94 @@
+\doxysection{logger Namespace Reference}
+\hypertarget{namespacelogger}{}\label{namespacelogger}\index{logger@{logger}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classlogger_1_1_console_ops}{Console\+Ops}}
+\item 
+class \mbox{\hyperlink{classlogger_1_1_file_ops}{File\+Ops}}
+\item 
+class \mbox{\hyperlink{classlogger_1_1_logger}{Logger}}
+\item 
+class \mbox{\hyperlink{classlogger_1_1_logging_ops}{Logging\+Ops}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{namespacelogger_a4f3b82e4b88ba9bc607208f4dee6f08f}\label{namespacelogger_a4f3b82e4b88ba9bc607208f4dee6f08f} 
+using {\bfseries DataQ} = std\+::queue$<$std\+::string$>$
+\item 
+using \mbox{\hyperlink{namespacelogger_aa03da5c1793d833ea43707770f5ca485}{UNORD\+\_\+\+STRING\+\_\+\+MAP}} = std\+::unordered\+\_\+map$<$std\+::string, \mbox{\hyperlink{namespacelogger_a360891ff5fbdf7b5e6da916beebaa107}{LOG\+\_\+\+TYPE}}$>$
+\begin{DoxyCompactList}\small\item\em Type alias for amps used in logging. \end{DoxyCompactList}\item 
+\Hypertarget{namespacelogger_a62b8078f90b526e1713f0c10834bd94e}\label{namespacelogger_a62b8078f90b526e1713f0c10834bd94e} 
+using {\bfseries UNORD\+\_\+\+LOG\+\_\+\+TYPE\+\_\+\+MAP} = std\+::unordered\+\_\+map$<$\mbox{\hyperlink{namespacelogger_a360891ff5fbdf7b5e6da916beebaa107}{LOG\+\_\+\+TYPE}}, std\+::string$>$
+\item 
+\Hypertarget{namespacelogger_a5a96f1d2c7ec9d85405d14c3d773321a}\label{namespacelogger_a5a96f1d2c7ec9d85405d14c3d773321a} 
+using {\bfseries BufferQ} = std\+::queue$<$std\+::array$<$char, buffer\+Size$>$$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespacelogger_a360891ff5fbdf7b5e6da916beebaa107}{LOG\+\_\+\+TYPE}} \{ \newline
+{\bfseries LOG\+\_\+\+ERR} = 0x01
+, {\bfseries LOG\+\_\+\+INFO} = 0x02
+, {\bfseries LOG\+\_\+\+DBG} = 0x03
+, {\bfseries LOG\+\_\+\+FATAL} = 0x04
+, \newline
+{\bfseries LOG\+\_\+\+WARN} = 0x05
+, {\bfseries LOG\+\_\+\+IMP} = 0x06
+, {\bfseries LOG\+\_\+\+ASSERT} = 0x07
+, {\bfseries LOG\+\_\+\+DEFAULT} = 0x\+FF
+ \}
+\begin{DoxyCompactList}\small\item\em Enum class for different log types. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{namespacelogger_a9a83648105f349fc52a45bdab9f23c4a}\label{namespacelogger_a9a83648105f349fc52a45bdab9f23c4a} 
+constexpr size\+\_\+t {\bfseries buffer\+Size} = 4097
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+File\+: \doxylink{_file_ops_8hpp_source}{File\+Ops.\+hpp} Description\+: Header file for the \doxylink{classlogger_1_1_file_ops}{File\+Ops} class, providing file operations such as reading, writing, appending, renaming, and deleting files, with thread-\/safe mechanisms. Supports file size limits, file content buffering, and exception handling.
+
+Author\+: Swarnendu Date\+: May, 2025
+
+MIT License
+
+Copyright (c) 2025 Swarnendu Roy Chowdhury
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "{}\+Software"{}), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions\+:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "{}\+AS IS"{}, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+
+\label{doc-typedef-members}
+\Hypertarget{namespacelogger_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{namespacelogger_aa03da5c1793d833ea43707770f5ca485}\index{logger@{logger}!UNORD\_STRING\_MAP@{UNORD\_STRING\_MAP}}
+\index{UNORD\_STRING\_MAP@{UNORD\_STRING\_MAP}!logger@{logger}}
+\doxysubsubsection{\texorpdfstring{UNORD\_STRING\_MAP}{UNORD\_STRING\_MAP}}
+{\footnotesize\ttfamily \label{namespacelogger_aa03da5c1793d833ea43707770f5ca485} 
+using \mbox{\hyperlink{namespacelogger_aa03da5c1793d833ea43707770f5ca485}{logger\+::\+UNORD\+\_\+\+STRING\+\_\+\+MAP}} = std\+::unordered\+\_\+map$<$std\+::string, \mbox{\hyperlink{namespacelogger_a360891ff5fbdf7b5e6da916beebaa107}{LOG\+\_\+\+TYPE}}$>$}
+
+
+
+Type alias for amps used in logging. 
+
+This type alias defines two maps for converting between log type strings and their corresponding enum values. The first map converts strings to log type enums, and the second map converts log type enums to their string representations. 
+
+\label{doc-enum-members}
+\Hypertarget{namespacelogger_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespacelogger_a360891ff5fbdf7b5e6da916beebaa107}\index{logger@{logger}!LOG\_TYPE@{LOG\_TYPE}}
+\index{LOG\_TYPE@{LOG\_TYPE}!logger@{logger}}
+\doxysubsubsection{\texorpdfstring{LOG\_TYPE}{LOG\_TYPE}}
+{\footnotesize\ttfamily \label{namespacelogger_a360891ff5fbdf7b5e6da916beebaa107} 
+enum class \mbox{\hyperlink{namespacelogger_a360891ff5fbdf7b5e6da916beebaa107}{logger\+::\+LOG\+\_\+\+TYPE}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Enum class for different log types. 
+
+This enum class defines various log types that can be used to categorize log messages. Each type corresponds to a specific logging level or purpose. The values are used to control the verbosity and importance of log messages. 

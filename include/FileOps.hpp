@@ -1,8 +1,8 @@
 /**
- * File: FileOps.hpp
- * Description: Header file for the FileOps class, providing file operations such as reading,
- *              writing, appending, renaming, and deleting files, with thread-safe mechanisms.
- *              Supports file size limits, file content buffering, and exception handling.
+ * @file FileOps.hpp
+ * @brief Header file for the FileOps class, providing file operations such as reading,
+ *        writing, appending, renaming, and deleting files, with thread-safe mechanisms.
+ *        Supports file size limits, file content buffering, and exception handling.
  *
  * Author: Swarnendu
  * Date: May, 2025
