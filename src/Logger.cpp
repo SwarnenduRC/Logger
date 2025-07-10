@@ -2,34 +2,9 @@
 #include "FileOps.hpp"
 #include "ConsoleOps.hpp"
 
+#include "ENV_VARS.hpp"
+
 #include <iomanip>
-
-//Only uncomment this if you want to run the LoggerTests to check
-//writing to a file rather than to the console (which is default)
-//#define __TESTING__ 1
-
-/**
- * @brief During testing, we want to log to a file rather than to the console.
- * This is useful for debugging and verifying the logging functionality.
- * @note This is only for testing purposes. In production, we will log
- * either to the console or to a file based on the configuration.
- */
-#ifdef __TESTING__
-    #ifdef __FILE_LOGGING__
-    #undef __FILE_LOGGING__ // If file logging is defined, then undefine it
-    #endif // __FILE_LOGGING__
-    #define __FILE_LOGGING__ 1
-
-    #ifdef __FILE_SIZE__
-    #undef __FILE_SIZE__ // If file size is defined, then undefine it
-    #endif // __FILE_SIZE__
-    #define __FILE_SIZE__ (1024 * 1024 * 10) // 10 MB
-
-    #ifdef __LOG_FILE_NAME__
-    #undef __LOG_FILE_NAME__ // If log file name is defined, then undefine
-    #endif // __LOG_FILE_NAME__
-    #define __LOG_FILE_NAME__ "LoggerTestLogs.txt" // Default log file name
-#endif // __TESTING__
 
 using namespace logger;
 
@@ -85,41 +60,41 @@ using namespace logger;
     static auto initialize = true;  // First time TRUE and then always FALSE
     while (initialize)
     {
-#if defined(__FILE_LOGGING__) || defined(__TESTING__) // Is it going to be a file logging ops?
+#if defined(FILE_LOGGING) // Is it going to be a file logging ops?
         std::ostringstream parser;
         uintmax_t fileSize = 1024 * 1000;   // Default max log file size is 1 MB
         std::string fileName;
         std::string fileExtn;
         std::string filePath;
-#ifdef __LOG_FILE_NAME__
-        parser << __LOG_FILE_NAME__;
+#ifdef LOG_FILE_NAME
+        parser << LOG_FILE_NAME;
         fileName = parser.str();
         // Break out then and there if file logging is requested
         // but none provided. We are not assuming
         // any log file name on our own in any case
         if (fileName.empty())
             break;
-#endif  // __LOG_FILE_NAME__
-#ifdef __FILE_SIZE__    // Is the max log file size provided?
-        fileSize = __FILE_SIZE__;
-#endif // __FILE_SIZE__
-#ifdef __FILE_EXTN__    // IS there a separate file extn also available from user?
+#endif  // LOG_FILE_NAME
+#ifdef FILE_SIZE    // Is the max log file size provided?
+        fileSize = FILE_SIZE;
+#endif // FILE_SIZE
+#ifdef LOG_FILE_EXTN    // IS there a separate file extn also available from user?
         std::ostringstream().swap(parser);
-        parser << __FILE_EXTN__;
+        parser << LOG_FILE_EXTN;
         fileExtn = parser.str();
-#endif  // __FILE_EXTN__
-#ifdef __FILE_PATH__
+#endif  // LOG_FILE_EXTN
+#ifdef LOG_FILE_PATH
         std::ostringstream().swap(parser);
-        parser << __FILE_PATH__;
+        parser << LOG_FILE_PATH;
         filePath = parser.str();
         std::filesystem::path path(filePath);
         if (!std::filesystem::exists(path) && std::filesystem::is_directory(path))
             break;  // Invalid file path not allowed
-#endif // __FILE_PATH__
+#endif // LOG_FILE_PATH
         pLoggingOps.reset(new FileOps(fileSize, fileName, filePath, fileExtn));
 #else   // Plain console logging it is
         pLoggingOps.reset(new ConsoleOps());
-#endif  // __FILE_LOGGING__
+#endif  // FILE_LOGGING
         initialize = false; // By this time initialization is completed
     }
     return *pLoggingOps;
