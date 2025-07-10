@@ -84,15 +84,12 @@ TEST_TARGET := $(BIN_DIR)/TestLogger
 TEST_DBG_TARGET := $(BIN_DIR)/TestLogger_d
 
 ifeq ($(BUILD_TYPE), release)
-	@echo "Building for BUILD_TYPE=$(BUILD_TYPE)"
 all: release	##Build release version of the library only
 
 else ifeq ($(BUILD_TYPE), debug)
-	@echo "Building for BUILD_TYPE=$(BUILD_TYPE)"
 all: debug  ##Build debug version of the library only
 
 else ifeq ($(BUILD_TYPE), all)
-	@echo "Building for BUILD_TYPE=$(BUILD_TYPE)"
 all: debug release  ##Build both debug and release versions of the library
 endif
 
@@ -156,12 +153,12 @@ $(OBJ_DIR)/%_d.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 else ifeq ($(LIB_TYPE), shared)	##.so file making in progress...
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	@echo "Compiling release build...."
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $(FPIC_FLAG) $< -o $@
 	@echo "Compiling release build completed"
 
 $(OBJ_DIR)/%_d.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	@echo "Compiling debug build...."
-	$(CXX) $(CXXFLAGS) -c $< -o $@ -DDEBUG
+	$(CXX) $(CXXFLAGS) -c $(FPIC_FLAG) $< -o $@ -DDEBUG
 	@echo "Compiling debug build completed"
 endif
 
