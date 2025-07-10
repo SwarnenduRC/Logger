@@ -332,6 +332,8 @@ if [[ "$BUILD_TEST" == "yes" ]]; then
     if [[ $status_gtest -ne 0 ]]; then
         echo "Error: Google Test installation script failed with exit code $status_gtest"
         exit $status_gtest
+    else
+        echo "Google Test installation completed successfully"
     fi
 fi
 
@@ -339,11 +341,13 @@ fi
 ./scripts/install_fmt.sh
 status_fmt=$?
 if [[ $status_fmt -ne 0 ]]; then
-  echo "Error: fmt library installation script failed with exit code $status_fmt"
-  exit $status_fmt
+    echo "Error: fmt library installation script failed with exit code $status_fmt"
+    exit $status_fmt
+else
+    echo "fmt library installation completed successfully"
 fi
 
-echo "Both Google Test and fmt library installed successfully."
+echo ""
 
 # Now do a clean build
 make clean; make BUILD_TYPE="$BUILD_TYPE" LIB_TYPE="$LIB_TYPE" BUILD_TEST="$BUILD_TEST"
