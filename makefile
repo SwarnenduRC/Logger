@@ -184,6 +184,7 @@ $(TEST_OBJ_DIR)/%_d.o: $(TEST_DIR)/%.cpp | $(TEST_OBJ_DIR)
 	$(CXX) $(CXXFLAGS_TEST) -c $< -o $@ -DDEBUG
 	@echo "Compiling debug test build completed"
 
+## Make tests with shared lib
 else ifeq ($(LIB_TYPE), shared)
 $(TEST_TARGET) : $(TEST_OBJS) | $(BIN_DIR)
 	@echo "Linking release test build...."
