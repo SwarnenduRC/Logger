@@ -21,11 +21,13 @@ sudo cp -r "$LIB_DIR"/* "$INSTALL_LIB_DIR"
 # Copy header files recursively
 sudo cp -r "$HEADER_DIR"/* "$INSTALL_INCLUDE_DIR"
 
-# Correct the embedded lib path from relative to absolute path
-sudo install_name_tool -id /usr/local/lib/liblogger.so /usr/local/lib/liblogger.so
-
 # Detect OS type
 OS_TYPE=$(uname)
+
+# Correct the embedded lib path from relative to absolute path on MacOS only
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+  sudo install_name_tool -id /usr/local/lib/liblogger.so /usr/local/lib/liblogger.so
+fi
 
 # Update linker cache on Linux (not mandatory but recommended)
 if [[ "$OS_TYPE" == "Linux" ]]; then
@@ -35,3 +37,4 @@ fi
 echo "Installation completed successfully."
 
 exit 0
+
