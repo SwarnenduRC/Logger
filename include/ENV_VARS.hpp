@@ -33,8 +33,5 @@
 #ifndef ENV_VARS_HPP
 #define ENV_VARS_HPP
 
-#define FILE_LOGGING 1
-#define FILE_SIZE (10 * 1024 * 1024)
-#define LOG_FILE_NAME "Testing.log"
 
 #endif // ENV_VARS_HPP

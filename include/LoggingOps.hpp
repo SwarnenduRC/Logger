@@ -466,7 +466,7 @@ namespace logger
              */
             static constexpr std::string_view m_FieldSep = "|";
     };
-};
+};  // namespace logger
 
 #endif  //LOGGING_OPS_HPP
 

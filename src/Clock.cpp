@@ -33,6 +33,8 @@
 
 #include <iomanip>
 
+using namespace logger;
+
 void Clock::start()
 {
     if (m_isRunning)

@@ -32,6 +32,8 @@
 
 #include <gtest/gtest.h>
 
+using namespace logger;
+
 #define nullString ""
 
 class ClockTests : public ::testing::Test
