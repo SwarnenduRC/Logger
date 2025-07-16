@@ -38,6 +38,25 @@ This Logger library offers simple logging capabilities, including multiple log l
 - A ConsoleOps class to handle logging msgs to console directly. (optional)
 - Unit tests using Google Test framework to ensure reliability.
 
+```log
+|20250713_180700| 140332865914560| src/ProducerConsumer.cpp|   21|INF>> [virtual void Producer : produce]
+|20250713_180700| 140332865914560| src/ProducerConsumer.cpp|   28|INF>  [virtual void Producer : produce] Producer[1] produces data[54] while running in thread 140332865914560
+|20250713_180700| 140332840736448| src/ProducerConsumer.cpp|   31|INF<< [virtual void Producer : produce]
+```
+
+**Column details:**
+
+| Field            | Description                                               |
+|------------------|-----------------------------------------------------------|
+| Date Time        | Timestamp when the log entry was generated (e.g., `20250713_180700`) |
+| Thread ID        | ID of the thread that produced the log (e.g., `140332865914560`) |
+| File Name        | Source file where the log was generated (e.g., `src/ProducerConsumer.cpp`) |
+| Line Number      | Line number in the source file that issued the log (e.g., `28`) |
+| Log Level        | Severity or level of the log (e.g., `INF/ERR/WARN/FATAL`)               |
+| Log Marker       | Additional marker or tag related to log context (e.g., `>>` indicates function/code block entry, `<<` indicates exit, `>` indicates msg) |
+| Class & Method   | Class name and method/function name generating the log (e.g., `Producer : produce`) |
+| Message          | User-defined log message content                            |
+
 ## Installation
 
 ### Prerequisits
