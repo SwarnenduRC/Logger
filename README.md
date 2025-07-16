@@ -186,7 +186,7 @@ by running following command:
 - `--gtest_shuffle` Shuffles the test cases in each iteration (optional)
 - `--gtest_repeat=3` Repeats the test cases at least 3 times (optional)
 
-![Test cases run](/Users/swarnendu/Downloads/TestCases.png)
+![Test cases run](docs/TestCases.png)
 
 ## Documentation
 
