@@ -70,7 +70,7 @@ Clone the repository:
 
 `git clone https://github.com/SwarnenduRC/Logger.gitcd Logger`
 
-### Build the library nad install (manually)
+### Build the library and install (manual)
 
 Run the following commands to build the library:
 
@@ -104,7 +104,7 @@ sudo cp -r "$LIB_DIR"/* "$INSTALL_LIB_DIR"
 sudo cp -r "$HEADER_DIR"/* "$INSTALL_INCLUDE_DIR"
 ```
 
-### Build the library nad install (automatically)
+### Build the library and install (automatic)
 
 You can also run the provided script to install the library automatically:
 
