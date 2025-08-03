@@ -26,7 +26,9 @@ OS_TYPE=$(uname)
 
 # Correct the embedded lib path from relative to absolute path on MacOS only
 if [[ "$OS_TYPE" == "Darwin" ]]; then
-  sudo install_name_tool -id /usr/local/lib/liblogger.so /usr/local/lib/liblogger.so
+  if find /usr/local/lib/ -maxdepth 1 -type f -name "liblogger.so" | grep -q .; then
+    sudo install_name_tool -id /usr/local/lib/liblogger.so /usr/local/lib/liblogger.so
+  fi
 fi
 
 # Update linker cache on Linux (not mandatory but recommended)
