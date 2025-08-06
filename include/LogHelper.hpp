@@ -190,6 +190,7 @@ namespace logger
      * @param [in] fileName The name of the file where the log is being generated.
      * @param [in] funcName The name of the function where the log is being generated.
      * @param [in] lineNo The line number in the source code where the log is being generated.
+     * @param [in] debugMode The boolean value to indicate whether the logging will happen in DEBUG mode only
      * @param [in] format_str The format string for the log message.
      * @param [in] args Additional arguments to be formatted into the log message.
      */
@@ -199,18 +200,33 @@ namespace logger
         const std::string_view fileName,
         const std::string_view funcName,
         const size_t lineNo,
+        const bool debugMode,
         const std::string_view format_str,
         Args&&... args
     )
     {
-        setLoggerProperties(fileName,
-                            funcName,
-                            FORWARD_ANGLES,
-                            lineNo,
-                            std::this_thread::get_id(),
-                            LOG_TYPE::LOG_INFO);
+        auto log = false;
+        if (debugMode)
+        {
+#if defined (DEBUG) || (__DEBUG__)
+            log = true;
+#endif
+        }
+        else
+        {
+            log = true;
+        }
+        if (log)
+        {
+            setLoggerProperties(fileName,
+                                funcName,
+                                FORWARD_ANGLES,
+                                lineNo,
+                                std::this_thread::get_id(),
+                                LOG_TYPE::LOG_INFO);
 
-        logMsg(format_str, args...);
+            logMsg(format_str, args...);
+        }
     }
 
     /**
@@ -224,6 +240,7 @@ namespace logger
      * @param [in] fileName The name of the file where the log is being generated.
      * @param [in] funcName The name of the function where the log is being generated.
      * @param [in] lineNo The line number in the source code where the log is being generated.
+     * @param [in] debugMode The boolean value to indicate whether the logging will happen in DEBUG mode only
      * @param [in] format_str The format string for the log message.
      * @param [in] args Additional arguments to be formatted into the log message.
      */
@@ -233,18 +250,33 @@ namespace logger
         const std::string_view fileName,
         const std::string_view funcName,
         const size_t lineNo,
+        const bool debugMode,
         const std::string_view format_str,
         Args&&... args
     )
     {
-        setLoggerProperties(fileName,
-                            funcName,
-                            BACKWARD_ANGLES,
-                            lineNo,
-                            std::this_thread::get_id(),
-                            LOG_TYPE::LOG_INFO);
+        auto log = false;
+        if (debugMode)
+        {
+#if defined (DEBUG) || (__DEBUG__)
+            log = true;
+#endif
+        }
+        else
+        {
+            log = true;
+        }
+        if (log)
+        {
+            setLoggerProperties(fileName,
+                                funcName,
+                                BACKWARD_ANGLES,
+                                lineNo,
+                                std::this_thread::get_id(),
+                                LOG_TYPE::LOG_INFO);
 
-        logMsg(format_str, args...);
+            logMsg(format_str, args...);
+        }
     }
 
     /**

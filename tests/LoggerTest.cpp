@@ -155,6 +155,22 @@ TEST_F(LoggerTest, testLogEntryExit)
     testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, BACKWARD_ANGLES);
 }
 
+TEST_F(LoggerTest, testLogEntryExitDebug)
+{
+#if defined (DEBUG) || defined (__DEBUG__)
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+#endif
+    LOG_ENTRY_DBG();
+#if defined (DEBUG) || defined (__DEBUG__)
+    testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, FORWARD_ANGLES);
+#endif
+    LOG_EXIT_DBG();
+#if defined (DEBUG) || defined (__DEBUG__)
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, BACKWARD_ANGLES);
+#endif
+}
+
 TEST_F(LoggerTest, testLogEntryExitWithMsg)
 {
     std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
@@ -167,6 +183,26 @@ TEST_F(LoggerTest, testLogEntryExitWithMsg)
         std::string("testLogEntryExitWithMsg"), logType, BACKWARD_ANGLES);
     std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
     testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, BACKWARD_ANGLES);
+}
+
+TEST_F(LoggerTest, testLogEntryExitWithMsgDebugMode)
+{
+#if defined (DEBUG) || defined (__DEBUG__)
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+#endif
+    auto logType = static_cast<std::underlying_type_t<LOG_TYPE>>(LOG_TYPE::LOG_INFO);
+    LOG_ENTRY_DBG("Entering now {} with LOG_TYPE as {:#08x} and log marker as {}",
+        std::string("testLogEntryExitWithMsg"), logType, FORWARD_ANGLES);
+#if defined (DEBUG) || defined (__DEBUG__)
+    testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, FORWARD_ANGLES);
+#endif
+
+    LOG_EXIT_DBG("Exiting {} with LOG_TYPE as {:#08x} and log marker as {}",
+        std::string("testLogEntryExitWithMsg"), logType, BACKWARD_ANGLES);
+#if defined (DEBUG) || defined (__DEBUG__)
+    std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
+    testLoggedData(LOG_TYPE::LOG_INFO, __PRETTY_FUNCTION__, BACKWARD_ANGLES);
+#endif
 }
 
 TEST_F(LoggerTest, testLogWarning)

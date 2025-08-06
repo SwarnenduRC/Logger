@@ -57,8 +57,8 @@ namespace logger
      * @param fmt_str The format string for the log message.
      * @param ... Additional arguments for formatting the log message.
      */
-    #define LOG_ENTRY(fmt_str, ...)                                                         \
-    log_entry(__FILE__, __PRETTY_FUNCTION__, __LINE__, #fmt_str __VA_OPT__(,) __VA_ARGS__);  \
+    #define LOG_ENTRY(fmt_str, ...)                                                                 \
+    log_entry(__FILE__, __PRETTY_FUNCTION__, __LINE__, false, #fmt_str __VA_OPT__(,) __VA_ARGS__);   \
 
     /**
      * @brief Macro to log an exit point message.
@@ -67,8 +67,28 @@ namespace logger
      * @param fmt_str The format string for the log message.
      * @param ... Additional arguments for formatting the log message.
      */
-    #define LOG_EXIT(fmt_str, ...)                                                          \
-    log_exit(__FILE__, __PRETTY_FUNCTION__, __LINE__, #fmt_str __VA_OPT__(,) __VA_ARGS__);   \
+    #define LOG_EXIT(fmt_str, ...)                                                                  \
+    log_exit(__FILE__, __PRETTY_FUNCTION__, __LINE__, false, #fmt_str __VA_OPT__(,) __VA_ARGS__);    \
+
+    /**
+     * @brief Macro to log an entry point message (in DEBUG mode only)
+     * This macro logs a message indicating the entry point of a function or code block.
+     * It automatically includes the file name, function name, and line number in the log
+     * @param fmt_str The format string for the log message.
+     * @param ... Additional arguments for formatting the log message.
+     */
+    #define LOG_ENTRY_DBG(fmt_str, ...)                                                                 \
+    log_entry(__FILE__, __PRETTY_FUNCTION__, __LINE__, true, #fmt_str __VA_OPT__(,) __VA_ARGS__);   \
+
+    /**
+     * @brief Macro to log an exit point message (in DEBUG mode only)
+     * This macro logs a message indicating the exit point of a function or code block.
+     * It automatically includes the file name, function name, and line number in the log
+     * @param fmt_str The format string for the log message.
+     * @param ... Additional arguments for formatting the log message.
+     */
+    #define LOG_EXIT_DBG(fmt_str, ...)                                                                  \
+    log_exit(__FILE__, __PRETTY_FUNCTION__, __LINE__, true, #fmt_str __VA_OPT__(,) __VA_ARGS__);    \
 
     /**
      * @brief Macro to log an informational message.
