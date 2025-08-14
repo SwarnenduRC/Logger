@@ -41,7 +41,7 @@ class LoggerTest : public CommonTestDataGenerator
         }
         void testLoggedData(
             const LOG_TYPE& expLogType,
-            const std::string_view funcName,
+            const std::string_view prettyFuncName,
             const std::string_view marker,
             const std::string_view logMsg = "")
         {
@@ -56,14 +56,14 @@ class LoggerTest : public CommonTestDataGenerator
                 << "oss.str() = " << oss.str() << ", " << "logStream.str() = " << logStream.str();
 
             EXPECT_TRUE(logStream.str().find(Logger::covertLogTypeEnumToString(expLogType)) != std::string::npos);
-
-            ASSERT_TRUE(std::string::npos != funcName.find(":"));
-            auto className = funcName.substr(0, funcName.find_first_of(":"));
-            auto funcNameWithoutClassName = funcName.substr(funcName.find_last_of(":") + 1);
+            ASSERT_TRUE(std::string::npos != prettyFuncName.find(":"));
+            auto className = prettyFuncName.substr(0, prettyFuncName.find_first_of(":"));
+            className = className.substr(className.rfind(" ") + 1);
+            auto funcNameWithoutClassName = prettyFuncName.substr(prettyFuncName.find_last_of(":") + 1);
             funcNameWithoutClassName = funcNameWithoutClassName.substr(0, funcNameWithoutClassName.find_first_of("("));
 
-            EXPECT_TRUE(logStream.str().find(className) != std::string::npos);
-            EXPECT_TRUE(logStream.str().find(funcNameWithoutClassName) != std::string::npos) << funcNameWithoutClassName;
+            EXPECT_TRUE(logStream.str().find(className) != std::string::npos) << "className = " << className << std::endl;
+            EXPECT_TRUE(logStream.str().find(funcNameWithoutClassName) != std::string::npos) << "funcNameWithoutClassName = " << funcNameWithoutClassName;
             EXPECT_TRUE(logStream.str().find(marker) != std::string::npos);
 
             if (!logMsg.empty())

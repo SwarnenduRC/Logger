@@ -310,11 +310,31 @@ namespace logger
             virtual void constructLogMsgPrefixSecondPart();
 
         private:
-            static const UNORD_STRING_MAP m_stringToEnumMap;
-            static const UNORD_LOG_TYPE_MAP m_EnumToStringMap;
+            /**
+             * @brief Extracts the class and function names from the function name.
+             * This function extracts the class name and function name from the
+             * full function name string, which may include a scope resolution operator (::).
+             *
+             * @param [out] className The extracted class name.
+             * @param [out] funcName The extracted function name.
+             */
+            void extractClassAndFuncName(std::string& className, std::string& funcName) noexcept;
 
+            /**
+             * @brief Logs a message with the specified format and arguments.
+             * This function formats the log message using the provided format string
+             * and arguments, and writes it to the log stream.
+             *
+             * @param [in] formatStr Format string for the log message.
+             * @param [in] args Arguments to be formatted into the log message.
+             * @note This function is used internally to handle the actual logging operation.
+             * It constructs the log message prefix and appends the formatted message
+             * to the log stream.
+             */
             void vlog(const std::string_view formatStr, std::format_args args);
 
+            static const UNORD_STRING_MAP m_stringToEnumMap;
+            static const UNORD_LOG_TYPE_MAP m_EnumToStringMap;
             std::thread::id m_threadID;
             Clock m_clock;
             size_t m_lineNo;

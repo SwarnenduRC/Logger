@@ -164,32 +164,21 @@ void Logger::populatePrerequisitFileds()
     // Clear the log stream before populating it with new log message
     std::stringstream().swap(m_logStream);
     constructLogMsgPrefix();
-    // Segregate the function name and class name from the
-    // m_funcName, if it is in the format "ClassName:FunctionName"
-    // If it is not in that format, then just use the function name
-    // as it is, without any class name.
-    // This is useful for logging purposes, to identify which class
-    // and function the log message is coming from.
-    // For example, if the function name is "Logger::log", then
-    // the class name will be "Logger" and the function name will be "log".
-    // If the function name is "log", then the class name will be empty
-    // and the function name will be "log".
-    // If the function name is "Logger::log()", then the class name will be "Logger"
-    // and the function name will be "log".
-    // If the function name is "Logger::log(const std::string&)", then the
-    // class name will be "Logger" and the function name will be "log".
     std::string funcName;
     std::string className;
-    if (std::string::npos != m_funcName.find(":"))
+    /* if (std::string::npos != m_funcName.find(":"))
     {
-        className = m_funcName.substr(0, m_funcName.find_first_of(":"));
-        funcName = m_funcName.substr(m_funcName.find_last_of(":") + 1);
+        className = m_funcName.substr(0, (m_funcName.find_first_of(":") - 1));
+        funcName = m_funcName.substr(m_funcName.find_first_of(":") + 2);
     }
     else
     {
         funcName = m_funcName;
     }
-    funcName = funcName.substr(0, funcName.find_first_of("("));
+    funcName = funcName.substr(0, funcName.find_first_of("(")); */
+
+    extractClassAndFuncName(className, funcName);
+
     m_logStream << LEFT_SQUARE_BRACE
                 << className
                 << ONE_SPACE
@@ -278,5 +267,36 @@ void Logger::vlog(const std::string_view formatStr, std::format_args args)
                     logMsg.find_last_of(DOUBLE_QUOTES) - 1);
     }
     m_logStream << logMsg;
+}
+
+void Logger::extractClassAndFuncName(std::string& className, std::string& funcName) noexcept
+{
+    className.clear();
+    funcName.clear();
+    if (m_funcName.empty())
+        return;
+
+    // Segregate the function name and class name from the
+    // m_funcName, if it is in the format "ClassName::FunctionName"
+    // If it is not in that format, then just use the function name
+    // as it is, without any class name.
+    // This is useful for logging purposes, to identify which class
+    // and function the log message is coming from.
+    // For example, if the function name is "Logger::log", then
+    // the class name will be "Logger" and the function name will be "log".
+    // If the function name is "log", then the class name will be empty
+    // and the function name will be "log".
+    // If the function name is "Logger::log()", then the class name will be "Logger"
+    // and the function name will be "log".
+    // If the function name is "Logger::log(const std::string&)", then the
+    // class name will be "Logger" and the function name will be "log".
+    funcName = m_funcName.substr(0, m_funcName.rfind("("));
+    auto scopeResOpertr = funcName.find_last_of("::");
+    if (std::string::npos != scopeResOpertr)
+    {
+        className = funcName.substr(0, (scopeResOpertr - 1));
+        funcName = funcName.substr(scopeResOpertr + 1);
+        className = className.substr(className.find_last_of(" ") + 1);
+    }
 }
 
