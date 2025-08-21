@@ -39,11 +39,11 @@ class LoggerTest : public CommonTestDataGenerator
         {
             LOG_FATAL("FATAL error at line {}", __LINE__);
         }
-        void testLoggedData(
+        static void testLoggedData(
             const LOG_TYPE& expLogType,
             const std::string_view prettyFuncName,
             const std::string_view marker,
-            const std::string_view logMsg = "")
+            const std::string_view logMsg = "") noexcept
         {
             auto& logStream = loggerObj.getLogStream();
             std::ostringstream oss;
@@ -68,6 +68,19 @@ class LoggerTest : public CommonTestDataGenerator
 
             if (!logMsg.empty())
                 EXPECT_TRUE(logStream.str().find(logMsg) != std::string::npos);
+        }
+        static int* funcReturningPointer(const int val1, const int val2) noexcept
+        {
+            LOG_ENTRY();
+            static std::unique_ptr<int> pRetVal = std::make_unique<int>(val1 * val2);
+            LOG_EXIT();
+            return pRetVal.get();
+        }
+        static std::unique_ptr<std::string> funcReturnUniquePtr() noexcept
+        {
+            LOG_ENTRY();
+            LOG_EXIT();
+            return std::make_unique<std::string>("LoggerTesting");
         }
 };
 
@@ -255,4 +268,38 @@ TEST_F(LoggerTest, testLogDbg)
     testLoggedData(LOG_TYPE::LOG_DBG, __PRETTY_FUNCTION__, FORWARD_ANGLE);
     std::cout << std::endl; // Put a line break so that the printed log msg can be seen clearly
 #endif
+}
+
+/**
+ * @brief The objective of this test feature
+ * is to test and polish the class name and
+ * function name in the actual log message.
+ * We need to look at the console or file
+ * (console option is quick and better) to
+ * check how the class and function names
+ * are been populated in the log message
+ * and trim/polish them accordingly.
+ */
+TEST_F(LoggerTest, testDiffFuncSignatures)
+{
+    EXPECT_NE(0, *funcReturningPointer(10, 10));
+    EXPECT_FALSE(funcReturnUniquePtr()->empty());
+    {
+        auto lamdaFunc = [](const std::string& val1, const std::string& val2)
+        {
+            LOG_ENTRY();
+            if (val1.empty() && val2.empty())
+            {
+                LOG_INFO("Both the incoming string are empty");
+            }
+            else
+            {
+                LOG_INFO("Combined string results of the incoming strings {} and {} is {}", 
+                    val1, val2, std::string(val1 + val2));
+            }
+            LOG_EXIT();
+            return 0;
+        };
+        EXPECT_EQ(0, lamdaFunc("Testing ", "function signature"));
+    }
 }

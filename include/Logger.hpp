@@ -317,6 +317,26 @@ namespace logger
              *
              * @param [out] className The extracted class name.
              * @param [out] funcName The extracted function name.
+             * 
+             * @note If pretty function name is in the format "ClassName::FunctionName"
+             * then use ClassName : FunctionName.
+             * If it is not in that format, then just use the function name
+             * as it is, without any class name.
+             * This is useful for logging purposes, to identify which class
+             * and function the log message is coming from.
+             * For example, if the function name is "Logger::log", then
+             * the class name will be "Logger" and the function name will be "log".
+             * If the function name is "log", then the class name will be empty
+             * and the function name will be "log".
+             * If the function name is "Logger::log()", then the class name will be "Logger"
+             * and the function name will be "log".
+             * If the function name is "Logger::log(const std::string&)", then the
+             * class name will be "Logger" and the function name will be "log".
+             * 
+             * In case of lamda functions on clang/gcc
+             * the pretty function name comes as
+             * "auto LoggerTest_testDiffFuncSignatures_Test::TestBody()::(anonymous class)::operator()"
+             * In this case the targeted aim is class : operator()
              */
             void extractClassAndFuncName(std::string& className, std::string& funcName) noexcept;
 

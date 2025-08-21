@@ -5,6 +5,7 @@
 #include "ENV_VARS.hpp"
 
 #include <iomanip>
+#include <regex>
 
 using namespace logger;
 
@@ -276,27 +277,82 @@ void Logger::extractClassAndFuncName(std::string& className, std::string& funcNa
     if (m_funcName.empty())
         return;
 
-    // Segregate the function name and class name from the
-    // m_funcName, if it is in the format "ClassName::FunctionName"
-    // If it is not in that format, then just use the function name
-    // as it is, without any class name.
-    // This is useful for logging purposes, to identify which class
-    // and function the log message is coming from.
-    // For example, if the function name is "Logger::log", then
-    // the class name will be "Logger" and the function name will be "log".
-    // If the function name is "log", then the class name will be empty
-    // and the function name will be "log".
-    // If the function name is "Logger::log()", then the class name will be "Logger"
-    // and the function name will be "log".
-    // If the function name is "Logger::log(const std::string&)", then the
-    // class name will be "Logger" and the function name will be "log".
+    /**
+     * @brief m_funcName, if it is in the format "ClassName::FunctionName"
+     * If it is not in that format, then just use the function name
+     * as it is, without any class name.
+     * This is useful for logging purposes, to identify which class
+     * and function the log message is coming from.
+     * For example, if the function name is "Logger::log", then
+     * the class name will be "Logger" and the function name will be "log".
+     * If the function name is "log", then the class name will be empty
+     * and the function name will be "log".
+     * If the function name is "Logger::log()", then the class name will be "Logger"
+     * and the function name will be "log".
+     * If the function name is "Logger::log(const std::string&)", then the
+     * class name will be "Logger" and the function name will be "log".
+     * 
+     * In case of lamda functions on clang/gcc
+     * the pretty function name comes as
+     * "auto LoggerTest_testDiffFuncSignatures_Test::TestBody()::(anonymous class)::operator()"
+     * In this case the targeted aim is class : operator()
+     */
+    static const std::string scopeOptr = "::";
+    static const std::string whiteSpace = " ";
+
     funcName = m_funcName.substr(0, m_funcName.rfind("("));
-    auto scopeResOpertr = funcName.find_last_of("::");
-    if (std::string::npos != scopeResOpertr)
+    auto scopeOptrPos = funcName.find_last_of("::");
+    if (std::string::npos != scopeOptrPos)
     {
-        className = funcName.substr(0, (scopeResOpertr - 1));
-        funcName = funcName.substr(scopeResOpertr + 1);
-        className = className.substr(className.find_last_of(" ") + 1);
+        className = funcName.substr(0, (scopeOptrPos - 1));
+        funcName = funcName.substr(scopeOptrPos + 1);
+
+        //Now remove any preceeding scope resolution operator
+        //it may have.
+        scopeOptrPos = className.rfind(scopeOptr);
+        if (std::string::npos != scopeOptrPos)
+        {
+            className = className.substr((scopeOptrPos + 2)); //+2 because we have two ":"
+        }
+
+        // Now look for any special chars in class name and remove them
+        std::regex specials("[{(<&*#->:;>)}]");
+        if (std::regex_search(className, specials)) //It has special characters
+        {
+            std::string specials = "[{(<&*#->:;>)}]";
+            auto trimFrmlead = true;
+            //Keep looping till each of them trimmed
+            while (className.find_first_of(specials) != std::string::npos)
+            {
+                if (trimFrmlead)    //If there are leading special chars
+                {
+                    className = className.substr(className.find_first_of(specials) + 1);
+                    auto nextSpecial = className.find_first_of(specials);
+                    if (nextSpecial != std::string::npos)
+                        trimFrmlead = false;
+                }
+                else    // Special chars are at trailing positions
+                {
+                    className = className.substr(0, className.find_last_not_of(specials) + 1);
+                }
+            }
+            //Finally remove any leading white space it may have
+            auto whiteSpacePos = className.find_last_of(whiteSpace);
+            while (std::string::npos != whiteSpacePos)
+            {
+                className = className.substr(whiteSpacePos + 1);
+                whiteSpacePos = className.find_last_of(whiteSpace);
+            }
+        }
+        else    //Otherwise remove any leading white space
+        {
+            auto whiteSpacePos = className.find_last_of(whiteSpace);
+            while (std::string::npos != whiteSpacePos)
+            {
+                className = className.substr(whiteSpacePos + 1);
+                whiteSpacePos = className.find_last_of(whiteSpace);
+            }
+        }
     }
 }
 
