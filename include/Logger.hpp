@@ -72,6 +72,7 @@ namespace logger
      * used in log messages. They help maintain consistency in log formatting
      * across different parts of the application.
      */
+    inline static constexpr std::string_view ASTRICK_SIGN         = "*";
     inline static constexpr std::string_view VERTICAL_SEP         = "|";
     inline static constexpr std::string_view COLONE_SEP           = ":";
     inline static constexpr std::string_view DOT_SEP              = ".";
@@ -83,6 +84,8 @@ namespace logger
     inline static constexpr std::string_view TWO_TABS             = "\t\t";
     inline static constexpr std::string_view ONE_LINE_BREAK       = "\n";
     inline static constexpr std::string_view TWO_LINE_BREAKS      = "\n\n";
+    inline static constexpr std::string_view FORWARD_SLASH        = "/";
+    inline static constexpr std::string_view BACKWARD_SLASH       = "\"";
     inline static constexpr std::string_view FORWARD_ANGLE        = ">";
     inline static constexpr std::string_view FORWARD_ANGLES       = ">>";
     inline static constexpr std::string_view BACKWARD_ANGLE       = ">>";

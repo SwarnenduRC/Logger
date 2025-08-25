@@ -50,8 +50,15 @@ class LoggerTest : public CommonTestDataGenerator
             oss << std::this_thread::get_id();
             EXPECT_TRUE(logStream.str().find(oss.str()) != std::string::npos)
                 << "oss.str() = " << oss.str() << ", " << "logStream.str() = " << logStream.str();
+            std::string fileName = __FILE__;
+            //Remove the parent directory name from the file name (if any)
+            auto dirPos = fileName.rfind(FORWARD_SLASH);
+            if (std::string::npos != dirPos)
+            {
+                fileName = fileName.substr(dirPos + 1);
+            }
             std::ostringstream().swap(oss);
-            oss << __FILE__;
+            oss << fileName;
             EXPECT_TRUE(logStream.str().find(oss.str()) != std::string::npos)
                 << "oss.str() = " << oss.str() << ", " << "logStream.str() = " << logStream.str();
 
@@ -81,6 +88,12 @@ class LoggerTest : public CommonTestDataGenerator
             LOG_ENTRY();
             LOG_EXIT();
             return std::make_unique<std::string>("LoggerTesting");
+        }
+        static std::unique_ptr<int> funcReturnIntUniquePtr(const int val1, const int val2) noexcept
+        {
+            LOG_ENTRY();
+            LOG_EXIT();
+            return std::make_unique<int>(val1 * val2);
         }
 };
 
@@ -283,6 +296,7 @@ TEST_F(LoggerTest, testLogDbg)
 TEST_F(LoggerTest, testDiffFuncSignatures)
 {
     EXPECT_NE(0, *funcReturningPointer(10, 10));
+    EXPECT_NE(0, *funcReturnIntUniquePtr(10, 10));
     EXPECT_FALSE(funcReturnUniquePtr()->empty());
     {
         auto lamdaFunc = [](const std::string& val1, const std::string& val2)

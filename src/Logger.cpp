@@ -167,16 +167,6 @@ void Logger::populatePrerequisitFileds()
     constructLogMsgPrefix();
     std::string funcName;
     std::string className;
-    /* if (std::string::npos != m_funcName.find(":"))
-    {
-        className = m_funcName.substr(0, (m_funcName.find_first_of(":") - 1));
-        funcName = m_funcName.substr(m_funcName.find_first_of(":") + 2);
-    }
-    else
-    {
-        funcName = m_funcName;
-    }
-    funcName = funcName.substr(0, funcName.find_first_of("(")); */
 
     extractClassAndFuncName(className, funcName);
 
@@ -225,6 +215,12 @@ void Logger::constructLogMsgPrefixSecondPart()
                 << FIELD_SEPARATOR
                 << ONE_SPACE;
 
+    //Remove the parent directory name from the file name (if any)
+    auto dirPos = m_fileName.rfind(FORWARD_SLASH);
+    if (std::string::npos != dirPos)
+    {
+        m_fileName = m_fileName.substr(dirPos + 1);
+    }
     m_logStream << std::left
                 << std::setw(20) // Assuming a file name consists max 20 char
                 << m_fileName 
@@ -297,60 +293,46 @@ void Logger::extractClassAndFuncName(std::string& className, std::string& funcNa
      * "auto LoggerTest_testDiffFuncSignatures_Test::TestBody()::(anonymous class)::operator()"
      * In this case the targeted aim is class : operator()
      */
-    static const std::string scopeOptr = "::";
-    static const std::string whiteSpace = " ";
-
-    funcName = m_funcName.substr(0, m_funcName.rfind("("));
-    auto scopeOptrPos = funcName.find_last_of("::");
+    funcName = m_funcName.substr(0, m_funcName.rfind(LEFT_OPENING_BRACE));
+    auto scopeOptrPos = funcName.find_last_of(COLONE_SEP);
     if (std::string::npos != scopeOptrPos)
     {
         className = funcName.substr(0, (scopeOptrPos - 1));
         funcName = funcName.substr(scopeOptrPos + 1);
-
-        //Now remove any preceeding scope resolution operator
-        //it may have.
-        scopeOptrPos = className.rfind(scopeOptr);
-        if (std::string::npos != scopeOptrPos)
+        // Remove any possible regex from the class name (if any)
+        if (!className.empty())
         {
-            className = className.substr((scopeOptrPos + 2)); //+2 because we have two ":"
-        }
-
-        // Now look for any special chars in class name and remove them
-        std::regex specials("[{(<&*#->:;>)}]");
-        if (std::regex_search(className, specials)) //It has special characters
-        {
-            std::string specials = "[{(<&*#->:;>)}]";
-            auto trimFrmlead = true;
-            //Keep looping till each of them trimmed
-            while (className.find_first_of(specials) != std::string::npos)
-            {
-                if (trimFrmlead)    //If there are leading special chars
-                {
-                    className = className.substr(className.find_first_of(specials) + 1);
-                    auto nextSpecial = className.find_first_of(specials);
-                    if (nextSpecial != std::string::npos)
-                        trimFrmlead = false;
-                }
-                else    // Special chars are at trailing positions
-                {
-                    className = className.substr(0, className.find_last_not_of(specials) + 1);
-                }
-            }
-            //Finally remove any leading white space it may have
-            auto whiteSpacePos = className.find_last_of(whiteSpace);
-            while (std::string::npos != whiteSpacePos)
+            auto whiteSpacePos = className.rfind(ONE_SPACE);
+            if (std::string::npos != whiteSpacePos)
             {
                 className = className.substr(whiteSpacePos + 1);
-                whiteSpacePos = className.find_last_of(whiteSpace);
+            }
+            auto astrickPos = className.rfind(ASTRICK_SIGN);
+            if (std::string::npos != astrickPos)
+            {
+                className = className.substr(astrickPos + 1);
+            }
+            auto closingBracePos = className.rfind(RIGHT_CLOSING_BRACE);
+            if (std::string::npos != closingBracePos)
+            {
+                className = className.substr(0, closingBracePos);
             }
         }
-        else    //Otherwise remove any leading white space
+    }
+    else
+    {
+        // Remove any possible regex from the function name (if any)
+        if (!funcName.empty())
         {
-            auto whiteSpacePos = className.find_last_of(whiteSpace);
-            while (std::string::npos != whiteSpacePos)
+            auto whiteSpacePos = funcName.rfind(ONE_SPACE);
+            if (std::string::npos != whiteSpacePos)
             {
-                className = className.substr(whiteSpacePos + 1);
-                whiteSpacePos = className.find_last_of(whiteSpace);
+                funcName = funcName.substr(whiteSpacePos + 1);
+            }
+            auto astrickPos = funcName.rfind(ASTRICK_SIGN);
+            if (std::string::npos != astrickPos)
+            {
+                funcName = funcName.substr(astrickPos + 1);
             }
         }
     }
