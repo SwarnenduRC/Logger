@@ -281,6 +281,29 @@ namespace logger
                 vlog(formatStr, std::make_format_args(std::forward<Args>(args)...));
             }
 
+            /**
+             * @brief Get the Extracted Class Name
+             * Returns the extracted class name from the function name.
+             * If the function name is in the format "ClassName::FunctionName",
+             * it extracts and returns "ClassName". If the function name does not
+             * contain a class name, it returns an empty string.
+             * 
+             * @return std::string The extracted class name.
+             * If no class name is found, returns an empty string.
+             */
+            inline std::string getExtractedClassName() const noexcept { return m_extractedClassName; }
+
+            /**
+             * @brief Get the Extracted Function Name
+             * Returns the extracted function name from the full function signature.
+             * If the function name is in the format "ClassName::FunctionName",
+             * it extracts and returns "FunctionName". If the function name does not
+             * contain a class name, it returns the function name as is.
+             * 
+             * @return std::string The extracted function name.
+             */
+            inline std::string getExtractedFuncName() const noexcept { return m_extractedFuncName; }
+
         protected:
             /**
              * @brief Populates prerequisite fields for logging.
@@ -361,8 +384,10 @@ namespace logger
             std::thread::id m_threadID;
             Clock m_clock;
             size_t m_lineNo;
-            std::string m_funcName;
+            std::string m_prettyFuncName;
             std::string m_fileName;
+            std::string m_extractedFuncName;
+            std::string m_extractedClassName;
             /**
              * @brief Log marker
              * Marks what kind of log function

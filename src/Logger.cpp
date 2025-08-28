@@ -118,7 +118,7 @@ Logger& Logger::setFileName(const std::string_view val) noexcept
 Logger& Logger::setFunctionName(const std::string_view val) noexcept
 {
     if (!val.empty())
-        m_funcName = val.data();
+        m_prettyFuncName = val.data();
 
     return *this;
 }
@@ -165,17 +165,15 @@ void Logger::populatePrerequisitFileds()
     // Clear the log stream before populating it with new log message
     std::stringstream().swap(m_logStream);
     constructLogMsgPrefix();
-    std::string funcName;
-    std::string className;
 
-    extractClassAndFuncName(className, funcName);
+    extractClassAndFuncName(m_extractedClassName, m_extractedFuncName);
 
     m_logStream << LEFT_SQUARE_BRACE
-                << className
+                << m_extractedClassName
                 << ONE_SPACE
                 << COLONE_SEP
                 << ONE_SPACE
-                << funcName
+                << m_extractedFuncName
                 << RIGHT_SQUARE_BRACE
                 << ONE_SPACE;
 
@@ -270,7 +268,7 @@ void Logger::extractClassAndFuncName(std::string& className, std::string& funcNa
 {
     className.clear();
     funcName.clear();
-    if (m_funcName.empty())
+    if (m_prettyFuncName.empty())
         return;
 
     /**
@@ -293,7 +291,7 @@ void Logger::extractClassAndFuncName(std::string& className, std::string& funcNa
      * "auto LoggerTest_testDiffFuncSignatures_Test::TestBody()::(anonymous class)::operator()"
      * In this case the targeted aim is class : operator()
      */
-    funcName = m_funcName.substr(0, m_funcName.rfind(LEFT_OPENING_BRACE));
+    funcName = m_prettyFuncName.substr(0, m_prettyFuncName.rfind(LEFT_OPENING_BRACE));
     auto scopeOptrPos = funcName.find_last_of(COLONE_SEP);
     if (std::string::npos != scopeOptrPos)
     {
