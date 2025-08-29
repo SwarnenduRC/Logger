@@ -101,7 +101,7 @@ class LoggerTest : public CommonTestDataGenerator
         template <typename F, typename ...Args>
         static std::any submit(F&& f, Args&&... args)
         {
-            LOG_ENTRY_DBG(/*"Submitting task {}", taskName*/);
+            LOG_ENTRY_DBG();
             using Result = std::invoke_result_t<F, Args...>;
             auto boundFunc = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
             // Wrap the bound function in a packaged_task that returns std::any
@@ -131,7 +131,7 @@ class LoggerTest : public CommonTestDataGenerator
                 else
                     result = std::any{};
             }
-            LOG_EXIT_DBG(/*"Task {} submitted successfully", m_taskName*/);
+            LOG_EXIT_DBG();
             return result;
         }
 };
