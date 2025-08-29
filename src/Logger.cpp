@@ -291,7 +291,7 @@ void Logger::extractClassAndFuncName(std::string& className, std::string& funcNa
      * "auto LoggerTest_testDiffFuncSignatures_Test::TestBody()::(anonymous class)::operator()"
      * In this case the targeted aim is class : operator()
      */
-    funcName = m_prettyFuncName.substr(0, m_prettyFuncName.rfind(LEFT_OPENING_BRACE));
+    funcName = m_prettyFuncName.substr(0, m_prettyFuncName.find(LEFT_OPENING_BRACE));
     auto scopeOptrPos = funcName.find_last_of(COLONE_SEP);
     if (std::string::npos != scopeOptrPos)
     {
@@ -333,6 +333,13 @@ void Logger::extractClassAndFuncName(std::string& className, std::string& funcNa
                 funcName = funcName.substr(astrickPos + 1);
             }
         }
+    }
+    // Finally remove any leftover
+    auto slicerPos = funcName.rfind(LEFT_OPENING_BRACE);
+    while (std::string::npos != slicerPos)
+    {
+        funcName = funcName.substr(0, slicerPos);
+        slicerPos = funcName.rfind(LEFT_OPENING_BRACE);
     }
 }
 
