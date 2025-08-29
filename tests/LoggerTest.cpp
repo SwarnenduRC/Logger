@@ -1,5 +1,5 @@
 //leaks --atExit --list -- ./bin/TestLogger_d --gtest_shuffle --gtest_repeat=3 --gtest_filter="LoggerTest.*"
-//leaks --atExit --list -- ./bin/TestLogger_d --gtest_shuffle --gtest_repeat=3 --gtest_filter=LoggerTest.testLogEntryMacro
+//leaks --atExit --list -- ./bin/TestLogger_d --gtest_shuffle --gtest_repeat=3 --gtest_filter=LoggerTest.testForStdFunctionObject
 //valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind.log ./bin/TestLogger_d
 
 #include "CommonFunc.hpp"
@@ -9,6 +9,9 @@
 #include "ConsoleOps.hpp"
 
 #include <type_traits>
+#include <future>
+#include <functional>
+#include <any>
 
 using namespace logger;
 
@@ -94,6 +97,42 @@ class LoggerTest : public CommonTestDataGenerator
             LOG_ENTRY();
             LOG_EXIT();
             return std::make_unique<int>(val1 * val2);
+        }
+        template <typename F, typename ...Args>
+        static std::any submit(F&& f, Args&&... args)
+        {
+            LOG_ENTRY_DBG(/*"Submitting task {}", taskName*/);
+            using Result = std::invoke_result_t<F, Args...>;
+            auto boundFunc = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
+            // Wrap the bound function in a packaged_task that returns std::any
+            // The lambda inside the packaged_task handles both void and non-void return types
+            // by checking if Result is void at compile time. Use constructor as assignment or
+            // copy initialization does not work with std::packaged_task.
+            std::packaged_task<std::any()> packagedTask(
+            [boundFunc]() -> std::any
+            {
+                if constexpr (std::is_void_v<Result>)
+                {
+                    boundFunc();
+                    return std::any{};
+                }
+                else
+                {
+                    return boundFunc();
+                }
+            });
+            std::any result;
+            if (packagedTask.valid())
+            {
+                packagedTask();
+                auto future = packagedTask.get_future();
+                if (future.valid())
+                    result = future.get();
+                else
+                    result = std::any{};
+            }
+            LOG_EXIT_DBG(/*"Task {} submitted successfully", m_taskName*/);
+            return result;
         }
 };
 
@@ -284,7 +323,7 @@ TEST_F(LoggerTest, testLogDbg)
 }
 
 /**
- * @brief The objective of this test feature
+ * @brief The objective of these test features
  * is to test and polish the class name and
  * function name in the actual log message.
  * We need to look at the console or file
@@ -316,4 +355,31 @@ TEST_F(LoggerTest, testDiffFuncSignatures)
         };
         EXPECT_EQ(0, lamdaFunc("Testing ", "function signature"));
     }
+}
+
+TEST_F(LoggerTest, testTemplatedSubmitFunc)
+{
+    auto val1 = 10;
+    auto val2 = 1000;
+    auto result = submit(funcReturningPointer, val1, val2);
+    EXPECT_EQ(val1 * val2, *(std::any_cast<int*>(result)));
+}
+
+TEST_F(LoggerTest, testFunctorSubmit)
+{
+    int* (*functor)(const int val1, const int val2);
+    functor = &funcReturningPointer;
+    auto val1 = 10;
+    auto val2 = 1000;
+    auto result = submit(functor, val1, val2);
+    EXPECT_EQ(val1 * val2, *(std::any_cast<int*>(result)));
+}
+
+TEST_F(LoggerTest, testForStdFunctionObject)
+{
+    std::function<int* (const int val1, const int val2)> functor = funcReturningPointer;
+    auto val1 = 10;
+    auto val2 = 1000;
+    auto result = submit(functor, val1, val2);
+    EXPECT_EQ(val1 * val2, *(std::any_cast<int*>(result)));
 }
