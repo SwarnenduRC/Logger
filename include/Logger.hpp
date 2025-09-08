@@ -191,7 +191,7 @@ namespace logger
              * @return Logger& Returns a reference to the Logger object
              * to allow for method chaining.
              */
-            Logger& setFunctionName(const std::string_view val) noexcept;
+            Logger& setFunctionName(const std::string& val) noexcept;
 
             /**
              * @brief Set the File Name object
@@ -202,7 +202,7 @@ namespace logger
              * @return Logger& Returns a reference to the Logger object
              * to allow for method chaining.
              */
-            Logger& setFileName(const std::string_view val) noexcept;
+            Logger& setFileName(const std::string& val) noexcept;
 
             /**
              * @brief Set the Log Marker object
@@ -214,7 +214,7 @@ namespace logger
              * @return Logger& Returns a reference to the Logger object
              * to allow for method chaining.
              */
-            Logger& setMarker(const std::string_view val) noexcept;
+            Logger& setMarker(const std::string& val) noexcept;
 
             /**
              * @brief Set the Log Type object
@@ -238,7 +238,7 @@ namespace logger
              * @return Logger& Returns a reference to the Logger object
              * to allow for method chaining.
              */
-            Logger& setLogType(const std::string_view logType) noexcept;
+            Logger& setLogType(const std::string& logType) noexcept;
 
             /**
              * @brief Set the Assert Condition object
@@ -249,7 +249,7 @@ namespace logger
              * @return Logger& Returns a reference to the Logger object
              * to allow for method chaining.
              */
-            Logger& setAssertCondition(const std::string_view cond) noexcept;
+            Logger& setAssertCondition(const std::string& cond) noexcept;
 
             /**
              * @brief Get the Log Stream object
@@ -400,6 +400,7 @@ namespace logger
              */
             std::string m_logMarker = FORWARD_ANGLE.data();
 
+            std::mutex m_logStrmMtx;
             std::stringstream m_logStream;
             LOG_TYPE m_logType = LOG_TYPE::LOG_INFO;
             std::string m_assertCond;

@@ -102,11 +102,11 @@ namespace logger
         const LOG_TYPE& logType
     )
     {
-        loggerObj.setFileName(fileName)
-                .setFunctionName(funcName)
+        loggerObj.setFileName(fileName.data())
+                .setFunctionName(funcName.data())
                 .setLineNo(lineNo)
                 .setThreadId(tid)
-                .setMarker(marker)
+                .setMarker(marker.data())
                 .setLogType(logType);
     }
 
@@ -486,7 +486,7 @@ namespace logger
         if (cond.empty())
             return;
 
-        loggerObj.setAssertCondition(cond); // Set the assertion condition
+        loggerObj.setAssertCondition(cond.data()); // Set the assertion condition
         setLoggerProperties(fileName,
                             funcName,
                             FORWARD_ANGLE,

@@ -107,7 +107,7 @@ Logger::Logger(const std::string_view timeFormat)
     , m_lineNo(0)
 {}
 
-Logger& Logger::setFileName(const std::string_view val) noexcept
+Logger& Logger::setFileName(const std::string& val) noexcept
 {
     if (!val.empty())
         m_fileName = val.data();
@@ -115,7 +115,7 @@ Logger& Logger::setFileName(const std::string_view val) noexcept
     return *this;
 }
 
-Logger& Logger::setFunctionName(const std::string_view val) noexcept
+Logger& Logger::setFunctionName(const std::string& val) noexcept
 {
     if (!val.empty())
         m_prettyFuncName = val.data();
@@ -135,7 +135,7 @@ Logger& Logger::setThreadId(const std::thread::id& val) noexcept
     return *this;
 }
 
-Logger& Logger::setMarker(const std::string_view val) noexcept
+Logger& Logger::setMarker(const std::string& val) noexcept
 {
     if (!val.empty())
         m_logMarker = val;
@@ -149,20 +149,21 @@ Logger& Logger::setLogType(const LOG_TYPE& logType) noexcept
     return *this;
 }
 
-Logger& Logger::setLogType(const std::string_view logType) noexcept
+Logger& Logger::setLogType(const std::string& logType) noexcept
 {
     return setLogType(convertStringToLogTypeEnum(logType));
 }
 
-Logger& Logger::setAssertCondition(const std::string_view cond) noexcept
+Logger& Logger::setAssertCondition(const std::string& cond) noexcept
 {
-    m_assertCond = cond.data();
+    m_assertCond = cond;
     return *this;
 }
 
 void Logger::populatePrerequisitFileds()
 {
     // Clear the log stream before populating it with new log message
+    std::lock_guard<std::mutex> dataStreamLock(m_logStrmMtx);
     std::stringstream().swap(m_logStream);
     constructLogMsgPrefix();
 
@@ -174,7 +175,7 @@ void Logger::populatePrerequisitFileds()
                 << COLONE_SEP
                 << ONE_SPACE
                 << m_extractedFuncName
-                << RIGHT_SQUARE_BRACE
+                << RIGHT_SQUARE_BRACE.data()
                 << ONE_SPACE;
 
     // Check if the log message is due to an assertion failure. If so,
@@ -261,6 +262,7 @@ void Logger::vlog(const std::string_view formatStr, std::format_args args)
             logMsg = logMsg.substr(logMsg.find_first_of(DOUBLE_QUOTES) + 1, 
                     logMsg.find_last_of(DOUBLE_QUOTES) - 1);
     }
+    std::lock_guard<std::mutex> dataStreamLock(m_logStrmMtx);
     m_logStream << logMsg;
 }
 
