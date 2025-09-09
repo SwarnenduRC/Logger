@@ -110,7 +110,7 @@ Logger::Logger(const std::string_view timeFormat)
 Logger& Logger::setFileName(const std::string& val) noexcept
 {
     if (!val.empty())
-        m_fileName = val.data();
+        m_fileName = val;
 
     return *this;
 }
@@ -118,7 +118,7 @@ Logger& Logger::setFileName(const std::string& val) noexcept
 Logger& Logger::setFunctionName(const std::string& val) noexcept
 {
     if (!val.empty())
-        m_prettyFuncName = val.data();
+        m_prettyFuncName = val;
 
     return *this;
 }
