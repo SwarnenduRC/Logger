@@ -52,6 +52,12 @@ namespace logger
     struct is_list<std::list<T, Alloc>> : std::true_type{};
 
     /**
+     * @brief A global mutex to this file to protect
+     * the concurrency of logger property attributes
+     */
+    static std::mutex raceMtx;
+
+    /**
      * @brief The logger object for the application.
      * This object is used to construct log messages
      * and write them to the log stream.
@@ -102,6 +108,12 @@ namespace logger
         const LOG_TYPE& logType
     )
     {
+        // Lock it as in case of a threadpool ops
+        // it might be very possible that multiple
+        // threads are just lurcking around to get
+        // a hold of this beautiful lady at the same
+        // point of time.
+        std::lock_guard<std::mutex> raceLock(raceMtx);
         loggerObj.setFileName(fileName.data())
                 .setFunctionName(funcName.data())
                 .setLineNo(lineNo)
@@ -128,7 +140,6 @@ namespace logger
     template<typename ...Args>
     void logMsg(const std::string_view format_str, Args&&... args)
     {
-        static std::mutex raceMtx;
         // Static objects are atomic in inature only during
         // the lifetime of the program. Accessing or modifying
         // them from multiple threads requires external synchronization.
