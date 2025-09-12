@@ -91,6 +91,14 @@ namespace logger
      * @param [in] lineNo The line number in the source code where the log is being generated.
      * @param [in] tid The thread ID of the thread generating the log.
      * @param [in] logType The type of log (e.g., info, error, debug).
+     * 
+     * @tparam Args Variadic template parameters for the arguments to be formatted into the log message.
+     * @param [in] format_str The format string for the log message.
+     *                 It can contain placeholders for the arguments, similar to printf-style formatting.
+     *                 For example, "Log message: {}" where {} will be replaced by the provided arguments.
+     * @param [in] args The arguments to be formatted into the log message.
+     *                 These arguments will be formatted according to the format string.
+     *                 The number and types of arguments should match the placeholders in the format string.
      *
      * @note This function is typically called before logging a message
      * to ensure that the logger object has all the necessary context
@@ -99,13 +107,16 @@ namespace logger
      * @note inline because otherwise it will cause linker errors
      * when used in multiple translation units.
      */
-    inline void setLoggerProperties
+    template<typename ...Args>
+    inline void logMsg
     (   const std::string_view fileName,
         const std::string_view funcName,
         const std::string_view marker,
         const size_t lineNo,
         const std::thread::id& tid,
-        const LOG_TYPE& logType
+        const LOG_TYPE& logType,
+        const std::string_view format_str,
+        Args&&... args
     )
     {
         // Lock it as in case of a threadpool ops
@@ -120,30 +131,7 @@ namespace logger
                 .setThreadId(tid)
                 .setMarker(marker.data())
                 .setLogType(logType);
-    }
 
-    /**
-     * @brief Log a message with the specified format and arguments.
-     *
-     * This function formats the log message using the provided format string
-     * and arguments, and writes it to the log stream. It is a convenience wrapper
-     * around the Logger's log method.
-     *
-     * @tparam Args Variadic template parameters for the arguments to be formatted into the log message.
-     * @param [in] format_str The format string for the log message.
-     *                 It can contain placeholders for the arguments, similar to printf-style formatting.
-     *                 For example, "Log message: {}" where {} will be replaced by the provided arguments.
-     * @param [in] args The arguments to be formatted into the log message.
-     *                 These arguments will be formatted according to the format string.
-     *                 The number and types of arguments should match the placeholders in the format string.
-     */
-    template<typename ...Args>
-    void logMsg(const std::string_view format_str, Args&&... args)
-    {
-        // Static objects are atomic in inature only during
-        // the lifetime of the program. Accessing or modifying
-        // them from multiple threads requires external synchronization.
-        std::lock_guard<std::mutex> lock(raceMtx);
         loggerObj.log(format_str, args...);
         loggingOps << loggerObj.getLogStream().str();
     }
@@ -178,14 +166,16 @@ namespace logger
         // If and only if, it is either a vector or std::list of strings
         if constexpr (is_list<List>::value || is_vector<List>::value)
         {
-            setLoggerProperties(fileName,
-                            funcName,
-                            FORWARD_ANGLES,
-                            lineNo,
-                            std::this_thread::get_id(),
-                            LOG_TYPE::LOG_INFO);
+            logMsg( fileName,
+                    funcName,
+                    FORWARD_ANGLES,
+                    lineNo,
+                    std::this_thread::get_id(),
+                    LOG_TYPE::LOG_INFO,
+                    format_str,
+                    args...);
 
-            logMsg(format_str, args...);
+            std::lock_guard<std::mutex> raceLock(raceMtx);
             loggingOps << msgList;
         }
     }
@@ -229,14 +219,14 @@ namespace logger
         }
         if (log)
         {
-            setLoggerProperties(fileName,
-                                funcName,
-                                FORWARD_ANGLES,
-                                lineNo,
-                                std::this_thread::get_id(),
-                                LOG_TYPE::LOG_INFO);
-
-            logMsg(format_str, args...);
+            logMsg( fileName,
+                    funcName,
+                    FORWARD_ANGLES,
+                    lineNo,
+                    std::this_thread::get_id(),
+                    LOG_TYPE::LOG_INFO,
+                    format_str,
+                    args...);
         }
     }
 
@@ -279,14 +269,14 @@ namespace logger
         }
         if (log)
         {
-            setLoggerProperties(fileName,
-                                funcName,
-                                BACKWARD_ANGLES,
-                                lineNo,
-                                std::this_thread::get_id(),
-                                LOG_TYPE::LOG_INFO);
-
-            logMsg(format_str, args...);
+            logMsg( fileName,
+                    funcName,
+                    BACKWARD_ANGLES,
+                    lineNo,
+                    std::this_thread::get_id(),
+                    LOG_TYPE::LOG_INFO,
+                    format_str,
+                    args...);
         }
     }
 
@@ -314,14 +304,14 @@ namespace logger
         Args&&... args
     )
     {
-        setLoggerProperties(fileName,
-                            funcName,
-                            FORWARD_ANGLE,
-                            lineNo,
-                            std::this_thread::get_id(),
-                            LOG_TYPE::LOG_ERR);
-
-        logMsg(format_str, args...);
+        logMsg( fileName,
+                funcName,
+                FORWARD_ANGLE,
+                lineNo,
+                std::this_thread::get_id(),
+                LOG_TYPE::LOG_ERR,
+                format_str,
+                args...);
     }
 
     /**
@@ -348,14 +338,14 @@ namespace logger
         Args&&... args
     )
     {
-        setLoggerProperties(fileName,
-                            funcName,
-                            FORWARD_ANGLE,
-                            lineNo,
-                            std::this_thread::get_id(),
-                            LOG_TYPE::LOG_WARN);
-
-        logMsg(format_str, args...);
+        logMsg( fileName,
+                funcName,
+                FORWARD_ANGLE,
+                lineNo,
+                std::this_thread::get_id(),
+                LOG_TYPE::LOG_WARN,
+                format_str,
+                args...);
     }
 
     /**
@@ -382,14 +372,14 @@ namespace logger
         Args&&... args
     )
     {
-        setLoggerProperties(fileName,
-                            funcName,
-                            FORWARD_ANGLE,
-                            lineNo,
-                            std::this_thread::get_id(),
-                            LOG_TYPE::LOG_INFO);
-
-        logMsg(format_str, args...);
+        logMsg( fileName,
+                funcName,
+                FORWARD_ANGLE,
+                lineNo,
+                std::this_thread::get_id(),
+                LOG_TYPE::LOG_INFO,
+                format_str,
+                args...);
     }
 
     /**
@@ -416,14 +406,14 @@ namespace logger
         Args&&... args
     )
     {
-        setLoggerProperties(fileName,
-                            funcName,
-                            FORWARD_ANGLE,
-                            lineNo,
-                            std::this_thread::get_id(),
-                            LOG_TYPE::LOG_IMP);
-
-        logMsg(format_str, args...);
+        logMsg( fileName,
+                funcName,
+                FORWARD_ANGLE,
+                lineNo,
+                std::this_thread::get_id(),
+                LOG_TYPE::LOG_IMP,
+                format_str,
+                args...);
     }
 
     /**
@@ -455,14 +445,14 @@ namespace logger
     )
     {
     #if defined (DEBUG) || (__DEBUG__)
-        setLoggerProperties(fileName,
-                            funcName,
-                            FORWARD_ANGLE,
-                            lineNo,
-                            std::this_thread::get_id(),
-                            LOG_TYPE::LOG_DBG);
-
-        logMsg(format_str, args...);
+        logMsg( fileName,
+                funcName,
+                FORWARD_ANGLE,
+                lineNo,
+                std::this_thread::get_id(),
+                LOG_TYPE::LOG_DBG,
+                format_str,
+                args...);
     #endif
     }
 
@@ -498,14 +488,16 @@ namespace logger
             return;
 
         loggerObj.setAssertCondition(cond.data()); // Set the assertion condition
-        setLoggerProperties(fileName,
-                            funcName,
-                            FORWARD_ANGLE,
-                            lineNo,
-                            std::this_thread::get_id(),
-                            LOG_TYPE::LOG_ASSERT);
+        logMsg( fileName,
+                funcName,
+                FORWARD_ANGLE,
+                lineNo,
+                std::this_thread::get_id(),
+                LOG_TYPE::LOG_ASSERT,
+                format_str,
+                args...);
 
-        logMsg(format_str, args...);
+        std::lock_guard<std::mutex> lock(raceMtx);
         if (exitGracefuly)
         {
             loggingOps.~LoggingOps();
@@ -542,14 +534,15 @@ namespace logger
         Args&&... args
     )
     {
-        setLoggerProperties(fileName,
-                            funcName,
-                            FORWARD_ANGLE,
-                            lineNo,
-                            std::this_thread::get_id(),
-                            LOG_TYPE::LOG_FATAL);
+        logMsg( fileName,
+                funcName,
+                FORWARD_ANGLE,
+                lineNo,
+                std::this_thread::get_id(),
+                LOG_TYPE::LOG_FATAL,
+                format_str,
+                args...);
 
-        logMsg(format_str, args...);
         std::abort();
     }
 };  // namespace logger
