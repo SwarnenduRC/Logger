@@ -47,8 +47,11 @@ namespace logger
      * @param fmt_str The format string for the log message.
      * @param ... Additional arguments for formatting the log message.
      */
-    #define LOG_LIST(LIST_OR_VEC_OF_STRINGS, fmt_str, ...)                                                        \
-    log_list(__FILE__, __PRETTY_FUNCTION__, __LINE__, LIST_OR_VEC_OF_STRINGS, #fmt_str __VA_OPT__(,) __VA_ARGS__)  \
+    #define LOG_LIST(LIST_OR_VEC_OF_STRINGS, fmt_str, ...)                                                          \
+    do                                                                                                               \
+    {                                                                                                                 \
+        log_list(__FILE__, __PRETTY_FUNCTION__, __LINE__, LIST_OR_VEC_OF_STRINGS, #fmt_str __VA_OPT__(,) __VA_ARGS__); \
+    } while (0)                                                                                                         \
 
     /**
      * @brief Macro to log an entry point message.
@@ -57,8 +60,11 @@ namespace logger
      * @param fmt_str The format string for the log message.
      * @param ... Additional arguments for formatting the log message.
      */
-    #define LOG_ENTRY(fmt_str, ...)                                                                 \
-    log_entry(__FILE__, __PRETTY_FUNCTION__, __LINE__, false, #fmt_str __VA_OPT__(,) __VA_ARGS__);   \
+    #define LOG_ENTRY(fmt_str, ...)                                                                \
+    do                                                                                              \
+    {                                                                                                \
+        log_entry(__FILE__, __PRETTY_FUNCTION__, __LINE__, false, #fmt_str __VA_OPT__(,) __VA_ARGS__);\
+    } while (0)                                                                                        \
 
     /**
      * @brief Macro to log an exit point message.
@@ -67,8 +73,11 @@ namespace logger
      * @param fmt_str The format string for the log message.
      * @param ... Additional arguments for formatting the log message.
      */
-    #define LOG_EXIT(fmt_str, ...)                                                                  \
-    log_exit(__FILE__, __PRETTY_FUNCTION__, __LINE__, false, #fmt_str __VA_OPT__(,) __VA_ARGS__);    \
+    #define LOG_EXIT(fmt_str, ...)                                                                \
+    do                                                                                             \
+    {                                                                                               \
+        log_exit(__FILE__, __PRETTY_FUNCTION__, __LINE__, false, #fmt_str __VA_OPT__(,) __VA_ARGS__);\
+    } while (0)                                                                                       \
 
     /**
      * @brief Macro to log an entry point message (in DEBUG mode only)
@@ -77,8 +86,11 @@ namespace logger
      * @param fmt_str The format string for the log message.
      * @param ... Additional arguments for formatting the log message.
      */
-    #define LOG_ENTRY_DBG(fmt_str, ...)                                                                 \
-    log_entry(__FILE__, __PRETTY_FUNCTION__, __LINE__, true, #fmt_str __VA_OPT__(,) __VA_ARGS__);   \
+#define LOG_ENTRY_DBG(fmt_str, ...)                                                               \
+    do                                                                                             \
+    {                                                                                               \
+        log_entry(__FILE__, __PRETTY_FUNCTION__, __LINE__, true, #fmt_str __VA_OPT__(,) __VA_ARGS__);\
+    } while (0)                                                                                       \
 
     /**
      * @brief Macro to log an exit point message (in DEBUG mode only)
@@ -87,8 +99,11 @@ namespace logger
      * @param fmt_str The format string for the log message.
      * @param ... Additional arguments for formatting the log message.
      */
-    #define LOG_EXIT_DBG(fmt_str, ...)                                                                  \
-    log_exit(__FILE__, __PRETTY_FUNCTION__, __LINE__, true, #fmt_str __VA_OPT__(,) __VA_ARGS__);    \
+#define LOG_EXIT_DBG(fmt_str, ...)                                                                \
+    do                                                                                             \
+    {                                                                                               \
+        log_exit(__FILE__, __PRETTY_FUNCTION__, __LINE__, true, #fmt_str __VA_OPT__(,) __VA_ARGS__); \
+    } while (0)                                                                                       \
 
     /**
      * @brief Macro to log an informational message.
@@ -97,8 +112,11 @@ namespace logger
      * @param fmt_str The format string for the log message.
      * @param ... Additional arguments for formatting the log message.
      */
-    #define LOG_INFO(fmt_str, ...)                                                         \
-    log_info(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__);   \
+    #define LOG_INFO(fmt_str, ...)                                                        \
+    do                                                                                     \
+    {                                                                                       \
+        log_info(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__);\
+    } while (0)                                                                               \
 
     /**
      * @brief Macro to log an important detail message.
@@ -107,8 +125,11 @@ namespace logger
      * @param fmt_str The format string for the log message.
      * @param ... Additional arguments for formatting the log message.
      */
-    #define LOG_IMP(fmt_str, ...)                                                          \
-    log_imp(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__);    \
+    #define LOG_IMP(fmt_str, ...)                                                         \
+    do                                                                                     \
+    {                                                                                       \
+        log_imp(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__); \
+    } while (0)                                                                               \
 
     /**
      * @brief Macro to log a warning message.
@@ -118,7 +139,10 @@ namespace logger
      * @param ... Additional arguments for formatting the log message.
      */
     #define LOG_WARN(fmt_str, ...)                                                        \
-    log_warn(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__);  \
+    do                                                                                     \
+    {                                                                                       \
+        log_warn(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__);\
+    } while (0)                                                                               \
 
     /**
      * @brief Macro to log an error message.
@@ -127,8 +151,11 @@ namespace logger
      * @param fmt_str The format string for the log message.
      * @param ... Additional arguments for formatting the log message.
      */
-    #define LOG_ERR(fmt_str, ...)                                                        \
-    log_err(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__);  \
+    #define LOG_ERR(fmt_str, ...)                                                         \
+    do                                                                                     \
+    {                                                                                       \
+        log_err(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__); \
+    } while (0)                                                                               \
 
     /**
      * @brief Macro to log a debug message.
@@ -147,8 +174,11 @@ namespace logger
      *       For logging important information or errors, use the other logging macros like LOG_INFO,
      *       LOG_WARN, LOG_ERR, etc.
      */
-    #define LOG_DBG(fmt_str, ...)                                                        \
-    log_dbg(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__);  \
+    #define LOG_DBG(fmt_str, ...)                                                         \
+    do                                                                                     \
+    {                                                                                       \
+        log_dbg(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__); \
+    } while (0)                                                                               \
 
     /**
      * @brief Macro to log an assertion failure message.
@@ -165,7 +195,7 @@ namespace logger
     {                                                                                                        \
         if (!(cond))                                                                                          \
             log_assert(__FILE__, __PRETTY_FUNCTION__, __LINE__, #cond, true, #cond __VA_OPT__(,) __VA_ARGS__); \
-    } while (0);                                                                                                \
+    } while (0)                                                                                                 \
 
     /**
      * @brief Macro to log an assertion failure message with a custom message.
@@ -181,7 +211,7 @@ namespace logger
     {                                                                                                          \
         if (!(cond))                                                                                            \
             log_assert(__FILE__, __PRETTY_FUNCTION__, __LINE__, #cond, true, fmt_str __VA_OPT__(,) __VA_ARGS__); \
-    } while (0);                                                                                                  \
+    } while (0)                                                                                                   \
 
     /**
      * @brief Macro to log a fatal error message and abort the program.
@@ -191,8 +221,11 @@ namespace logger
      * @param fmt_str The format string for the log message.
      * @param ... Additional arguments for formatting the log message.
      */
-    #define LOG_FATAL(fmt_str, ...)                                                        \
-    log_fatal(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__);  \
+    #define LOG_FATAL(fmt_str, ...)                                                         \
+    do                                                                                       \
+    {                                                                                         \
+        log_fatal(__FILE__, __PRETTY_FUNCTION__, __LINE__, fmt_str __VA_OPT__(,) __VA_ARGS__); \
+    } while (0)                                                                                 \
 
 } // namespace logger
 
