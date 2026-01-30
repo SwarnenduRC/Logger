@@ -500,8 +500,6 @@ namespace logger
         std::lock_guard<std::mutex> lock(raceMtx);
         if (exitGracefuly)
         {
-            loggingOps.~LoggingOps();
-            loggerObj.~Logger();
             std::exit(EXIT_FAILURE);
         }
         else
